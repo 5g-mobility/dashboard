@@ -40,8 +40,8 @@
     "zone.js": "0.11.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "0.1001.5",
-    "@angular/cli": "10.1.5",
+    "@angular-devkit/build-angular": "^0.1102.8",
+    "@angular/cli": "^10.2.3",
     "@angular/compiler-cli": "10.1.5",
     "@types/bootstrap": "5.0.0",
     "@types/chartist": "0.11.0",
