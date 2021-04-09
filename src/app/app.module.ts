@@ -13,6 +13,8 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
 import { ExcessiveSpeedComponent } from './pages/excessive-speed/excessive-speed.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
+import {FormsModule} from '@angular/forms';
+
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
@@ -31,7 +33,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NavbarModule,
     ToastrModule.forRoot(),
     FontAwesomeModule,
-    NgbModule
+    NgbModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

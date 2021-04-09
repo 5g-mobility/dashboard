@@ -29,7 +29,7 @@ L.Marker.prototype.options.icon = iconDefault;
 export class ExcessiveSpeedComponent implements OnInit, AfterViewInit {
   private map;
 
-  selectionMap = 1;
+  selectionMap = 0;
 
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null;
