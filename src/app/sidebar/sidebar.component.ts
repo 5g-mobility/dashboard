@@ -11,7 +11,7 @@ export interface RouteInfo {
 export const ROUTES: RouteInfo[] = [
     { path: '/dashboard',     title: 'Dashboard',         icon:'ion ion-md-stats',       class: '' },
     { path: '/excessive_speed',     title: 'Excessive Speed',         icon:'ion ion-md-speedometer',       class: '' },
-    { path: '/icons',         title: 'Icons',             icon:'nc-icon nc-diamond',    class: '' },
+    { path: '/event_tab',         title: 'Events',             icon:'nc-icon nc-tile-56',     class: '' },
     { path: '/notifications', title: 'Notifications',     icon:'nc-icon nc-bell-55',    class: '' },
     { path: '/user',          title: 'User Profile',      icon:'nc-icon nc-single-02',  class: '' },
     { path: '/table',         title: 'Table List',        icon:'nc-icon nc-tile-56',    class: '' },
