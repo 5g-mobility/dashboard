@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js';
-
+import { faCloudShowersHeavy, faLeaf, faCloudSun, faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'dashboard-cmp',
@@ -8,9 +8,16 @@ import Chart from 'chart.js';
     templateUrl: 'dashboard.component.html'
 })
 
-export class DashboardComponent implements OnInit{
 
-  public canvas : any;
+// Card com o número de carros em excessive speed nas últimas 24h
+
+export class DashboardComponent implements OnInit{
+  rainIcon = faCloudShowersHeavy;
+  leafIcon = faLeaf;
+  sunCloudIcon = faCloudSun;
+  sunIcon = faSun;
+  moonIcon = faMoon;
+  public canvas: any;
   public ctx;
   public chartColor;
   public chartEmail;
