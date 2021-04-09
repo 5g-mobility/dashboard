@@ -5,22 +5,6 @@ import "leaflet-extra-markers/dist/js/leaflet.extra-markers.js";
 import { NgbDate, NgbCalendar, NgbDateParserFormatter, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-
-const iconRetinaUrl = 'assets/marker-icon-2x.png';
-const iconUrl = 'assets/marker-icon.png';
-const shadowUrl = 'assets/marker-shadow.png';
-const iconDefault = L.icon({
-  iconRetinaUrl,
-  iconUrl,
-  shadowUrl,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  tooltipAnchor: [16, -28],
-  shadowSize: [41, 41]
-});
-L.Marker.prototype.options.icon = iconDefault;
-
 @Component({
   selector: 'app-excessive-speed',
   templateUrl: './excessive-speed.component.html',
@@ -85,7 +69,7 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
 
-    var speedCanvas = document.getElementById("speedChart");
+    var speedCanvas = document.getElementById("dailyExcessiveChart");
 
     var dataEventNumber = {
       data: [0, 19, 15, 20, 30, 40, 40, 50, 25, 30, 50, 70, 0,

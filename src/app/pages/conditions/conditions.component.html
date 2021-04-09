@@ -2,7 +2,8 @@
     <div class="col-lg-6 col-md-6 col-sm-6">
         <div class="card card-stats">
             <div class="card-header">
-                <h5 class="card-title">Praia da Barra</h5>
+                <h5 class="card-title">Praia da Barra <fa-icon style="color: #F8D45B;" [icon]="sunIcon"></fa-icon></h5>
+                
             </div>
             <div class="card-body ">
                 <div class="row" style="margin: 10px 15px;">
@@ -41,7 +42,7 @@
     <div class="col-lg-6 col-md-6 col-sm-6">
         <div class="card card-stats">
             <div class="card-header">
-                <h5 class="card-title">Costa Nova</h5>
+                <h5 class="card-title">Costa Nova <fa-icon style="color: #1D3150;" [icon]="moonIcon"></fa-icon></h5>
             </div>
             <div class="card-body ">
                 <div class="row" style="margin: 10px 15px;">
@@ -62,7 +63,7 @@
                             </div>
                             <div class="numbers" style="display: flex; flex-direction: column; align-items: center;">
                                 <p class="card-category">Climate Condition</p>
-                                <p class="card-title">Inconclusive
+                                <p class="card-title">Clean
                                 <p>
                             </div>
                         </div>
@@ -77,5 +78,70 @@
             </div>
         </div>
     </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header" style="display: flex; justify-content: space-between;">
+                <h5 class="card-title">Events Map</h5>
+                <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="selectionMap">
+                    <label ngbButtonLabel class="btn-primary">
+                      <input ngbButton type="radio" [value]="0"> Last 5 Minutes
+                    </label>
+                    <label ngbButtonLabel class="btn-primary">
+                      <input ngbButton type="radio" [value]="1"> Select Date
+                    </label>
+                    <label ngbButtonLabel class="btn-primary">
+                        <input ngbButton type="radio" [value]="2"> Filter By Type
+                      </label>
+                  </div>
+            </div>
+            <div class="card-body">
+                <div class="map-container" style="position:static; height: 62.5vh; margin: 0;">
+                    <div class="map-frame">
+                        <div id="mapConditions"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
+<div class="row">
+    <div class="col-md-6">
+        <div class="card ">
+          <div class="card-header ">
+            <h5 class="card-title">Praia da Barra</h5>
+            <p class="card-category">Conditions Chart</p>
+          </div>
+          <div class="card-body ">
+            <canvas id="chartBarra"></canvas>
+          </div>
+          <div class="card-footer ">
+            <div class="legend">
+              <i class="fa fa-circle text-primary"></i> Rain
+              <i class="fa fa-circle text-warning"></i> Clean
+              <i class="fa fa-circle text-danger"></i> Fog
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card ">
+          <div class="card-header ">
+            <h5 class="card-title">Costa Nova</h5>
+            <p class="card-category">Conditions Chart</p>
+          </div>
+          <div class="card-body ">
+            <canvas id="chartCostaNova"></canvas>
+          </div>
+          <div class="card-footer ">
+            <div class="legend">
+              <i class="fa fa-circle text-primary"></i> Rain
+              <i class="fa fa-circle text-warning"></i> Clean
+              <i class="fa fa-circle text-danger"></i> Fog
+            </div>
+          </div>
+        </div>
+      </div>
 </div>
