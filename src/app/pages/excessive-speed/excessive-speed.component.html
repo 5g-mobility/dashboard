@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="card">
             <div class="card-header" style="display: flex; justify-content: space-between;">
-                <h5 class="card-title">Map Events</h5>
+                <h5 class="card-title">Events Map</h5>
                 <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="selectionMap">
                     <label ngbButtonLabel class="btn-primary">
                       <input ngbButton type="radio" [value]="0"> Last 5 Minutes
@@ -72,7 +72,7 @@
 
             </div>
             <div class="card-body">
-                <canvas id="speedChart" width="400" height="100"></canvas>
+                <canvas id="dailyExcessiveChart" width="400" height="100"></canvas>
             </div>
         </div>
     </div>
