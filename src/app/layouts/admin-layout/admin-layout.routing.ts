@@ -8,6 +8,7 @@ import { IconsComponent } from '../../pages/icons/icons.component';
 import { NotificationsComponent } from '../../pages/notifications/notifications.component';
 import { UpgradeComponent } from '../../pages/upgrade/upgrade.component';
 import { ExcessiveSpeedComponent } from 'app/pages/excessive-speed/excessive-speed.component';
+import { ConditionsComponent } from 'app/pages/conditions/conditions.component';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'dashboard',      component: DashboardComponent },
@@ -17,5 +18,6 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'icons',          component: IconsComponent },
     { path: 'notifications',  component: NotificationsComponent },
     { path: 'upgrade',        component: UpgradeComponent },
-    { path: 'excessive_speed',component: ExcessiveSpeedComponent }
+    { path: 'excessive_speed',component: ExcessiveSpeedComponent },
+    { path: 'conditions',     component: ConditionsComponent }
 ];

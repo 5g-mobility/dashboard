@@ -16,12 +16,14 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {FormsModule} from '@angular/forms';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { ConditionsComponent } from './pages/conditions/conditions.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AdminLayoutComponent,
-    ExcessiveSpeedComponent
+    ExcessiveSpeedComponent,
+    ConditionsComponent
     
   ],
   imports: [
