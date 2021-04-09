@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ConditionsComponent } from './pages/conditions/conditions.component';
+import { RoadInfoComponent } from './pages/road-info/road-info.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { ConditionsComponent } from './pages/conditions/conditions.component';
     AdminLayoutComponent,
     ExcessiveSpeedComponent,
     ConditionsComponent,
-    EventTabComponent
+    EventTabComponent,
+    RoadInfoComponent
 
   ],
   imports: [
