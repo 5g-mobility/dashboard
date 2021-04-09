@@ -11,13 +11,16 @@ import { AppRoutes } from './app.routing';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { ExcessiveSpeedComponent } from './pages/excessive-speed/excessive-speed.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
     AppComponent,
     AdminLayoutComponent,
     ExcessiveSpeedComponent
+    
   ],
   imports: [
     BrowserAnimationsModule,
@@ -27,6 +30,8 @@ import { ExcessiveSpeedComponent } from './pages/excessive-speed/excessive-speed
     SidebarModule,
     NavbarModule,
     ToastrModule.forRoot(),
+    FontAwesomeModule,
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent]
