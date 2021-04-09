@@ -8,14 +8,16 @@ import { IconsComponent } from '../../pages/icons/icons.component';
 import { NotificationsComponent } from '../../pages/notifications/notifications.component';
 import { UpgradeComponent } from '../../pages/upgrade/upgrade.component';
 import { ExcessiveSpeedComponent } from 'app/pages/excessive-speed/excessive-speed.component';
+import { EventTabComponent } from '../../pages/event-tab/event-tab.component';
 
 export const AdminLayoutRoutes: Routes = [
-    { path: 'dashboard',      component: DashboardComponent },
-    { path: 'user',           component: UserComponent },
-    { path: 'table',          component: TableComponent },
-    { path: 'typography',     component: TypographyComponent },
-    { path: 'icons',          component: IconsComponent },
-    { path: 'notifications',  component: NotificationsComponent },
-    { path: 'upgrade',        component: UpgradeComponent },
-    { path: 'excessive_speed',component: ExcessiveSpeedComponent }
+    { path: 'dashboard',       component: DashboardComponent },
+    { path: 'user',            component: UserComponent },
+    { path: 'table',           component: TableComponent },
+    { path: 'typography',      component: TypographyComponent },
+    { path: 'icons',           component: IconsComponent },
+    { path: 'notifications',   component: NotificationsComponent },
+    { path: 'upgrade',         component: UpgradeComponent },
+    { path: 'excessive_speed', component: ExcessiveSpeedComponent },
+    { path: 'event_tab',       component: EventTabComponent},
 ];
