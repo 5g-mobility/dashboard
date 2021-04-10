@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js';
-import { faCloudShowersHeavy, faLeaf, faCloudSun, faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
+import { faCloudShowersHeavy, faLeaf, faCloudSun, faSun, faMoon, faRoad, faCloudMoonRain, faVideo, faExclamationTriangle, faCar, faWalking,
+faChartLine, faExclamation } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'dashboard-cmp',
@@ -16,7 +17,14 @@ export class DashboardComponent implements OnInit{
   leafIcon = faLeaf;
   sunCloudIcon = faCloudSun;
   sunIcon = faSun;
-  moonIcon = faMoon;
+  road = faRoad;
+  conditions = faCloudMoonRain;
+  camera = faVideo;
+  danger = faExclamationTriangle;
+  car = faCar;
+  person = faWalking;
+  max = faChartLine;
+  rn = faExclamation;
   public canvas: any;
   public ctx;
   public chartColor;

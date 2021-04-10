@@ -5,18 +5,18 @@
       <div class="card-body ">
         <div class="row">
           <div class="col-6 col-md-6">
-            <h5>Conditions</h5>
+            <h5 style="font-size: 140%">Conditions <fa-icon style="color:black"[icon]="conditions" ></fa-icon></h5>
             <hr>
-            <h6>Barra</h6>
-              <p style="font-size:110%"><fa-icon [icon]="rainIcon" ></fa-icon> 23º<p>
-              <p style="font-size:110%"><fa-icon style="color:green"[icon]="leafIcon" ></fa-icon> 800g<p>
+            <h6 style="font-size: 110%; color:#6570C6">Barra</h6>
+              <p style="font-size:110%; font-weight: bold"><fa-icon style="font-size:150%; color:#6570C6;margin-right:3% "[icon]="rainIcon" ></fa-icon> 23º<p>
+              <p style="font-size:110%; font-weight: bold"><fa-icon style="font-size:150%; color:green;margin-right:3% "[icon]="leafIcon" ></fa-icon> 800g<p>
           </div>
           <div class="col-6 col-md-6">
-            <h5 style="color:white;">...</h5>
+            <h5 style="color:white;font-size: 140%">...</h5>
             <hr style="border-color:white">
-            <h6>Costa Nova</h6>
-              <p style="font-size:110%"><fa-icon [icon]="sunCloudIcon" ></fa-icon> 19º<p>
-              <p style="font-size:110%"><fa-icon style="color:green"[icon]="leafIcon" ></fa-icon> 450g<p>
+            <h6 style="font-size: 110%; color:#6570C6">Costa Nova</h6>
+              <p style="font-size:110%; font-weight: bold"><fa-icon style="font-size:150%; color:#ffc107;margin-right:3% " [icon]="sunCloudIcon" ></fa-icon> 19º<p>
+              <p style="font-size:110%; font-weight: bold"><fa-icon style="font-size:150%; color:green;margin-right:3% " [icon]="leafIcon" ></fa-icon> 450g<p>
           </div>
         </div>
       </div>
@@ -29,23 +29,23 @@
     </div>
   </div>
 
-  <div class="col-lg-6 col-md-6 col-sm-6">
+  <div class="col-lg-6 col-md-6 col-sm-6" >
     <div class="card card-stats">
       <div class="card-body ">
         <div class="row">
           <div class="col-6 col-md-6">
-            <h5>Traffic Inflow</h5>
+            <h5 style="font-size: 140%">Traffic Inflow <fa-icon style="color:black"[icon]="road" ></fa-icon></h5>
             <hr>
-            <h6>Barra</h6>
-            <p style="font-size:110%"><b style="color:#3472F7">Maximum:</b> 35</p>
-            <p style="font-size:110%"><b style="color:#3472F7">Current:</b> 14</p>
+            <h6 style="font-size: 110%; color:#6570C6">Barra</h6>
+            <p style="font-size:110%"><b><fa-icon style="font-size:150%; color:black;margin-right:3% " [icon]="max" ></fa-icon> Maximum:</b> 35</p>
+            <p style="font-size:110%"><b><fa-icon style="font-size:150%; color:black;margin-right:7% " [icon]="rn" ></fa-icon> Current:</b> 14</p>
           </div>
           <div class="col-6 col-md-6">
-            <h5 style="color:white;">...</h5>
+            <h5 style="color:white;font-size: 140%">...</h5>
             <hr style="border-color:white">
-            <h6>Costa Nova</h6>
-            <p style="font-size:110%"><b style="color:#3472F7">Maximum:</b> 57</p>
-            <p style="font-size:110%"><b style="color:#3472F7">Current:</b> 29</p>
+            <h6 style="font-size: 110%; color:#6570C6">Costa Nova</h6>
+            <p style="font-size:110%"><b><fa-icon style="font-size:150%; color:black;margin-right:3% " [icon]="max" ></fa-icon> Maximum:</b> 57</p>
+            <p style="font-size:110%"><b><fa-icon style="font-size:150%; color:black;margin-right:7% " [icon]="rn" ></fa-icon> Current:</b> 29</p>
           </div>
         </div>
       </div>
@@ -67,7 +67,7 @@
             <div class="col-md-6 ml-auto mr-auto text-center">
               <h4 class="card-title">
                 Current Traffic
-                <p class="category">IN EACH CAMERA/RADAR</p>
+                <p class="category"> IN EACH CAMERA/RADAR <fa-icon [icon]="camera" ></fa-icon> </p>
               </h4>
             </div>
           </div>
@@ -77,74 +77,106 @@
             <div class="col-8" >
               <div class="row">
                 <div class="col-md-3 d-flex justify-content-center">
-                  <h6>Ria Ativa</h6>
+                  <h6 style="font-size:140%">Ria Ativa</h6>
                 </div>
                 <div class="col-md-3 d-flex justify-content-center">
-                  <h6>Duna</h6>
+                  <h6 style="font-size:140%">Duna</h6>
                 </div>
                 <div class="col-md-3 d-flex justify-content-center">
-                  <h6>A25 Aveiro</h6>
+                  <h6 style="font-size:140%">A25 Aveiro</h6>
                 </div>
                 <div class="col-md-3 d-flex justify-content-center">
-                  <h6>Ponte Barra</h6>
+                  <h6 style="font-size:140%">Ponte Barra</h6>
                 </div>
               </div>
             </div>
             <div class="col-2"></div>
           </div>
         <div class="row">
-            <div class="col-2"></div>
+            <div class="col-2">
+              <div class="row d-flex justify-content-end">
+                  <p style="color:black; font-size: 250%; font-weight: initial"> <fa-icon [icon]="car" ></fa-icon></p>
+              </div>
+            </div>
             <div class="col-8" >
-              <div class="row">
+              <div class="row" style="padding-top:1%">
+
                 <div class="col-md-3 d-flex justify-content-center">
-                  <p style="color:green">Flowing normally</p>
+                  <p style="color:green; font-size: 130%; font-weight: initial">Flowing normally</p>
                 </div>
                 <div class="col-md-3 d-flex justify-content-center">
-                  <p style="color:red">Careful! Excessive speed.</p>
+                  <p style="color:red; font-size: 130%; font-weight: initial">Careful! Excessive speed</p>
                 </div>
                 <div class="col-md-3 d-flex justify-content-center">
-                  <p style="color:green">Flowing normally</p>
+                  <p style="color:green;font-size: 130%; font-weight: initial">Flowing normally</p>
                 </div>
                 <div class="col-md-3 d-flex justify-content-center">
-                  <p style="color: #fd7e14">Slow</p>
+                  <p style="color: #fd7e14; font-size: 130%; font-weight: initial">Slow</p>
                 </div>
               </div>
             </div>
             <div class="col-2"></div>
           </div>
+        <hr>
+        <div class="row">
+            <div class="col-2">
+              <div class="row d-flex justify-content-end">
+                  <p style="color:black; font-size: 300%;"> <fa-icon [icon]="person" ></fa-icon></p>
+              </div>
+            </div>
+            <div class="col-8" >
+              <div class="row" style="padding-top:2%">
 
+                <div class="col-md-3 d-flex justify-content-center">
+                  <p style="font-size: 130%; font-weight: initial">2 pedestrians</p>
+                </div>
+                <div class="col-md-3 d-flex justify-content-center">
+                  <p style="font-size: 130%; font-weight: initial">5 pedestrians</p>
+                </div>
+                <div class="col-md-3 d-flex justify-content-center">
+                  <p style="font-size: 130%; font-weight: initial">0 pedestrians</p>
+                </div>
+                <div class="col-md-3 d-flex justify-content-center">
+                  <p style="font-size: 130%; font-weight: initial">1 pedestrians</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-2"></div>
+          </div>
       </div>
     </div>
   </div>
 
 
 <div class="col-lg-3 col-md-3 col-sm-3">
-  <div class="card card-stats" style="background-color: #CA0B00">
+  <div class="card card-stats" style="background-color: #6570C6">
     <div class="card-body ">
       <div class="row" style="margin-bottom:0 ">
         <div class="col-12 col-md-12 d-flex justify-content-center">
-          <h6>Speeding Cars</h6>
+          <h6 style="color:white; font-size:140%"> <fa-icon [icon]="danger" ></fa-icon> Speeding Cars <fa-icon [icon]="danger" ></fa-icon></h6>
         </div>
       </div>
       <div class="row" style="margin-top:0">
         <div class="col-12 col-md-12 d-flex justify-content-center">
-          <p style="margin-top:0">LAST 24H</p>
+          <p style="color:white">LAST 24H</p>
         </div>
       </div>
       <div class="row" style="margin-top:0">
         <div class="col-12 col-md-12 d-flex justify-content-center">
-          <p style="font-size: 450%"><b>23</b></p>
+          <p style="font-size: 450%;color:white"><b>23</b></p>
         </div>
       </div>
     </div>
     <div class="card-footer ">
       <hr>
-      <div class="stats" style="color:black">
-        <i style="color:black" class="fa fa-clock-o"></i> Updated at 09/04/2021 12:35
+      <div class="stats" style="color:white">
+        <i style="color:white" class="fa fa-clock-o"></i> Updated at 09/04/2021 12:35
       </div>
     </div>
   </div>
 </div>
+
+
 
 </div>
 
