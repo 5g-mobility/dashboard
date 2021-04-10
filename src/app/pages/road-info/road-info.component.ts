@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js';
 import { NgbDate, NgbCalendar, NgbDateParserFormatter, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { faWalking, faBiking, faDog, faExclamationTriangle, faClock } from '@fortawesome/free-solid-svg-icons';
+import { faWalking, faBiking, faDog, faExclamationTriangle, faClock, faTruck, faCarSide, faMotorcycle, faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -15,7 +15,14 @@ export class RoadInfoComponent implements OnInit {
   bikeIcon = faBiking;
   dogIcon = faDog;
   clockIcon = faClock;
+  truckIcon = faTruck;
+  carSideIcon = faCarSide;
+  motorcycleIcon = faMotorcycle;
+  speedIcon = faTachometerAlt;
   exclamationTriangleIcon = faExclamationTriangle;
+  public ctx;
+  public canvas: any;
+  public chartCars;
 
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null;
@@ -105,6 +112,111 @@ export class RoadInfoComponent implements OnInit {
       hover: false,
       data: dailyData,
       options: chartOptions,
+    });
+
+
+    var topSpeedCanvas = document.getElementById("topSpeedGraph");
+
+    var dataTopSpeed = {
+      data: [150, 120, 95, 200, 220, 300, 93, 97, 100, 110, 99, 91, 102,
+        145, 185, 170, 160, 112, 133, 141, 121, 105, 100, 96, 95, 91, 93,
+        92, 97, 94, 91],
+      fill: false,
+      label: 'Max Speed of The Day',
+      borderColor: '#EF8157',
+      backgroundColor: 'transparent',
+      pointBorderColor: '#EF8157',
+      pointRadius: 4,
+      pointHoverRadius: 4,
+      pointBorderWidth: 8
+    };
+
+    var dailyData = {
+      labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
+        "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
+        "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
+        "31"],
+      datasets: [dataTopSpeed]
+    };
+
+    var chartOptions = {
+      legend: {
+        display: true,
+        position: 'bottom',
+      }
+    };
+
+    var lineChart = new Chart(topSpeedCanvas, {
+      type: 'line',
+      hover: false,
+      data: dailyData,
+      options: chartOptions,
+    });
+
+
+    this.canvas = document.getElementById("chartCars");
+    this.ctx = this.canvas.getContext("2d");
+    this.chartCars = new Chart(this.ctx, {
+      type: 'pie',
+      data: {
+        labels: ['Cars', 'Trucks', 'Motorcycles'],
+        datasets: [{
+          label: "Cars",
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          backgroundColor: [
+            '#4acccd',
+            '#fcc468',
+            '#ef8157'
+          ],
+          borderWidth: 0,
+          data: [100, 50, 20]
+        }]
+      },
+
+      options: {
+
+        legend: {
+          display: true
+        },
+
+        pieceLabel: {
+          render: 'percentage',
+          fontColor: ['white'],
+          precision: 2
+        },
+
+        tooltips: {
+          enabled: true
+        },
+
+        scales: {
+          yAxes: [{
+
+            ticks: {
+              display: false
+            },
+            gridLines: {
+              drawBorder: true,
+              zeroLineColor: "transparent",
+              color: 'rgba(255,255,255,0.05)'
+            }
+
+          }],
+
+          xAxes: [{
+            barPercentage: 1.6,
+            gridLines: {
+              drawBorder: false,
+              color: 'rgba(255,255,255,0.1)',
+              zeroLineColor: "transparent"
+            },
+            ticks: {
+              display: false,
+            }
+          }]
+        },
+      }
     });
   }
 

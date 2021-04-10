@@ -11,6 +11,7 @@ import { Location } from '@angular/common';
 
 export class NavbarComponent implements OnInit {
   selectionPlace = 0;
+  selectionDate = 0;
   private listTitles: any[];
   location: Location;
   private nativeElement: Node;
