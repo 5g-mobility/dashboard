@@ -28,3 +28,18 @@
 button {
     margin: 0;
 }
+
+.danger-event {
+    background-color: #6570C6; color: white;
+    .card-category{
+        color: white;
+    }
+
+    .stats{
+        color: white;
+    }
+
+    i{
+        color: white;
+    }
+}

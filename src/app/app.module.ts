@@ -5,6 +5,7 @@ import { ToastrModule } from "ngx-toastr";
 
 import { SidebarModule } from './sidebar/sidebar.module';
 import { NavbarModule} from './shared/navbar/navbar.module';
+import { CommonModule } from "@angular/common";
 
 import { AppComponent } from './app.component';
 import { AppRoutes } from './app.routing';
@@ -20,6 +21,8 @@ import { FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ConditionsComponent } from './pages/conditions/conditions.component';
 import { RoadInfoComponent } from './pages/road-info/road-info.component';
+import { ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -41,7 +44,9 @@ import { RoadInfoComponent } from './pages/road-info/road-info.component';
     ToastrModule.forRoot(),
     FontAwesomeModule,
     NgbModule,
-    FormsModule
+    CommonModule,
+    FormsModule, 
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

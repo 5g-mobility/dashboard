@@ -16,7 +16,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
   sunIcon = faSun;
   moonIcon = faMoon;
   private map;
-  selectionMap = 0
+  selectionMap = 0;
   public ctx;
   public canvas : any;
   public chartEmail;

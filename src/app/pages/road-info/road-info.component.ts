@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js';
 import { NgbDate, NgbCalendar, NgbDateParserFormatter, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { faWalking, faBiking, faDog, faExclamationTriangle, faClock } from '@fortawesome/free-solid-svg-icons';
+
 
 
 @Component({
@@ -9,6 +11,11 @@ import { NgbDate, NgbCalendar, NgbDateParserFormatter, NgbModule } from '@ng-boo
   styleUrls: ['./road-info.component.scss']
 })
 export class RoadInfoComponent implements OnInit {
+  walkingIcon = faWalking;
+  bikeIcon = faBiking;
+  dogIcon = faDog;
+  clockIcon = faClock;
+  exclamationTriangleIcon = faExclamationTriangle;
 
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null;
