@@ -23,6 +23,7 @@ import { ConditionsComponent } from './pages/conditions/conditions.component';
 import { RoadInfoComponent } from './pages/road-info/road-info.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -45,8 +46,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     FontAwesomeModule,
     NgbModule,
     CommonModule,
-    FormsModule, 
-    ReactiveFormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
