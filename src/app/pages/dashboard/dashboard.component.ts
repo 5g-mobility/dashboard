@@ -16,14 +16,18 @@ export class DashboardComponent implements OnInit {
   public chartColor;
   public chartEmail;
   public chartHours;
-  events: Event[];
+  events: Event[] = [];
   constructor( private eventService: EventService ) {
   }
 
   getEvents(): void {
     this.eventService.getEvent().subscribe(
-      data => console.log(data)
+      data =>  data.results.forEach(
+        e => this.events.push(e)
+      )
     );
+    console.log(this.events)
+
   }
     ngOnInit() {
       this.getEvents()

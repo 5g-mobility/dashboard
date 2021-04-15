@@ -11,7 +11,7 @@ const httpOptions = {
 })
 
 export class EventService {
-  private baseURL = 'localhost:8000/5g-mobility/event/'
+  private baseURL = 'http://localhost:8000/5g-mobility/event/'
   constructor( private http: HttpClient ) {
   }
 
