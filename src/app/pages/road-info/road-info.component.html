@@ -1,0 +1,241 @@
+<div class="row">
+    <div class="col-lg-8 col-md-12 col-sm 12" style="display: flex; flex-direction: column; justify-content: space-around;">
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header">People on Bike Lanes</div>
+                    <div class="card-body ">
+                        <div class="row">
+                            <div class="col-5 col-md-4">
+                                <div class="icon-big text-center icon-warning">
+                                    <fa-icon style="color: #7FD45F;" [icon]="walkingIcon"></fa-icon>
+                                </div>
+                            </div>
+                            <div class="col-7 col-md-8">
+                                <div class="numbers">
+                                    <p class="card-title">100
+                                    <p class="card-category">People</p>
+
+                                    <p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer ">
+                        <hr>
+                        <div class="stats">
+                            <i class="fa fa-refresh"></i> Updated Now
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header">Bikes on Bike Lanes</div>
+                    <div class="card-body ">
+                        <div class="row">
+                            <div class="col-5 col-md-4">
+                                <div class="icon-big text-center icon-warning">
+                                    <fa-icon style="color: #72C7CD;" [icon]="bikeIcon"></fa-icon>
+                                </div>
+                            </div>
+                            <div class="col-7 col-md-8">
+                                <div class="numbers">
+                                    <p class="card-title">20
+                                    <p class="card-category">Bikes</p>
+
+                                    <p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer ">
+                        <hr>
+                        <div class="stats">
+                            <i class="fa fa-refresh"></i> Updated Now
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header">Animals on Bike Lanes</div>
+                    <div class="card-body ">
+                        <div class="row">
+                            <div class="col-5 col-md-4">
+                                <div class="icon-big text-center icon-warning">
+                                    <fa-icon style="color: #c96a1d;" [icon]="dogIcon"></fa-icon>
+                                </div>
+                            </div>
+                            <div class="col-7 col-md-8">
+                                <div class="numbers">
+                                    <p class="card-title">5</p>
+                                    <p class="card-category">Animals</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer ">
+                        <hr>
+                        <div class="stats">
+                            <i class="fa fa-refresh"></i> Updated at 09/04/2021 14:50
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="card card-stats danger-event">
+                    <div class="card-header">Last Road Danger Event</div>
+                    <div class="card-body ">
+                        <div class="row">
+                            <div class="col-4 col-md-4">
+                                <div class="icon-big text-center icon-warning"
+                                    style="display: flex; justify-content: center;">
+                                    <fa-icon style="color: #F3C76B;" [icon]="exclamationTriangleIcon"></fa-icon>
+
+
+                                </div>
+                            </div>
+                            <div class="col-8 col-md-8"
+                                style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <fa-icon style="color: white;" [icon]="walkingIcon" size="3x"></fa-icon>
+                                <p class="card-category">Person on Road Lane
+                                <p>
+                            </div>
+                        </div>
+                        <div class="row" style="display: flex; justify-content: center;">
+                            <fa-icon style="color: white; margin-right: 5px;" [icon]="clockIcon"></fa-icon>
+                            <p class="card-category" style="margin-bottom: 0.5rem;">10/04/2021 11:30
+                            <p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-lg-4 col-md-12 col-sm-12">
+        <div class="card card-stats" >
+            <div class="card-header">Circulating Vehicles</div>
+            <div class="card-body ">
+                <canvas  style="max-height: 450px;" id="chartCars"></canvas>
+            </div>
+
+            <div class="card-footer ">
+                <hr>
+                <div class="stats" style="display: flex; justify-content: center;">
+                    <i class="fa fa-refresh"></i> Updated at 09/04/2021 14:50
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-chart">
+            <div class="card-header" style="display: flex; justify-content: space-between;">
+                <h5 class="card-title">Top Speed Summary</h5>
+                <form class="form-inline">
+                    <div class="form-group hidden">
+                        <div class="input-group">
+                            <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
+                                [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2"
+                                [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1">
+                            <ng-template #t let-date let-focused="focused">
+                                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                                    [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                                    (mouseleave)="hoveredDate = null">
+                                    {{ date.day }}
+                                </span>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate"
+                                [value]="formatter.format(fromDate)"
+                                (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary calendar fa fa-calendar"
+                                    (click)="datepicker.toggle()" type="button"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group ml-2">
+                        <div class="input-group">
+                            <input #dpToDate class="form-control" placeholder="yyyy-mm-dd" name="dpToDate"
+                                [value]="formatter.format(toDate)"
+                                (input)="toDate = validateInput(toDate, dpToDate.value)">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary calendar fa fa-calendar"
+                                    (click)="datepicker.toggle()" type="button"></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="card-body">
+                <canvas id="topSpeedGraph" width="400" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-chart">
+            <div class="card-header" style="display: flex; justify-content: space-between;">
+                <h5 class="card-title">Daily Traffic Inflow Summary</h5>
+                <form class="form-inline">
+                    <div class="form-group hidden">
+                        <div class="input-group">
+                            <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
+                                [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2"
+                                [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1">
+                            <ng-template #t let-date let-focused="focused">
+                                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                                    [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                                    (mouseleave)="hoveredDate = null">
+                                    {{ date.day }}
+                                </span>
+                            </ng-template>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate"
+                                [value]="formatter.format(fromDate)"
+                                (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary calendar fa fa-calendar"
+                                    (click)="datepicker.toggle()" type="button"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group ml-2">
+                        <div class="input-group">
+                            <input #dpToDate class="form-control" placeholder="yyyy-mm-dd" name="dpToDate"
+                                [value]="formatter.format(toDate)"
+                                (input)="toDate = validateInput(toDate, dpToDate.value)">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary calendar fa fa-calendar"
+                                    (click)="datepicker.toggle()" type="button"></button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="card-body">
+                <canvas id="dailyInflowTraffic" width="400" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+</div>

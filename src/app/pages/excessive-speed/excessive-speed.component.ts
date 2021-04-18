@@ -3,7 +3,6 @@ import Chart from 'chart.js';
 import * as L from "leaflet";
 import "leaflet-extra-markers/dist/js/leaflet.extra-markers.js";
 import { NgbDate, NgbCalendar, NgbDateParserFormatter, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-excessive-speed',
