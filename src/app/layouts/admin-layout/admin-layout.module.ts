@@ -16,6 +16,10 @@ import { UpgradeComponent }         from '../../pages/upgrade/upgrade.component'
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import { ConditionsComponent } from 'app/pages/conditions/conditions.component';
+import { ExcessiveSpeedComponent } from 'app/pages/excessive-speed/excessive-speed.component';
+import { RoadInfoComponent } from 'app/pages/road-info/road-info.component';
+import { EventComponent } from 'app/pages/event/event.component';
 
 @NgModule({
   imports: [
@@ -27,7 +31,11 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
     FontAwesomeModule
   ],
   declarations: [
+    ConditionsComponent,
     DashboardComponent,
+    EventComponent,
+    ExcessiveSpeedComponent,
+    RoadInfoComponent,
     UserComponent,
     TableComponent,
     UpgradeComponent,
