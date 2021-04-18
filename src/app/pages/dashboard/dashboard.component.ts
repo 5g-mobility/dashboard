@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { faCloudShowersHeavy, faLeaf, faCloudSun, faSun, faMoon, faRoad, faCloudMoonRain, faVideo, faExclamationTriangle, faCar, faWalking,
-  faChartLine, faExclamation } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCloudShowersHeavy, faLeaf, faCloudSun, faSun, faMoon, faRoad, faCloudMoonRain, faVideo, faExclamationTriangle, faCar, faWalking,
+  faChartLine, faExclamation
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,6 +14,7 @@ export class DashboardComponent implements OnInit {
   leafIcon = faLeaf;
   sunCloudIcon = faCloudSun;
   sunIcon = faSun;
+  moonIcon = faMoon;
   road = faRoad;
   conditions = faCloudMoonRain;
   camera = faVideo;
