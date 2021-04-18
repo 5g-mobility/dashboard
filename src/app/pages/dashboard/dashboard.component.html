@@ -1,171 +1,192 @@
 <div class="row">
-  <div class="col-lg-3 col-md-6 col-sm-6">
+
+  <div class="col-lg-6 col-md-6 col-sm-6">
     <div class="card card-stats">
-      <div class="card-body ">
-        <div class="row">
-          <div class="col-5 col-md-4">
-            <div class="icon-big text-center icon-warning">
-              <i class="nc-icon nc-globe text-warning"></i>
-            </div>
-          </div>
-          <div class="col-7 col-md-8">
-            <div class="numbers">
-              <p class="card-category">Capacity</p>
-              <p class="card-title">150GB
-                <p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card-footer ">
-        <hr>
-        <div class="stats">
-          <i class="fa fa-refresh"></i> Update Now
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-3 col-md-6 col-sm-6">
-    <div class="card card-stats">
-      <div class="card-body ">
-        <div class="row">
-          <div class="col-5 col-md-4">
-            <div class="icon-big text-center icon-warning">
-              <i class="nc-icon nc-money-coins text-success"></i>
-            </div>
-          </div>
-          <div class="col-7 col-md-8">
-            <div class="numbers">
-              <p class="card-category">Revenue</p>
-              <p class="card-title">$ 1,345
-                <p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card-footer ">
-        <hr>
-        <div class="stats">
-          <i class="fa fa-calendar-o"></i> Last day
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-3 col-md-6 col-sm-6">
-    <div class="card card-stats">
-      <div class="card-body ">
-        <div class="row">
-          <div class="col-5 col-md-4">
-            <div class="icon-big text-center icon-warning">
-              <i class="nc-icon nc-vector text-danger"></i>
-            </div>
-          </div>
-          <div class="col-7 col-md-8">
-            <div class="numbers">
-              <p class="card-category">Errors</p>
-              <p class="card-title">23
-                <p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card-footer ">
-        <hr>
-        <div class="stats">
-          <i class="fa fa-clock-o"></i> In the last hour
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-lg-3 col-md-6 col-sm-6">
-    <div class="card card-stats">
-      <div class="card-body ">
-        <div class="row">
-          <div class="col-5 col-md-4">
-            <div class="icon-big text-center icon-warning">
-              <i class="nc-icon nc-favourite-28 text-primary"></i>
-            </div>
-          </div>
-          <div class="col-7 col-md-8">
-            <div class="numbers">
-              <p class="card-category">Followers</p>
-              <p class="card-title">+45K
-                <p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="card-footer ">
-        <hr>
-        <div class="stats">
-          <i class="fa fa-refresh"></i> Update now
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-12">
-    <div class="card ">
-      <div class="card-header ">
-        <h5 class="card-title">Users Behavior</h5>
-        <p class="card-category">24 Hours performance</p>
-      </div>
-      <div class="card-body ">
-        <canvas id=chartHours width="400" height="100"></canvas>
-      </div>
-      <div class="card-footer ">
-        <hr>
-        <div class="stats">
-          <i class="fa fa-history"></i> Updated 3 minutes ago
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<div class="row">
-  <div class="col-md-4">
-    <div class="card ">
-      <div class="card-header ">
-        <h5 class="card-title">Email Statistics</h5>
-        <p class="card-category">Last Campaign Performance</p>
-      </div>
-      <div class="card-body ">
-        <canvas id="chartEmail"></canvas>
-      </div>
-      <div class="card-footer ">
-        <div class="legend">
-          <i class="fa fa-circle text-primary"></i> Opened
-          <i class="fa fa-circle text-warning"></i> Read
-          <i class="fa fa-circle text-danger"></i> Deleted
-          <i class="fa fa-circle text-gray"></i> Unopened
-        </div>
-        <hr>
-        <div class="stats">
-          <i class="fa fa-calendar"></i> Number of emails sent
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-8">
-    <div class="card card-chart">
       <div class="card-header">
-        <h5 class="card-title">NASDAQ: AAPL</h5>
-        <p class="card-category">Line Chart with Points</p>
+        <h5 class="card-title">Conditions</h5>
+      </div>
+      <div class="card-body ">
+        <div class="row" style="margin-left: 10px;">
+          <div class="col-6 col-md-6">
+            <h5 style=" color:#6570C6">Barra <fa-icon style="color: #F8D45B;" [icon]="sunIcon"></fa-icon> 25º</h5>
+            <p style="font-size:110%; font-weight: bold">
+              <fa-icon style="font-size:150%; color:#6570C6;margin-right:3% " [icon]="rainIcon"></fa-icon> Rain
+            <p>
+            <p style="font-size:110%; font-weight: bold">
+              <fa-icon style="font-size:150%; color:#93D16E;margin-right:3% " [icon]="leafIcon"></fa-icon> 800g
+            <p>
+          </div>
+          <div class="col-6 col-md-6">
+            <h5 style="color:#6570C6">Costa Nova <fa-icon style="color: #1D3150;" [icon]="moonIcon"></fa-icon> 22º</h5>
+            <p style="font-size:110%; font-weight: bold">
+              <fa-icon style="font-size:150%; color:#ffc107;margin-right:3% " [icon]="sunCloudIcon"></fa-icon> Clean
+            <p>
+            <p style="font-size:110%; font-weight: bold">
+              <fa-icon style="font-size:150%; color:#93D16E;margin-right:3% " [icon]="leafIcon"></fa-icon> 450g
+            <p>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer ">
+        <hr>
+        <div class="stats">
+          <i class="fa fa-clock-o"></i> Updated at 09/04/2021 12:35
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-6 col-md-6 col-sm-6">
+    <div class="card card-stats">
+      <div class="card-header">
+        <h5 class="card-title">Traffic Inflow</h5>
+      </div>
+      <div class="card-body ">
+        <div class="row">
+          <div class="col-6 col-md-6">
+            <h5 style="color:#6570C6">Barra</h5>
+            <p style="font-size:110%"><b>
+                <fa-icon style="font-size:150%; color:#E18660;margin-right:3% " [icon]="max"></fa-icon> Maximum:
+              </b> 35</p>
+            <p style="font-size:110%"><b>
+                <fa-icon style="font-size:150%; color:#6672C0;margin-right:7% " [icon]="rn"></fa-icon> Current:
+              </b> 14</p>
+          </div>
+          <div class="col-6 col-md-6">
+            <h5 style="color:#6570C6">Costa Nova</h5>
+            <p style="font-size:110%"><b>
+                <fa-icon style="font-size:150%; color:#E18660;margin-right:3% " [icon]="max"></fa-icon> Maximum:
+              </b> 57</p>
+            <p style="font-size:110%"><b>
+                <fa-icon style="font-size:150%; color:#6672C0;margin-right:7% " [icon]="rn"></fa-icon> Current:
+              </b> 29</p>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer ">
+        <hr>
+        <div class="stats">
+          <i class="fa fa-clock-o"></i> Updated at 09/04/2021 12:35
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-lg-8 col-md-12 col-sm-12">
+    <div class="card">
+      <div class="card-header">
+        <h5 class="card-title">Current Traffic</h5>
       </div>
       <div class="card-body">
-        <canvas id="speedChart" width="400" height="100"></canvas>
-      </div>
-      <div class="card-footer">
-        <div class="chart-legend">
-          <i class="fa fa-circle text-info"></i> Tesla Model S
-          <i class="fa fa-circle text-warning"></i> BMW 5 Series
+        <div class="row">
+          <div class="col-2"></div>
+          <div class="col-8">
+            <div class="row">
+              <div class="col-md-4 d-flex flex-column align-items-center">
+                <fa-icon style="color: #366171;" [icon]="camera"></fa-icon>
+                <h6 style="font-size:140%">Ria Ativa</h6>
+              </div>
+              <div class="col-md-4 d-flex flex-column align-items-center">
+                <fa-icon style="color: #366171;" [icon]="camera"></fa-icon>
+                <h6 style="font-size:140%">Duna</h6>
+              </div>
+              <div class="col-md-4 d-flex flex-column align-items-center">
+                <fa-icon style="color: #366171;" [icon]="camera"></fa-icon>
+                <h6 style="font-size:140%">Ponte Barra</h6>
+              </div>
+            </div>
+          </div>
+          <div class="col-2"></div>
         </div>
-        <hr/>
-        <div class="card-stats">
-          <i class="fa fa-check"></i> Data information certified
+        <div class="row">
+          <div class="col-2">
+            <div class="row d-flex justify-content-center">
+              <p style="color:#366171; font-size: 250%; font-weight: initial">
+                <fa-icon [icon]="car"></fa-icon>
+              </p>
+            </div>
+          </div>
+          <div class="col-8">
+            <div class="row" style="padding-top:1%; margin-top: 7.5px;">
+              <div class="col-md-4 d-flex justify-content-center align-items-center">
+                <p style="color:green; font-size: 130%; font-weight: initial; text-align: center;"><b>Flowing
+                    normally</b></p>
+              </div>
+              <div class="col-md-4 d-flex justify-content-center align-items-center">
+                <p style="color:red; font-size: 130%; font-weight: initial; text-align: center;"><b>Excessive speed</b>
+                </p>
+              </div>
+              <div class="col-md-4 d-flex justify-content-center align-items-center">
+                <p style="color: #fd7e14; font-size: 130%; font-weight: initial; text-align: center;"><b>Slow</b></p>
+              </div>
+            </div>
+          </div>
+          <div class="col-2"></div>
+        </div>
+        <hr>
+        <div class="row">
+          <div class="col-2">
+            <div class="row d-flex justify-content-center">
+              <p style="color:#366171; font-size: 300%;">
+                <fa-icon [icon]="person"></fa-icon>
+              </p>
+            </div>
+          </div>
+          <div class="col-8">
+            <div class="row" style="padding-top:1%; margin-top: 7.5px;">
+
+              <div class="col-md-4 d-flex justify-content-center">
+                <p style="font-size: 130%; font-weight: initial">2 pedestrians</p>
+              </div>
+              <div class="col-md-4 d-flex justify-content-center">
+                <p style="font-size: 130%; font-weight: initial">5 pedestrians</p>
+              </div>
+              <div class="col-md-4 d-flex justify-content-center">
+                <p style="font-size: 130%; font-weight: initial">1 pedestrians</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-2"></div>
+        </div>
+      </div>
+      <div class="card-footer ">
+        <hr>
+        <div class="stats">
+          <i class="fa fa-clock-o"></i> Updated at 09/04/2021 12:35
         </div>
       </div>
     </div>
   </div>
+
+
+  <div class="col-lg-4 col-md-12 col-sm-12">
+    <div class="card card-stats" style="background-color: #6570C6">
+      <div class="card-header">
+        <h5 style="color:white;" class="card-title">Events Overview</h5>
+      </div>
+      <div class="card-body">
+        <div class="col-12 d-flex justify-content-center">
+          <h6 style="color:white;" class="card-title">Cars Speeding</h6>
+        </div>
+        <div class="row d-flex flex-column align-items-center">
+          <p style="font-size: 450%;color:white"><b>23</b></p>
+          <p style="color:white; margin-bottom: 50px;">LAST 24H</p>
+          <div class="btn-group btn-group-toggle">
+            <label style="background-color: white;" class="btn-primary" ngbButtonLabel>
+              <input type="checkbox" ngbButton> See All
+            </label>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer ">
+        <hr>
+        <div class="stats" style="color:white">
+          <i style="color:white" class="fa fa-clock-o"></i> Updated at 09/04/2021 12:35
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
