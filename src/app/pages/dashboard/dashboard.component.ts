@@ -1,13 +1,37 @@
 import { Component, OnInit } from '@angular/core';
+
 import Chart from 'chart.js';
 import {EventService} from '../../services/event/event.service';
-
+import {
+  faCloudShowersHeavy, faLeaf, faCloudSun, faSun, faMoon, faRoad, faCloudMoonRain, faVideo, faExclamationTriangle, faCar, faWalking,
+  faChartLine, faExclamation
+} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-    selector: 'dashboard-cmp',
-    moduleId: module.id,
-    templateUrl: 'dashboard.component.html'
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss']
 })
+export class DashboardComponent implements OnInit {
+  rainIcon = faCloudShowersHeavy;
+  leafIcon = faLeaf;
+  sunCloudIcon = faCloudSun;
+  sunIcon = faSun;
+  moonIcon = faMoon;
+  road = faRoad;
+  conditions = faCloudMoonRain;
+  camera = faVideo;
+  danger = faExclamationTriangle;
+  car = faCar;
+  person = faWalking;
+  max = faChartLine;
+  rn = faExclamation;
+
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+
 
 export class DashboardComponent implements OnInit {
 

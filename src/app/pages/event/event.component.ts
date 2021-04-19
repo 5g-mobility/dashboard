@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import DateTimeFormat = Intl.DateTimeFormat;
 
 
 type eventType = Array<{timestamp: string, location: string, type: string, class: string, speed?: number, geolocation?: string, co2?: number}>;
 
+
 @Component({
-  selector: 'app-event-tab',
-  templateUrl: './event-tab.component.html',
-  styleUrls: ['./event-tab.component.scss']
+  selector: 'app-event',
+  templateUrl: './event.component.html',
+  styleUrls: ['./event.component.scss']
 })
-export class EventTabComponent implements OnInit {
+export class EventComponent implements OnInit {
   selectionMap = 0;
 
   events: eventType = [
@@ -21,6 +21,9 @@ export class EventTabComponent implements OnInit {
     {timestamp: new Date().toLocaleString(), location: 'A25 Aveiro', type: 'Conditions', class: 'Rain'},
     {timestamp: new Date().toLocaleString(), location: 'A25 Aveiro', type: 'Road Traffic', class: 'Motorcycle', speed: 100 },
   ]
+
+  constructor() { }
+
   ngOnInit(): void {
   }
 

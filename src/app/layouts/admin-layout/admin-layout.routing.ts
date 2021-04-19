@@ -9,8 +9,8 @@ import { NotificationsComponent } from '../../pages/notifications/notifications.
 import { UpgradeComponent } from '../../pages/upgrade/upgrade.component';
 import { ExcessiveSpeedComponent } from 'app/pages/excessive-speed/excessive-speed.component';
 import { ConditionsComponent } from 'app/pages/conditions/conditions.component';
-import { EventTabComponent } from '../../pages/event-tab/event-tab.component';
 import { RoadInfoComponent } from 'app/pages/road-info/road-info.component';
+import { EventComponent } from 'app/pages/event/event.component';
 
 export const AdminLayoutRoutes: Routes = [
     { path: 'dashboard',      component: DashboardComponent },
@@ -22,6 +22,6 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'upgrade',        component: UpgradeComponent },
     { path: 'excessive_speed',component: ExcessiveSpeedComponent },
     { path: 'conditions',     component: ConditionsComponent },
-    { path: 'event',       component: EventTabComponent},
+    { path: 'event',       component: EventComponent},
     { path: 'road_info',       component: RoadInfoComponent},
 ];
