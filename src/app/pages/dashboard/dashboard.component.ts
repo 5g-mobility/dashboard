@@ -6,6 +6,10 @@ import {
   faCloudShowersHeavy, faLeaf, faCloudSun, faSun, faMoon, faRoad, faCloudMoonRain, faVideo, faExclamationTriangle, faCar, faWalking,
   faChartLine, faExclamation
 } from '@fortawesome/free-solid-svg-icons';
+import {ClimateService} from '../../services/climate/climate.service';
+import {DailyInflowService} from '../../services/daily-inflow/daily-inflow.service';
+import {Climate} from '../../models/climate';
+import {DailyInflow} from '../../models/daily-inflow';
 
 @Component({
   selector: 'app-dashboard',
@@ -26,22 +30,16 @@ export class DashboardComponent implements OnInit {
   person = faWalking;
   max = faChartLine;
   rn = faExclamation;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-
-export class DashboardComponent implements OnInit {
-
   public canvas: any;
   public ctx;
   public chartColor;
   public chartEmail;
   public chartHours;
   events: Event[] = [];
-  constructor( private eventService: EventService ) {
+  climate: Climate[] = []
+  dailyInflow: DailyInflow[] = []
+
+  constructor( private eventService: EventService, private climateService: ClimateService, private dailyService: DailyInflowService ) {
   }
 
   getEvents(): void {
@@ -50,11 +48,29 @@ export class DashboardComponent implements OnInit {
         e => this.events.push(e)
       )
     );
-    console.log(this.events)
-
   }
+
+  getClimate(): void {
+    this.climateService.getClimate().subscribe(
+      data => data.results.forEach(
+        c => this.climate.push(c)
+      )
+    )
+  }
+
+  getDaily(): void {
+    this.dailyService.getDaily().subscribe(
+      data => data.results.forEach(
+        d => this.dailyInflow.push(d)
+      )
+    )
+  }
+
     ngOnInit() {
       this.getEvents()
+      this.getClimate()
+      this.getDaily()
+
       this.chartColor = "#FFFFFF";
 
       this.canvas = document.getElementById("chartHours");
