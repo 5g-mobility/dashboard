@@ -17,7 +17,7 @@ export class NavbarComponent implements OnInit {
   private nativeElement: Node;
   private toggleButton;
   private sidebarVisible: boolean;
-  private onRoadInfo: boolean;
+  onRoadInfo: boolean;
 
   public isCollapsed = true;
   @ViewChild("navbar-cmp", { static: false }) button;
