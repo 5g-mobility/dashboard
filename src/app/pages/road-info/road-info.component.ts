@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js';
 import { NgbDate, NgbCalendar, NgbDateParserFormatter, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { faWalking, faBiking, faDog, faExclamationTriangle, faClock, faTruck, faCarSide, faMotorcycle, faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
+import {EventService} from '../../services/event/event.service';
+import {stringify} from '@angular/compiler/src/util';
+import {time} from 'ionicons/icons';
 
 
 
@@ -23,14 +26,26 @@ export class RoadInfoComponent implements OnInit {
   public ctx;
   public canvas: any;
   public chartCars;
+  events: Event[] = [];
+
+  event_by_day_speed: Map<string, number[]> = new Map()
+  maxSpeedSumary: number[] = [];
 
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
 
-  constructor(private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
+  constructor(private eventService: EventService, private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+  }
+
+  getEvents(): void {
+    this.eventService.getEvent().subscribe(
+      data =>  data.results.forEach(
+        e => this.events.push(e)
+      )
+    );
   }
 
   onDateSelection(date: NgbDate) {
@@ -39,9 +54,40 @@ export class RoadInfoComponent implements OnInit {
     } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
       this.toDate = date;
     } else {
-      this.toDate = null;
       this.fromDate = date;
+      this.toDate = null;
     }
+
+    this.fetchTopSpeedSumaryData()
+  }
+
+  fetchTopSpeedSumaryData(): void {
+    // CURL EXAMPLE:
+    // "http://localhost:8000/5g-mobility/event/?timestamp__lte=2021-04-16T00:00&timestamp__gte=2021-04-14T00:00"
+    const from = this.fromDate.year + '-' + this.fromDate.month + '-' + this.fromDate.day + 'T00:00'
+    const to = this.toDate.year + '-' + this.toDate.month + '-' + this.toDate.day + 'T00:00'
+    console.log(from + ' : ' + to)
+
+    this.eventService.getEventBetweenDates(from, to).subscribe(
+    data => {
+      data.results.forEach(
+        e => {
+          let timestamp = stringify(e.timestamp).slice(0, 10)
+          if (!this.event_by_day_speed.has(timestamp)) {
+            this.event_by_day_speed.set(timestamp, [e.velocity])
+          } else {
+            this.event_by_day_speed.get(timestamp).push(e.velocity)
+          }
+        }
+      );
+      this.event_by_day_speed.forEach((v, k) => {
+        let arr = this.event_by_day_speed.get(k)
+        let max = Math.max.apply(Math, arr)
+        this.maxSpeedSumary.push(max)
+      })
+    }
+    )
+
   }
 
   isHovered(date: NgbDate) {
@@ -62,6 +108,12 @@ export class RoadInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.fromDate = new NgbDate(2021, 4, 13)
+    this.toDate = new NgbDate(2021, 5, 13)
+    
+    this.getEvents()
+    this.fetchTopSpeedSumaryData()
+
     var speedCanvas = document.getElementById("dailyInflowTraffic");
 
     var dataEventNumber = {
@@ -118,9 +170,7 @@ export class RoadInfoComponent implements OnInit {
     var topSpeedCanvas = document.getElementById("topSpeedGraph");
 
     var dataTopSpeed = {
-      data: [150, 120, 95, 200, 220, 300, 93, 97, 100, 110, 99, 91, 102,
-        145, 185, 170, 160, 112, 133, 141, 121, 105, 100, 96, 95, 91, 93,
-        92, 97, 94, 91],
+      data: this.maxSpeedSumary,
       fill: false,
       label: 'Max Speed of The Day',
       borderColor: '#EF8157',

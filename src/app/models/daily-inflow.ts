@@ -1,7 +1,6 @@
 export class DailyInflow {
-  timestamp: Date;
+  date: Date;
   location: string;
-  condition: string;
-  daytime: boolean;
-  temperature: number;
+  maximum: number;
+  current: number;
 }

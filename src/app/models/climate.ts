@@ -1,7 +1,8 @@
 export class Climate {
-  date: Date;
+  timestamp: Date;
   location: string;
-  maximum: number;
-  current: number;
+  condition: string;
+  daytime: boolean;
   temperature: number;
+
 }

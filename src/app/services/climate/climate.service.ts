@@ -10,7 +10,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class ClimateService {
-  private baseURL = 'http://localhost:8000/5g-mobility/daily-inflow/'
+  private baseURL = 'http://localhost:8000/5g-mobility/climate/'
   constructor(private http: HttpClient) { }
 
   getClimate(field?: string, search?: string): Observable<any> {

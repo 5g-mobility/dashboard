@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -23,6 +24,11 @@ export class EventService {
       url = this.baseURL;
     }
     return this.http.get<any>(url, httpOptions);
+  }
+
+  getEventBetweenDates(from: string, to: string): Observable<any>{
+    let url = this.baseURL + '?timestamp__lte=' + to + '&timestamp__gte=' + from
+    return this.http.get<any>(url, httpOptions)
   }
 
 }
