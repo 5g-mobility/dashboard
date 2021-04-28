@@ -26,7 +26,7 @@ export class RoadInfoComponent implements OnInit {
   public ctx;
   public canvas: any;
   public chartCars;
-  events: Event[] = [];
+  labelTopSpeeds: string[] = [];
 
   event_by_day_speed: Map<string, number[]> = new Map()
   maxSpeedSumary: number[] = [];
@@ -40,13 +40,6 @@ export class RoadInfoComponent implements OnInit {
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
 
-  getEvents(): void {
-    this.eventService.getEvent().subscribe(
-      data =>  data.results.forEach(
-        e => this.events.push(e)
-      )
-    );
-  }
 
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
@@ -58,7 +51,12 @@ export class RoadInfoComponent implements OnInit {
       this.toDate = null;
     }
 
+    this.maxSpeedSumary = []
+    this.labelTopSpeeds = []
+    this.event_by_day_speed = new Map()
+
     this.fetchTopSpeedSumaryData()
+    this.constructTopSpeedGraph()
   }
 
   fetchTopSpeedSumaryData(): void {
@@ -66,7 +64,6 @@ export class RoadInfoComponent implements OnInit {
     // "http://localhost:8000/5g-mobility/event/?timestamp__lte=2021-04-16T00:00&timestamp__gte=2021-04-14T00:00"
     const from = this.fromDate.year + '-' + this.fromDate.month + '-' + this.fromDate.day + 'T00:00'
     const to = this.toDate.year + '-' + this.toDate.month + '-' + this.toDate.day + 'T00:00'
-    console.log(from + ' : ' + to)
 
     this.eventService.getEventBetweenDates(from, to).subscribe(
     data => {
@@ -84,10 +81,46 @@ export class RoadInfoComponent implements OnInit {
         let arr = this.event_by_day_speed.get(k)
         let max = Math.max.apply(Math, arr)
         this.maxSpeedSumary.push(max)
+        this.labelTopSpeeds.push(k.slice(8, 10))
       })
     }
     )
 
+  }
+
+  constructTopSpeedGraph() {
+    let topSpeedCanvas = document.getElementById("topSpeedGraph");
+
+    let dataTopSpeed = {
+      data: this.maxSpeedSumary,
+      fill: false,
+      label: 'Max Speed of The Day',
+      borderColor: '#EF8157',
+      backgroundColor: 'transparent',
+      pointBorderColor: '#EF8157',
+      pointRadius: 4,
+      pointHoverRadius: 4,
+      pointBorderWidth: 8
+    };
+
+    let dailyData = {
+      labels: this.labelTopSpeeds,
+      datasets: [dataTopSpeed]
+    };
+
+    let chartOptions = {
+      legend: {
+        display: true,
+        position: 'bottom',
+      }
+    };
+
+    let lineChart = new Chart(topSpeedCanvas, {
+      type: 'line',
+      hover: false,
+      data: dailyData,
+      options: chartOptions,
+    });
   }
 
   isHovered(date: NgbDate) {
@@ -108,11 +141,10 @@ export class RoadInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fromDate = new NgbDate(2021, 4, 13)
-    this.toDate = new NgbDate(2021, 5, 13)
-    
-    this.getEvents()
+    this.fromDate = new NgbDate(2021, 4, 10)
+    this.toDate = new NgbDate(2021, 5, 10)
     this.fetchTopSpeedSumaryData()
+    this.constructTopSpeedGraph()
 
     var speedCanvas = document.getElementById("dailyInflowTraffic");
 
@@ -166,43 +198,7 @@ export class RoadInfoComponent implements OnInit {
       options: chartOptions,
     });
 
-
-    var topSpeedCanvas = document.getElementById("topSpeedGraph");
-
-    var dataTopSpeed = {
-      data: this.maxSpeedSumary,
-      fill: false,
-      label: 'Max Speed of The Day',
-      borderColor: '#EF8157',
-      backgroundColor: 'transparent',
-      pointBorderColor: '#EF8157',
-      pointRadius: 4,
-      pointHoverRadius: 4,
-      pointBorderWidth: 8
-    };
-
-    var dailyData = {
-      labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-        "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
-        "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
-        "31"],
-      datasets: [dataTopSpeed]
-    };
-
-    var chartOptions = {
-      legend: {
-        display: true,
-        position: 'bottom',
-      }
-    };
-
-    var lineChart = new Chart(topSpeedCanvas, {
-      type: 'line',
-      hover: false,
-      data: dailyData,
-      options: chartOptions,
-    });
-
+    // CIRCULO CARROS ################################################################################################
 
     this.canvas = document.getElementById("chartCars");
     this.ctx = this.canvas.getContext("2d");
