@@ -5,8 +5,7 @@ import { faWalking, faBiking, faDog, faExclamationTriangle, faClock, faTruck, fa
 import {EventService} from '../../services/event/event.service';
 import {stringify} from '@angular/compiler/src/util';
 import {time} from 'ionicons/icons';
-
-
+import {DailyInflowService} from '../../services/daily-inflow/daily-inflow.service';
 
 @Component({
   selector: 'app-road-info',
@@ -27,17 +26,24 @@ export class RoadInfoComponent implements OnInit {
   public canvas: any;
   public chartCars;
   labelTopSpeeds: string[] = [];
-
+  buttons = 0
   event_by_day_speed: Map<string, number[]> = new Map()
   maxSpeedSumary: number[] = [];
 
+  maxBACars: number[] = [];
+  maxCNCars: number[] = [];
+  maxLabels: string[] = [];
+
+
   hoveredDate: NgbDate | null = null;
+
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
 
-  constructor(private eventService: EventService, private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
-    this.fromDate = calendar.getToday();
-    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+
+  constructor(private eventService: EventService, private dailyService: DailyInflowService, private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
+    this.fromDate = new NgbDate(2021, 4, 10)
+    this.toDate = new NgbDate(2021, 5, 10)
   }
 
 
@@ -53,15 +59,23 @@ export class RoadInfoComponent implements OnInit {
 
     this.maxSpeedSumary = []
     this.labelTopSpeeds = []
+    this.maxCNCars = []
+    this.maxLabels = []
+    this.maxBACars = []
     this.event_by_day_speed = new Map()
 
     this.fetchTopSpeedSumaryData()
+    this.fetchMaxCarsInfo()
+
     this.constructTopSpeedGraph()
+    this.constructMaxCarsGraph()
   }
+
 
   fetchTopSpeedSumaryData(): void {
     // CURL EXAMPLE:
     // "http://localhost:8000/5g-mobility/event/?timestamp__lte=2021-04-16T00:00&timestamp__gte=2021-04-14T00:00"
+
     const from = this.fromDate.year + '-' + this.fromDate.month + '-' + this.fromDate.day + 'T00:00'
     const to = this.toDate.year + '-' + this.toDate.month + '-' + this.toDate.day + 'T00:00'
 
@@ -69,7 +83,7 @@ export class RoadInfoComponent implements OnInit {
     data => {
       data.results.forEach(
         e => {
-          let timestamp = stringify(e.timestamp).slice(0, 10)
+          const timestamp = stringify(e.timestamp).slice(0, 10)
           if (!this.event_by_day_speed.has(timestamp)) {
             this.event_by_day_speed.set(timestamp, [e.velocity])
           } else {
@@ -78,13 +92,90 @@ export class RoadInfoComponent implements OnInit {
         }
       );
       this.event_by_day_speed.forEach((v, k) => {
-        let arr = this.event_by_day_speed.get(k)
-        let max = Math.max.apply(Math, arr)
+        const arr = this.event_by_day_speed.get(k)
+        const max = Math.max.apply(Math, arr)
         this.maxSpeedSumary.push(max)
         this.labelTopSpeeds.push(k.slice(8, 10))
       })
+
+      this.maxSpeedSumary = this.maxSpeedSumary.reverse()
+      this.labelTopSpeeds = this.labelTopSpeeds.reverse()
     }
     )
+
+  }
+
+  fetchMaxCarsInfo() {
+    const from = this.fromDate.year + '-' + this.fromDate.month + '-' + this.fromDate.day
+    const to = this.toDate.year + '-' + this.toDate.month + '-' + this.toDate.day
+
+    this.dailyService.getTrafficBA_betweenDates(from, to).subscribe(
+      data => {
+        data.results.forEach(
+          r => {
+            console.log(r)
+            if (r.location === 'BA') {
+              this.maxBACars.push(r.maximum)
+            } else {
+              this.maxCNCars.push(r.maximum)
+              this.maxLabels.push(r.date.slice(8, 10))
+            }
+
+          }
+        );
+        this.maxLabels = this.maxLabels.reverse()
+        this.maxBACars = this.maxBACars.reverse()
+        this.maxCNCars = this.maxCNCars.reverse()
+      }
+    )
+
+  }
+
+  constructMaxCarsGraph(){
+    var speedCanvas = document.getElementById("dailyInflowTraffic");
+
+    var BA = {
+      data: this.maxBACars,
+      fill: false,
+      label: 'Max Number of Cars - Praia da Barra',
+      borderColor: '#fbc658',
+      backgroundColor: 'transparent',
+      pointBorderColor: '#fbc658',
+      pointRadius: 4,
+      pointHoverRadius: 4,
+      pointBorderWidth: 8,
+    };
+
+    var CN = {
+      data: this.maxCNCars,
+      fill: false,
+      label: 'Max Number of Cars - Costa Nova',
+      borderColor: '#51CACF',
+      backgroundColor: 'transparent',
+      pointBorderColor: '#51CACF',
+      pointRadius: 4,
+      pointHoverRadius: 4,
+      pointBorderWidth: 8
+    };
+
+    var dailyData = {
+      labels: this.maxLabels,
+      datasets: [BA, CN]
+    };
+
+    var chartOptions = {
+      legend: {
+        display: true,
+        position: 'bottom',
+      }
+    };
+
+    var lineChart = new Chart(speedCanvas, {
+      type: 'line',
+      hover: false,
+      data: dailyData,
+      options: chartOptions,
+    });
 
   }
 
@@ -112,7 +203,16 @@ export class RoadInfoComponent implements OnInit {
       legend: {
         display: true,
         position: 'bottom',
-      }
+      },
+      scales: {
+       yAxes: [{
+          ticks: {
+             max: 300,
+             min: 0,
+             stepSize: 50,
+          }
+       }]
+    }
     };
 
     let lineChart = new Chart(topSpeedCanvas, {
@@ -141,62 +241,12 @@ export class RoadInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fromDate = new NgbDate(2021, 4, 10)
-    this.toDate = new NgbDate(2021, 5, 10)
     this.fetchTopSpeedSumaryData()
+    this.fetchMaxCarsInfo()
+
     this.constructTopSpeedGraph()
+    this.constructMaxCarsGraph()
 
-    var speedCanvas = document.getElementById("dailyInflowTraffic");
-
-    var dataEventNumber = {
-      data: [0, 19, 15, 20, 30, 40, 40, 50, 25, 30, 50, 70, 0,
-        19, 15, 20, 30, 40, 40, 50, 25, 30, 50, 70, 50, 20, 60,
-        55, 76, 34, 21],
-      fill: false,
-      label: 'Max Number of Cars - Praia da Barra',
-      borderColor: '#fbc658',
-      backgroundColor: 'transparent',
-      pointBorderColor: '#fbc658',
-      pointRadius: 4,
-      pointHoverRadius: 4,
-      pointBorderWidth: 8,
-    };
-
-    var dataTopSpeed = {
-      data: [150, 120, 95, 200, 220, 300, 93, 97, 100, 110, 99, 91, 102,
-        145, 185, 170, 160, 112, 133, 141, 121, 105, 100, 96, 95, 91, 93,
-        92, 97, 94, 91],
-      fill: false,
-      label: 'Max Number of Cars - Costa Nova',
-      borderColor: '#51CACF',
-      backgroundColor: 'transparent',
-      pointBorderColor: '#51CACF',
-      pointRadius: 4,
-      pointHoverRadius: 4,
-      pointBorderWidth: 8
-    };
-
-    var dailyData = {
-      labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-        "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
-        "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
-        "31"],
-      datasets: [dataEventNumber, dataTopSpeed]
-    };
-
-    var chartOptions = {
-      legend: {
-        display: true,
-        position: 'bottom',
-      }
-    };
-
-    var lineChart = new Chart(speedCanvas, {
-      type: 'line',
-      hover: false,
-      data: dailyData,
-      options: chartOptions,
-    });
 
     // CIRCULO CARROS ################################################################################################
 

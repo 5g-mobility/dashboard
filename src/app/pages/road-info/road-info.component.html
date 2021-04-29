@@ -1,4 +1,62 @@
-<div class="row">
+<div>
+  <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="buttons" style="padding-right:2%;margin-bottom:1.1%">
+    <label ngbButtonLabel style="background-color: #6570C6;">
+      <input ngbButton type="radio" [value]="0"> Ponte da Barra
+    </label>
+    <label ngbButtonLabel style="background-color: #6570C6;">
+      <input ngbButton type="radio" [value]="1"> Duna
+    </label>
+    <label ngbButtonLabel style="background-color: #6570C6;">
+      <input ngbButton type="radio" [value]="2"> Ria Ativa
+    </label>
+  </div>
+
+  <div class="btn-group" ngbRadioGroup name="radioBasic" >
+  <form class="form-inline">
+    <div class="form-group hidden">
+        <div class="input-group">
+            <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
+                [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2"
+                [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1">
+            <ng-template #t let-date let-focused="focused">
+                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                    [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                    (mouseleave)="hoveredDate = null">
+                    {{ date.day }}
+                </span>
+            </ng-template>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="input-group">
+            <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate"
+                [value]="formatter.format(fromDate)"
+                (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar fa fa-calendar"
+                    (click)="datepicker.toggle()" type="button"></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group ml-2">
+        <div class="input-group">
+            <input #dpToDate class="form-control" placeholder="yyyy-mm-dd" name="dpToDate"
+                [value]="formatter.format(toDate)"
+                (input)="toDate = validateInput(toDate, dpToDate.value)">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary calendar fa fa-calendar"
+                    (click)="datepicker.toggle()" type="button"></button>
+            </div>
+        </div>
+    </div>
+  </form>
+  </div>
+
+
+</div>
+
+<div class="row" style="margin-top:2%">
     <div class="col-lg-8 col-md-12 col-sm 12"
         style="display: flex; flex-direction: column; justify-content: space-around;">
         <div class="row">
@@ -127,7 +185,7 @@
 
             <div class="card-footer ">
                 <hr>
-                <div class="stats" style="display: flex; justify-content: center;">
+                <div class="stats" style="display: flex; justify-content: center; height: 3.5em">
                     <i class="fa fa-refresh"></i> Updated at 09/04/2021 14:50
                 </div>
             </div>
@@ -140,45 +198,6 @@
         <div class="card card-chart">
             <div class="card-header" style="display: flex; justify-content: space-between;">
                 <h5 class="card-title">Top Speed Summary</h5>
-                <form class="form-inline">
-                    <div class="form-group hidden">
-                        <div class="input-group">
-                            <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
-                                [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2"
-                                [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1">
-                            <ng-template #t let-date let-focused="focused">
-                                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
-                                    [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
-                                    (mouseleave)="hoveredDate = null">
-                                    {{ date.day }}
-                                </span>
-                            </ng-template>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate"
-                                [value]="formatter.format(fromDate)"
-                                (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary calendar fa fa-calendar"
-                                    (click)="datepicker.toggle()" type="button"></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group ml-2">
-                        <div class="input-group">
-                            <input #dpToDate class="form-control" placeholder="yyyy-mm-dd" name="dpToDate"
-                                [value]="formatter.format(toDate)"
-                                (input)="toDate = validateInput(toDate, dpToDate.value)">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary calendar fa fa-calendar"
-                                    (click)="datepicker.toggle()" type="button"></button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
 
             </div>
             <div class="card-body">
@@ -192,47 +211,7 @@
     <div class="col-md-12">
         <div class="card card-chart">
             <div class="card-header" style="display: flex; justify-content: space-between;">
-                <h5 class="card-title">Daily Traffic Inflow Summary</h5>
-                <form class="form-inline">
-                    <div class="form-group hidden">
-                        <div class="input-group">
-                            <input name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
-                                [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2"
-                                [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1">
-                            <ng-template #t let-date let-focused="focused">
-                                <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
-                                    [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
-                                    (mouseleave)="hoveredDate = null">
-                                    {{ date.day }}
-                                </span>
-                            </ng-template>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="input-group">
-                            <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate"
-                                [value]="formatter.format(fromDate)"
-                                (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary calendar fa fa-calendar"
-                                    (click)="datepicker.toggle()" type="button"></button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group ml-2">
-                        <div class="input-group">
-                            <input #dpToDate class="form-control" placeholder="yyyy-mm-dd" name="dpToDate"
-                                [value]="formatter.format(toDate)"
-                                (input)="toDate = validateInput(toDate, dpToDate.value)">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary calendar fa fa-calendar"
-                                    (click)="datepicker.toggle()" type="button"></button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-
+                <h5 class="card-title">Traffic Inflow Summary</h5>
             </div>
             <div class="card-body">
                 <canvas id="dailyInflowTraffic" width="400" height="100"></canvas>
