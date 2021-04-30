@@ -26,7 +26,10 @@ export class RoadInfoComponent implements OnInit {
   public canvas: any;
   public chartCars;
   labelTopSpeeds: string[] = [];
-  buttons = 0
+
+  locationBttn = 0
+  hrs24Bttn = 0
+
   event_by_day_speed: Map<string, number[]> = new Map()
   maxSpeedSumary: number[] = [];
 
@@ -34,6 +37,10 @@ export class RoadInfoComponent implements OnInit {
   maxCNCars: number[] = [];
   maxLabels: string[] = [];
 
+  circulatingCA: number;
+  circulatingTR: number;
+  circulatingMC: number;
+  circulatingData: number[] = [];
 
   hoveredDate: NgbDate | null = null;
 
@@ -45,6 +52,20 @@ export class RoadInfoComponent implements OnInit {
     this.fromDate = new NgbDate(2021, 4, 10)
     this.toDate = new NgbDate(2021, 5, 10)
   }
+
+  Barra() {
+    console.log('barra')
+
+  }
+
+  Ria() {
+    console.log('ria')
+  }
+
+  Duna() {
+    console.log('duna')
+  }
+
 
 
   onDateSelection(date: NgbDate) {
@@ -113,7 +134,6 @@ export class RoadInfoComponent implements OnInit {
       data => {
         data.results.forEach(
           r => {
-            console.log(r)
             if (r.location === 'BA') {
               this.maxBACars.push(r.maximum)
             } else {
@@ -131,10 +151,10 @@ export class RoadInfoComponent implements OnInit {
 
   }
 
-  constructMaxCarsGraph(){
-    var speedCanvas = document.getElementById("dailyInflowTraffic");
+  constructMaxCarsGraph() {
+    const speedCanvas = document.getElementById('dailyInflowTraffic');
 
-    var BA = {
+    const BA = {
       data: this.maxBACars,
       fill: false,
       label: 'Max Number of Cars - Praia da Barra',
@@ -146,7 +166,7 @@ export class RoadInfoComponent implements OnInit {
       pointBorderWidth: 8,
     };
 
-    var CN = {
+    const CN = {
       data: this.maxCNCars,
       fill: false,
       label: 'Max Number of Cars - Costa Nova',
@@ -158,19 +178,19 @@ export class RoadInfoComponent implements OnInit {
       pointBorderWidth: 8
     };
 
-    var dailyData = {
+    const dailyData = {
       labels: this.maxLabels,
       datasets: [BA, CN]
     };
 
-    var chartOptions = {
+    const chartOptions = {
       legend: {
         display: true,
         position: 'bottom',
       }
     };
 
-    var lineChart = new Chart(speedCanvas, {
+    const lineChart = new Chart(speedCanvas, {
       type: 'line',
       hover: false,
       data: dailyData,
@@ -180,9 +200,9 @@ export class RoadInfoComponent implements OnInit {
   }
 
   constructTopSpeedGraph() {
-    let topSpeedCanvas = document.getElementById("topSpeedGraph");
+    const topSpeedCanvas = document.getElementById('topSpeedGraph');
 
-    let dataTopSpeed = {
+    const dataTopSpeed = {
       data: this.maxSpeedSumary,
       fill: false,
       label: 'Max Speed of The Day',
@@ -194,12 +214,12 @@ export class RoadInfoComponent implements OnInit {
       pointBorderWidth: 8
     };
 
-    let dailyData = {
+    const dailyData = {
       labels: this.labelTopSpeeds,
       datasets: [dataTopSpeed]
     };
 
-    let chartOptions = {
+    const chartOptions = {
       legend: {
         display: true,
         position: 'bottom',
@@ -215,7 +235,7 @@ export class RoadInfoComponent implements OnInit {
     }
     };
 
-    let lineChart = new Chart(topSpeedCanvas, {
+    const lineChart = new Chart(topSpeedCanvas, {
       type: 'line',
       hover: false,
       data: dailyData,
@@ -240,24 +260,34 @@ export class RoadInfoComponent implements OnInit {
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
   }
 
-  ngOnInit(): void {
-    this.fetchTopSpeedSumaryData()
-    this.fetchMaxCarsInfo()
+  fetchCirculatingVehiclesInfo() {
+    // CURL: "http://localhost:8000/5g-mobility/event/?event_type=RT"
+    this.eventService.getRoadTrafficEvents( 'CA' ).subscribe(
+      data => {
+        this.circulatingCA = data.results.length
+      }
+    )
+    this.eventService.getRoadTrafficEvents( 'TR').subscribe(
+      data => {
+        this.circulatingTR = data.results.length
+      }
+    )
+    this.eventService.getRoadTrafficEvents( 'MC').subscribe(
+      data => {
+        this.circulatingMC = data.results.length
+      }
+    )
+  }
 
-    this.constructTopSpeedGraph()
-    this.constructMaxCarsGraph()
-
-
-    // CIRCULO CARROS ################################################################################################
-
-    this.canvas = document.getElementById("chartCars");
-    this.ctx = this.canvas.getContext("2d");
+  constructCirculatingVehiclesGraph() {
+    this.canvas = document.getElementById('chartCars');
+    this.ctx = this.canvas.getContext('2d');
     this.chartCars = new Chart(this.ctx, {
       type: 'pie',
       data: {
         labels: ['Cars', 'Trucks', 'Motorcycles'],
         datasets: [{
-          label: "Cars",
+          label: 'Cars',
           pointRadius: 0,
           pointHoverRadius: 0,
           backgroundColor: [
@@ -266,7 +296,7 @@ export class RoadInfoComponent implements OnInit {
             '#ef8157'
           ],
           borderWidth: 0,
-          data: [100, 50, 20]
+          data: [1, 2, 3]
         }]
       },
 
@@ -294,7 +324,7 @@ export class RoadInfoComponent implements OnInit {
             },
             gridLines: {
               drawBorder: true,
-              zeroLineColor: "transparent",
+              zeroLineColor: 'transparent',
               color: 'rgba(255,255,255,0.05)'
             }
 
@@ -305,7 +335,7 @@ export class RoadInfoComponent implements OnInit {
             gridLines: {
               drawBorder: false,
               color: 'rgba(255,255,255,0.1)',
-              zeroLineColor: "transparent"
+              zeroLineColor: 'transparent'
             },
             ticks: {
               display: false,
@@ -314,6 +344,16 @@ export class RoadInfoComponent implements OnInit {
         },
       }
     });
+  }
+
+  ngOnInit(): void {
+    this.fetchTopSpeedSumaryData()
+    this.fetchMaxCarsInfo()
+    this.fetchCirculatingVehiclesInfo()
+
+    this.constructTopSpeedGraph()
+    this.constructMaxCarsGraph()
+    this.constructCirculatingVehiclesGraph()
   }
 
 }

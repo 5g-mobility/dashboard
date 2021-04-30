@@ -26,8 +26,18 @@ export class EventService {
     return this.http.get<any>(url, httpOptions);
   }
 
-  getEventBetweenDates(from: string, to: string): Observable<any>{
+  getEventBetweenDates(from: string, to: string): Observable<any> {
     let url = this.baseURL + '?timestamp__lte=' + to + '&timestamp__gte=' + from
+    return this.http.get<any>(url, httpOptions)
+  }
+
+  getRoadTrafficEvents(classe: string, from?: string, to?: string): Observable<any> {
+    let url = this.baseURL
+    if (from != null || to != null ){
+      url = this.baseURL + '?event_type=RT&timestamp__lte=' + to + '&timestamp__gte=' + from
+    } else {
+      url = this.baseURL + '?event_type=RT&event_class=' + classe
+    }
     return this.http.get<any>(url, httpOptions)
   }
 
