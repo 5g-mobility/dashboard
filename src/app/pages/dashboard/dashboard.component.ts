@@ -43,13 +43,7 @@ export class DashboardComponent implements OnInit {
   constructor( private eventService: EventService, private climateService: ClimateService, private dailyService: DailyInflowService ) {
   }
 
-  getEvents(): void {
-    this.eventService.getEvent().subscribe(
-      data =>  data.results.forEach(
-        e => this.events.push(e)
-      )
-    );
-  }
+
 
   getClimate(): void {
     this.climateService.getClimate().subscribe(
@@ -79,7 +73,7 @@ export class DashboardComponent implements OnInit {
 
 
     ngOnInit() {
-      this.getEvents()
+
       this.getClimate()
       this.getDaily()
 

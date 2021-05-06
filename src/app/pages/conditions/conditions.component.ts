@@ -1,8 +1,14 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { faCloudShowersHeavy, faLeaf, faCloudSun, faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
-import * as L from "leaflet";
-import "leaflet-extra-markers/dist/js/leaflet.extra-markers.js";
+import * as L from 'leaflet';
+import 'leaflet-extra-markers/dist/js/leaflet.extra-markers.js';
+import { NgbDate, NgbCalendar, NgbDateParserFormatter, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import Chart from 'chart.js';
+import {timer} from 'rxjs';
+import {Climate} from '../../models/climate';
+import {ClimateService} from '../../services/climate/climate.service';
+import {faSmog} from '@fortawesome/free-solid-svg-icons/faSmog';
+import {EventService} from '../../services/event/event.service';
 
 @Component({
   selector: 'app-conditions',
@@ -10,18 +16,140 @@ import Chart from 'chart.js';
   styleUrls: ['./conditions.component.scss']
 })
 export class ConditionsComponent implements OnInit, AfterViewInit {
-  rainIcon = faCloudShowersHeavy;
+  rainy = faCloudShowersHeavy;
   leafIcon = faLeaf;
   sunCloudIcon = faCloudSun;
-  sunIcon = faSun;
+  cleanSkies = faSun;
   moonIcon = faMoon;
+  foggy = faSmog;
   private map;
-  selectionMap = 0;
+  dataSelection = 0;
+  typeSelection = -1;
   public ctx;
-  public canvas : any;
+  public canvas: any;
   public chartEmail;
 
-  constructor() { }
+  mapMarkers: any[] = [];
+  ultimoBA: Climate;
+  ultimoCN: Climate;
+  conditionBA: string;
+  conditionCN: string;
+  dataAtual: String;
+
+  hoveredDate: NgbDate | null = null;
+
+  fromDate: NgbDate | null;
+  toDate: NgbDate | null;
+
+
+  // DROPLET ICONS
+  rainMarker = (L as any).ExtraMarkers.icon({
+    shape: 'circle',
+    markerColor: 'blue-dark',
+    prefix: 'fa',
+    icon: 'fa-tint',
+    iconColor: '#fff',
+    iconRotate: 0,
+    extraClasses: '',
+    number: '',
+    svg: true
+  });
+
+  fogMarker = (L as any).ExtraMarkers.icon({
+    shape: 'circle',
+    markerColor: 'blue-dark',
+    prefix: 'fa',
+    icon: 'fa-cloud',
+    iconColor: '#fff',
+    iconRotate: 0,
+    extraClasses: '',
+    number: '',
+    svg: true
+  });
+
+  noLight = (L as any).ExtraMarkers.icon({
+    shape: 'circle',
+    markerColor: 'blue-dark',
+    prefix: 'fa',
+    icon: 'fa-moon-o',
+    iconColor: '#fff',
+    iconRotate: 0,
+    extraClasses: '',
+    number: '',
+    svg: true
+  });
+
+  light = (L as any).ExtraMarkers.icon({
+    shape: 'circle',
+    markerColor: 'blue-dark',
+    prefix: 'fa',
+    icon: 'fa-lightbulb-o',
+    iconColor: '#fff',
+    iconRotate: 0,
+    extraClasses: '',
+    number: '',
+    svg: true
+  });
+
+  outsideTemp = (L as any).ExtraMarkers.icon({
+    shape: 'circle',
+    markerColor: 'blue-dark',
+    prefix: 'fa',
+    icon: 'fa-thermometer-half',
+    iconColor: '#fff',
+    iconRotate: 0,
+    extraClasses: '',
+    number: '',
+    svg: true
+  });
+
+
+  carbon = (L as any).ExtraMarkers.icon({
+    shape: 'circle',
+    markerColor: 'blue-dark',
+    prefix: 'fa',
+    icon: 'fa-leaf',
+    iconColor: '#fff',
+    iconRotate: 0,
+    extraClasses: '',
+    number: '',
+    svg: true
+  });
+
+
+  onDateSelection(date: NgbDate) {
+    if (!this.fromDate && !this.toDate) {
+      this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
+      this.toDate = date;
+    } else {
+      this.fromDate = date;
+      this.toDate = null;
+    }
+  }
+
+  isHovered(date: NgbDate) {
+    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
+  }
+
+  isInside(date: NgbDate) {
+    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+  }
+
+  isRange(date: NgbDate) {
+    return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
+  }
+
+  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
+    const parsed = this.formatter.parse(input);
+    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  }
+
+  constructor(private climateService: ClimateService, private eventService: EventService,
+              private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
+    this.fromDate = new NgbDate(2021, 4, 10)
+    this.toDate = new NgbDate(2021, 5, 10)
+  }
 
   private initMap(): void {
     this.map = L.map('mapConditions', {
@@ -29,7 +157,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
       zoom: 14
     });
 
-    const tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+    const tiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
       maxZoom: 18,
       minZoom: 3,
       attribution: 'edupala.com'
@@ -38,15 +166,114 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
     tiles.addTo(this.map);
   }
 
+  last5min() {
+    for (let i = 0; i < this.mapMarkers.length; i++) {
+      this.map.removeLayer(this.mapMarkers[i]);
+    }
+    this.mapMarkers = [];
+  }
+
+  selectDate() {
+    for (let i = 0; i < this.mapMarkers.length; i++) {
+      this.map.removeLayer(this.mapMarkers[i]);
+    }
+    this.mapMarkers = [];
+  }
+
   ngOnInit(): void {
-    this.canvas = document.getElementById("chartBarra");
-      this.ctx = this.canvas.getContext("2d");
+    // 15.000
+    timer(0, 60000000).subscribe(() => {
+      // para a parte das conditions
+      this.climateService.getClimate().subscribe(
+        data => {
+          if (data.results[data.results.length - 1].location === 'BA') {
+            this.ultimoBA = data.results[data.results.length - 1];
+            this.ultimoCN = data.results[data.results.length - 2];
+          } else if (data.results[data.results.length - 2].location === 'BA') {
+            this.ultimoBA = data.results[data.results.length - 2];
+            this.ultimoCN = data.results[data.results.length - 1];
+          }
+
+          this.dataAtual = new Date().toLocaleTimeString();
+          // condition Barra
+          if (this.ultimoBA.condition === 'FO') {
+            this.conditionBA = 'Foggy';
+          } else if (this.ultimoBA.condition === 'RA') {
+            this.conditionBA = 'Rainy';
+          } else if (this.ultimoBA.condition === 'CL') {
+            this.conditionBA = 'Clean Skies';
+          }
+          // condition Costa Nova
+          if (this.ultimoCN.condition === 'FO') {
+            this.conditionCN = 'Foggy';
+          } else if (this.ultimoCN.condition === 'RA') {
+            this.conditionCN = 'Rainy';
+          } else if (this.ultimoCN.condition === 'CL') {
+            this.conditionCN = 'Clean Skies';
+          }
+        }
+        );
+
+      if ( this.dataSelection === 1 ) {
+        // então ir buscar as datas, pesquisar pelos eventos entre essas datas
+        if (this.toDate != null && this.fromDate != null) {
+          this.eventService.getEventsBetweenDates(this.fromDate, this.toDate).subscribe(
+            data => {
+              data.results.forEach( r => {
+                console.log(r)
+                if (r.event_class === 'RA') {
+                  const marker = L.marker([r.latitude, r.longitude], { icon: this.rainMarker });
+                  marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">r.timestamp</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Rain Detected"</p></div>');
+                  marker.addTo(this.map);
+                  this.mapMarkers.push(marker);
+                } else if (r.event_class === 'FO') {
+                  const marker = L.marker([r.latitude, r.longitude], { icon: this.fogMarker });
+                  marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">r.timestamp</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Fog Detected"</p></div>');
+                  marker.addTo(this.map);
+                  this.mapMarkers.push(marker);
+                  this.mapMarkers.push(marker);
+                } else if (r.event_class === 'NL') {
+                  const marker = L.marker([r.latitude, r.longitude], { icon: this.noLight });
+                  marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">r.timestamp</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Medium Lights OFF"</p></div>');
+                  marker.addTo(this.map);
+                  this.mapMarkers.push(marker);
+                } else if (r.event_class === 'LT') {
+                  const marker = L.marker([r.latitude, r.longitude], { icon: this.light });
+                  marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">r.timestamp</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Medium Lights ON"</p></div>');
+                  marker.addTo(this.map);
+                  this.mapMarkers.push(marker);
+                } else if (r.event_class === 'OT') {
+                  const marker = L.marker([r.latitude, r.longitude], { icon: this.outsideTemp });
+                  marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">r.timestamp</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Outside Temperature"</p></div>');
+                  marker.addTo(this.map);
+                  this.mapMarkers.push(marker);
+                } else if (r.event_class === 'CF') {
+                  const marker = L.marker([40.629779, -8.737498], { icon: this.carbon });
+                  marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">r.timestamp</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Carbon Emission"</p></div>');
+                  marker.addTo(this.map);
+                  this.mapMarkers.push(marker);
+                }
+              })
+            }
+          )
+        }
+      } else {
+        this.eventService.getEventsLast5Mins().subscribe(
+          data => {
+            console.log(data.results)
+          }
+        )
+      }
+    });
+
+    this.canvas = document.getElementById('chartBarra');
+      this.ctx = this.canvas.getContext('2d');
       this.chartEmail = new Chart(this.ctx, {
         type: 'pie',
         data: {
           labels: [1, 2, 3],
           datasets: [{
-            label: "Emails",
+            label: 'Emails',
             pointRadius: 0,
             pointHoverRadius: 0,
             backgroundColor: [
@@ -173,37 +400,6 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.initMap();
-    var redMarker = (L as any).ExtraMarkers.icon({
-      shape: 'circle',
-      markerColor: 'blue-dark',
-      prefix: 'fa',
-      icon: 'fa-tint',
-      iconColor: '#fff',
-      iconRotate: 0,
-      extraClasses: '',
-      number: '',
-      svg: true
-    });
-
-    var marker = L.marker([40.629779, -8.737498], { icon: redMarker });
-    marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">09/04/2021 00:55</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">Rain Detected</p></div>');
-    marker.addTo(this.map);
-
-    var redMarker = (L as any).ExtraMarkers.icon({
-      shape: 'circle',
-      markerColor: 'blue-dark',
-      prefix: 'fa',
-      icon: 'fa-cloud',
-      iconColor: '#fff',
-      iconRotate: 0,
-      extraClasses: '',
-      number: '',
-      svg: true
-    });
-
-    marker = L.marker([40.629779, -8.746988], { icon: redMarker });
-    marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">09/04/2021 00:58</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">Fog Detected</p></div>');
-    marker.addTo(this.map);
   }
 
 }

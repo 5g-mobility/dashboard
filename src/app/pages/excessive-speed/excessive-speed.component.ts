@@ -1,8 +1,12 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import Chart from 'chart.js';
-import * as L from "leaflet";
-import "leaflet-extra-markers/dist/js/leaflet.extra-markers.js";
+import * as L from 'leaflet';
+import 'leaflet-extra-markers/dist/js/leaflet.extra-markers.js';
 import { NgbDate, NgbCalendar, NgbDateParserFormatter, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs/internal/Observable';
+import {timer} from "rxjs";
+import {ClimateService} from "../../services/climate/climate.service";
+import {now} from "moment";
 
 @Component({
   selector: 'app-excessive-speed',
@@ -14,6 +18,9 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit {
 
   selectionMap = 0;
 
+  ultimos2Eventos: Event[] = []
+  data_atual: Date;
+
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
@@ -24,7 +31,7 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit {
       zoom: 14
     });
 
-    const tiles = L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
+    const tiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png', {
       maxZoom: 18,
       minZoom: 3,
       attribution: 'edupala.com'
@@ -33,7 +40,7 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit {
     tiles.addTo(this.map);
   }
 
-  constructor(private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
+  constructor(private climateService: ClimateService, private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
@@ -67,6 +74,8 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
+
+
 
     var speedCanvas = document.getElementById("dailyExcessiveChart");
 

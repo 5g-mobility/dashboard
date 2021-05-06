@@ -4,5 +4,5 @@ export class Climate {
   condition: string;
   daytime: boolean;
   temperature: number;
-
 }
+

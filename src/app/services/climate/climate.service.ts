@@ -13,13 +13,7 @@ export class ClimateService {
   private baseURL = 'http://localhost:8000/5g-mobility/climate/'
   constructor(private http: HttpClient) { }
 
-  getClimate(field?: string, search?: string): Observable<any> {
-    let url = this.baseURL;
-    if (field != null && search != null) {
-      url += '/?' + field + '=' + search;
-    } else {
-      url = this.baseURL;
-    }
-    return this.http.get<any>(url, httpOptions);
+  getClimate(): Observable<any> {
+    return this.http.get<any>(this.baseURL, httpOptions);
   }
 }

@@ -77,85 +77,14 @@ export class RoadInfoComponent implements OnInit {
       this.fromDate = date;
       this.toDate = null;
     }
-
-    this.maxSpeedSumary = []
-    this.labelTopSpeeds = []
-    this.maxCNCars = []
-    this.maxLabels = []
-    this.maxBACars = []
-    this.event_by_day_speed = new Map()
-
-    this.fetchTopSpeedSumaryData()
-    this.fetchMaxCarsInfo()
-
-    this.constructTopSpeedGraph()
-    this.constructMaxCarsGraph()
   }
 
-
-  fetchTopSpeedSumaryData(): void {
-    // CURL EXAMPLE:
-    // "http://localhost:8000/5g-mobility/event/?timestamp__lte=2021-04-16T00:00&timestamp__gte=2021-04-14T00:00"
-
-    const from = this.fromDate.year + '-' + this.fromDate.month + '-' + this.fromDate.day + 'T00:00'
-    const to = this.toDate.year + '-' + this.toDate.month + '-' + this.toDate.day + 'T00:00'
-
-    this.eventService.getEventBetweenDates(from, to).subscribe(
-    data => {
-      data.results.forEach(
-        e => {
-          const timestamp = stringify(e.timestamp).slice(0, 10)
-          if (!this.event_by_day_speed.has(timestamp)) {
-            this.event_by_day_speed.set(timestamp, [e.velocity])
-          } else {
-            this.event_by_day_speed.get(timestamp).push(e.velocity)
-          }
-        }
-      );
-      this.event_by_day_speed.forEach((v, k) => {
-        const arr = this.event_by_day_speed.get(k)
-        const max = Math.max.apply(Math, arr)
-        this.maxSpeedSumary.push(max)
-        this.labelTopSpeeds.push(k.slice(8, 10))
-      })
-
-      this.maxSpeedSumary = this.maxSpeedSumary.reverse()
-      this.labelTopSpeeds = this.labelTopSpeeds.reverse()
-    }
-    )
-
-  }
-
-  fetchMaxCarsInfo() {
-    const from = this.fromDate.year + '-' + this.fromDate.month + '-' + this.fromDate.day
-    const to = this.toDate.year + '-' + this.toDate.month + '-' + this.toDate.day
-
-    this.dailyService.getTrafficBA_betweenDates(from, to).subscribe(
-      data => {
-        data.results.forEach(
-          r => {
-            if (r.location === 'BA') {
-              this.maxBACars.push(r.maximum)
-            } else {
-              this.maxCNCars.push(r.maximum)
-              this.maxLabels.push(r.date.slice(8, 10))
-            }
-
-          }
-        );
-        this.maxLabels = this.maxLabels.reverse()
-        this.maxBACars = this.maxBACars.reverse()
-        this.maxCNCars = this.maxCNCars.reverse()
-      }
-    )
-
-  }
 
   constructMaxCarsGraph() {
     const speedCanvas = document.getElementById('dailyInflowTraffic');
 
     const BA = {
-      data: this.maxBACars,
+      data: [],
       fill: false,
       label: 'Max Number of Cars - Praia da Barra',
       borderColor: '#fbc658',
@@ -167,7 +96,7 @@ export class RoadInfoComponent implements OnInit {
     };
 
     const CN = {
-      data: this.maxCNCars,
+      data: [],
       fill: false,
       label: 'Max Number of Cars - Costa Nova',
       borderColor: '#51CACF',
@@ -179,7 +108,7 @@ export class RoadInfoComponent implements OnInit {
     };
 
     const dailyData = {
-      labels: this.maxLabels,
+      labels: [],
       datasets: [BA, CN]
     };
 
@@ -203,7 +132,7 @@ export class RoadInfoComponent implements OnInit {
     const topSpeedCanvas = document.getElementById('topSpeedGraph');
 
     const dataTopSpeed = {
-      data: this.maxSpeedSumary,
+      data: [],
       fill: false,
       label: 'Max Speed of The Day',
       borderColor: '#EF8157',
@@ -215,7 +144,7 @@ export class RoadInfoComponent implements OnInit {
     };
 
     const dailyData = {
-      labels: this.labelTopSpeeds,
+      labels: [],
       datasets: [dataTopSpeed]
     };
 
@@ -260,24 +189,6 @@ export class RoadInfoComponent implements OnInit {
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
   }
 
-  fetchCirculatingVehiclesInfo() {
-    // CURL: "http://localhost:8000/5g-mobility/event/?event_type=RT"
-    this.eventService.getRoadTrafficEvents( 'CA' ).subscribe(
-      data => {
-        this.circulatingCA = data.results.length
-      }
-    )
-    this.eventService.getRoadTrafficEvents( 'TR').subscribe(
-      data => {
-        this.circulatingTR = data.results.length
-      }
-    )
-    this.eventService.getRoadTrafficEvents( 'MC').subscribe(
-      data => {
-        this.circulatingMC = data.results.length
-      }
-    )
-  }
 
   constructCirculatingVehiclesGraph() {
     this.canvas = document.getElementById('chartCars');
@@ -347,13 +258,6 @@ export class RoadInfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.fetchTopSpeedSumaryData()
-    this.fetchMaxCarsInfo()
-    this.fetchCirculatingVehiclesInfo()
-
-    this.constructTopSpeedGraph()
-    this.constructMaxCarsGraph()
-    this.constructCirculatingVehiclesGraph()
   }
 
 }
