@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-
-
-type eventType = Array<{timestamp: string, location: string, type: string, class: string, speed?: number, geolocation?: string, co2?: number}>;
-
+import {ClimateService} from "../../services/climate/climate.service";
+import {EventService} from "../../services/event/event.service";
+import {NgbCalendar, NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
+import {FormBuilder, FormGroup} from "@angular/forms";
+import {timer} from "rxjs";
 
 @Component({
   selector: 'app-event',
@@ -11,20 +12,73 @@ type eventType = Array<{timestamp: string, location: string, type: string, class
 })
 export class EventComponent implements OnInit {
   selectionMap = 0;
+  fromDate: NgbDate | null;
+  toDate: NgbDate | null;
+  hoveredDate: NgbDate | null = null;
+  events: Event[] = [];
+  filter: string;
+  selectingdate = 0
+  public radioGroupForm: FormGroup;
 
-  events: eventType = [
-    {timestamp: new Date().toLocaleString(), location: 'Ria Ativa', type: 'Road Danger', class: 'Stopped Car', speed: 0 },
-    {timestamp: new Date().toLocaleString(), location: 'A25 Aveiro', type: 'Bike Lanes', class: 'Person', speed: 2 },
-    {timestamp: new Date().toLocaleString(), location: 'Duna', type: 'Road Traffic', class: 'Car', speed: 184 },
-    {timestamp: new Date().toLocaleString(), location: 'Costa Nova', type: 'Conditions', class: 'Fog'},
-    {timestamp: new Date().toLocaleString(), location: 'Barra', type: 'Carbon Footprint', class: 'Car', speed: 97, geolocation: '40° 38′ 32 N, 8° 44′ 56', co2: 5},
-    {timestamp: new Date().toLocaleString(), location: 'A25 Aveiro', type: 'Conditions', class: 'Rain'},
-    {timestamp: new Date().toLocaleString(), location: 'A25 Aveiro', type: 'Road Traffic', class: 'Motorcycle', speed: 100 },
-  ]
+  constructor(private climateService: ClimateService, private eventService: EventService,
+              private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private formBuilder: FormBuilder) {
+  }
 
-  constructor() { }
+  onDateSelection(date: NgbDate) {
+    if (!this.fromDate && !this.toDate) {
+      this.fromDate = date;
+    } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
+      this.toDate = date;
+    } else {
+      this.fromDate = date;
+      this.toDate = null;
+    }
+  }
+
+  filterCN() {
+    if (this.filter !== '&location=CN') {
+      this.filter = '&location=CN'
+    } else {
+      this.filter = null
+    }
+  }
+
+  filterBarra() {
+    if (this.filter !== '&location=BA') {
+      this.filter = '&location=BA'
+    } else {
+      this.filter = null
+    }
+  }
+
+  isHovered(date: NgbDate) {
+    return this.fromDate && !this.toDate && this.hoveredDate && date.after(this.fromDate) && date.before(this.hoveredDate);
+  }
+
+  isInside(date: NgbDate) {
+    return this.toDate && date.after(this.fromDate) && date.before(this.toDate);
+  }
+
+  isRange(date: NgbDate) {
+    return date.equals(this.fromDate) || (this.toDate && date.equals(this.toDate)) || this.isInside(date) || this.isHovered(date);
+  }
+
+  validateInput(currentValue: NgbDate | null, input: string): NgbDate | null {
+    const parsed = this.formatter.parse(input);
+    return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
+  }
 
   ngOnInit(): void {
+    timer(0, 10000).subscribe( () => {
+      if ((this.toDate != null && this.fromDate != null) || this.filter != null) {
+        this.events = []
+        this.eventService.getEventsBetweenDates(this.fromDate, this.toDate, this.filter).subscribe(
+          data => data.results.forEach( d => {this.events.push(d)}));
+      } else {
+        this.eventService.getAllEvents().subscribe(data => data.results.forEach( d => {this.events.push(d)}));
+      }
+    })
+
   }
 
 }

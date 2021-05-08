@@ -91,18 +91,6 @@
         </div>
     </div>
 </div>
-<form class="form-inline" >
-  <div class="form-check form-check-inline" style="color:black">
-    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-    <label class="form-check-label" for="inlineCheckbox1">1</label>
-  </div>
-  <div class="form-check form-check-inline">
-    <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-    <label class="form-check-label" for="inlineCheckbox2">2</label>
-  </div>
-</form>
-
-
 
 <div class="row">
     <div class="col-md-12" >
@@ -120,11 +108,33 @@
             </div>
           <div *ngIf="dataSelection==1" class="d-flex flex-row-reverse">
             <div class="p-2">
+              <form [formGroup]="radioGroupForm">
+                <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="model">
+                  <label ngbButtonLabel class="btn-primary">
+                    <input ngbButton type="radio" (click)="filterRain()" [value]="0"> Rain
+                  </label>
+                  <label ngbButtonLabel class="btn-primary">
+                    <input ngbButton type="radio" (click)="filterFog()" [value]="1"> Fog
+                  </label>
+                  <label ngbButtonLabel class="btn-primary">
+                    <input ngbButton type="radio" (click)="filterNoLight()" [value]="2"> No Light
+                  </label>
+                  <label ngbButtonLabel class="btn-primary">
+                    <input ngbButton type="radio" (click)="filterLight()" [value]="3"> Light
+                  </label>
+                  <label ngbButtonLabel class="btn-primary">
+                    <input ngbButton type="radio" (click)="filterOutsideTemp()" [value]="4"> Outside Temp.
+                  </label>
+                  <label ngbButtonLabel class="btn-primary">
+                    <input ngbButton type="radio" (click)="filterCarbon()" [value]="5"> Carbon Footp.
+                  </label>
+                </div>
+              </form>
               <form class="form-inline" >
                 <div class="form-group hidden" >
                     <div class="input-group" >
                       <!-- PARTE PARA DAR TOGGLE DO DATAPICKER -->
-                        <input style="z-index: -1" name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
+                        <input style="z-index: -1"  name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
                             [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2"
                             [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1">
                         <ng-template #t let-date let-focused="focused">

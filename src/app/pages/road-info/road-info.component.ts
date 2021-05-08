@@ -25,13 +25,10 @@ export class RoadInfoComponent implements OnInit {
   public ctx;
   public canvas: any;
   public chartCars;
-  labelTopSpeeds: string[] = [];
 
   locationBttn = 0
   hrs24Bttn = 0
 
-  event_by_day_speed: Map<string, number[]> = new Map()
-  maxSpeedSumary: number[] = [];
 
   maxBACars: number[] = [];
   maxCNCars: number[] = [];
@@ -49,8 +46,6 @@ export class RoadInfoComponent implements OnInit {
 
 
   constructor(private eventService: EventService, private dailyService: DailyInflowService, private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
-    this.fromDate = new NgbDate(2021, 4, 10)
-    this.toDate = new NgbDate(2021, 5, 10)
   }
 
   Barra() {
