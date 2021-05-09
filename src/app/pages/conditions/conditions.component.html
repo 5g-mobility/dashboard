@@ -109,7 +109,7 @@
 
           <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="typeSelection">
             <label ngbButtonLabel class="btn-primary">
-              <input ngbButton type="radio" [value]="0"> All
+              <input ngbButton type="radio" (click)="clearAllFilters()" [value]="0"> All
             </label>
             <label ngbButtonLabel class="btn-primary">
               <input ngbButton type="radio" (click)="filterRain()" [value]="1"> Rain

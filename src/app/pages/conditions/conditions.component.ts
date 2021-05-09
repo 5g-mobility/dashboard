@@ -123,6 +123,14 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
     svg: true
   });
 
+  clearAllFilters() {
+    this.filterToSearch = '';
+    if (this.dataSelection === 1) {
+      this.getEventsByDate()
+    } else {
+      this.getEventsLast5Min()
+    }
+  }
 
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
@@ -261,7 +269,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getEventsByDate() {
-    this.eventService.getEventsBetweenDates(this.fromDate, this.toDate, 0, '&event_type=CO' + this.filterToSearch, 100).subscribe(
+    this.eventService.getEventsBetweenDates(0, this.fromDate, this.toDate, '&event_type=CO' + this.filterToSearch, 100).subscribe(
       data => {
         data.results.forEach(r => {
           if (r.event_class === 'RA') {
@@ -344,6 +352,43 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
     )
   }
 
+  getConditions() {
+    this.climateService.getBarraClimate().subscribe(
+    dataBA => {
+
+      this.ultimoClimateBA = dataBA.results[0];
+
+      // condition Barra
+      if (this.ultimoClimateBA.condition === 'FG') {
+        this.conditionBA = 'Foggy';
+      } else if (this.ultimoClimateBA.condition === 'RN') {
+        this.conditionBA = 'Rainy';
+      } else if (this.ultimoClimateBA.condition === 'CL') {
+        this.conditionBA = 'Clean Skies';
+      }
+      this.dataAtual = new Date().toLocaleTimeString();
+
+
+    }
+  );
+
+  this.climateService.getCostaNovaClimate().subscribe(dataCN => {
+    this.ultimoClimateCN = dataCN.results[0];
+
+    // condition Barra
+    if (this.ultimoClimateCN.condition === 'FG') {
+      this.conditionCN = 'Foggy';
+    } else if (this.ultimoClimateCN.condition === 'RN') {
+      this.conditionCN = 'Rainy';
+    } else if (this.ultimoClimateCN.condition === 'CL') {
+      this.conditionCN = 'Clean Skies';
+    }
+  })
+
+    if (this.dataSelection === 0) {
+      this.getEventsLast5Min();
+    }
+  }
 
   ngOnInit(): void {
     this.spinner.show();
@@ -351,43 +396,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.subscription = timer(0, 10000).subscribe(() => {
       // para a parte das conditions
-      this.climateService.getBarraClimate().subscribe(
-        dataBA => {
-
-          this.ultimoClimateBA = dataBA.results[0];
-
-          // condition Barra
-          if (this.ultimoClimateBA.condition === 'FG') {
-            this.conditionBA = 'Foggy';
-          } else if (this.ultimoClimateBA.condition === 'RN') {
-            this.conditionBA = 'Rainy';
-          } else if (this.ultimoClimateBA.condition === 'CL') {
-            this.conditionBA = 'Clean Skies';
-          }
-          this.dataAtual = new Date().toLocaleTimeString();
-
-
-        }
-      );
-
-      this.climateService.getCostaNovaClimate().subscribe(dataCN => {
-        this.ultimoClimateCN = dataCN.results[0];
-
-
-        // condition Barra
-        if (this.ultimoClimateCN.condition === 'FG') {
-          this.conditionCN = 'Foggy';
-        } else if (this.ultimoClimateCN.condition === 'RN') {
-          this.conditionCN = 'Rainy';
-        } else if (this.ultimoClimateCN.condition === 'CL') {
-          this.conditionCN = 'Clean Skies';
-        }
-      })
-
-      if (this.dataSelection === 0) {
-        this.getEventsLast5Min();
-      }
-
+      this.getConditions()
     });
 
     this.canvas = document.getElementById('chartBarra');

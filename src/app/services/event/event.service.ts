@@ -21,28 +21,31 @@ export class EventService {
     return this.http.get<any>(this.baseURL + '?offset=' + offset, httpOptions)
   }
 
-  getEventsBetweenDates(from: NgbDate, to: NgbDate, offset: number, filter?: string, limit?: number): Observable<any> {
-    const from_str = from.year + '-' + from.month.toLocaleString('en-US', {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    }) + '-' + from.day.toLocaleString('en-US', {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    }) + 'T00:00'
+  getEventsBetweenDates(offset: number, from?: NgbDate, to?: NgbDate, filter?: string, limit?: number): Observable<any> {
+    if (from != null && to != null) {
+      const from_str = from.year + '-' + from.month.toLocaleString('en-US', {
+        minimumIntegerDigits: 2,
+        useGrouping: false
+      }) + '-' + from.day.toLocaleString('en-US', {
+        minimumIntegerDigits: 2,
+        useGrouping: false
+      }) + 'T00:00'
 
-    const to_str = to.year + '-' + to.month.toLocaleString('en-US', {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    }) + '-' + to.day.toLocaleString('en-US', {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    }) + 'T00:00'
-    if (filter == null) {
-      return this.http.get<any>(this.baseURL + '?timestamp__gte=' + from_str + '&timestamp__lte=' + to_str + '&offset=' + offset +
-        (limit === null ? '' : '&limit=' + limit), httpOptions)
+      const to_str = to.year + '-' + to.month.toLocaleString('en-US', {
+        minimumIntegerDigits: 2,
+        useGrouping: false
+      }) + '-' + to.day.toLocaleString('en-US', {
+        minimumIntegerDigits: 2,
+        useGrouping: false
+      }) + 'T00:00'
+      if (filter == null) {
+        return this.http.get<any>(this.baseURL + '?timestamp__gte=' + from_str + '&timestamp__lte=' + to_str + '&offset=' + offset +
+        (limit === null || limit === undefined ? '' : '&limit=' + limit), httpOptions)
+      }
+      return this.http.get<any>(this.baseURL + '?timestamp__gte=' + from_str + '&timestamp__lte=' + to_str + filter + '&offset=' + offset
+        + (limit === null ? '' : '&limit=' + limit), httpOptions)
     }
-    return this.http.get<any>(this.baseURL + '?timestamp__gte=' + from_str + '&timestamp__lte=' + to_str + filter + '&offset=' + offset
-      + (limit === null ? '' : '&limit=' + limit), httpOptions)
+    return this.http.get<any>(this.baseURL + '?offset=' + offset + (limit === null ? '' : '&limit=' + limit) + (filter === null ? '' : '' + filter) + (filter === null ? '' : '' + filter) , httpOptions )
   }
 
   getEventsLast5Mins(filter?: string): Observable<any> {

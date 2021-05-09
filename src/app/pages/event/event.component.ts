@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ClimateService} from '../../services/climate/climate.service';
 import {EventService} from '../../services/event/event.service';
 import {NgbCalendar, NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
@@ -10,8 +10,8 @@ import {timer} from 'rxjs';
   templateUrl: './event.component.html',
   styleUrls: ['./event.component.scss']
 })
-export class EventComponent implements OnInit {
-  selectionMap = 0;
+export class EventComponent implements OnInit, OnDestroy {
+  selectionMap = -1 ;
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
   hoveredDate: NgbDate | null = null;
@@ -19,7 +19,8 @@ export class EventComponent implements OnInit {
   filter: string;
   page: number = Number(1);
   totalEvents: number;
-  selectingDate = 0
+  private subscription;
+  selectingDate = -1;
   public radioGroupForm: FormGroup;
 
   constructor(private climateService: ClimateService, private eventService: EventService,
@@ -35,6 +36,16 @@ export class EventComponent implements OnInit {
       this.fromDate = date;
       this.toDate = null;
     }
+    this.getEvents()
+  }
+
+  clearAllFilters() {
+    this.toDate = null;
+    this.fromDate = null;
+    this.filter = null;
+    this.selectionMap = -1;
+    this.selectingDate = -1;
+    this.getEvents()
   }
 
   filterCN() {
@@ -43,6 +54,7 @@ export class EventComponent implements OnInit {
     } else {
       this.filter = null
     }
+    this.getEvents()
   }
 
   filterBarra() {
@@ -51,6 +63,7 @@ export class EventComponent implements OnInit {
     } else {
       this.filter = null
     }
+    this.getEvents()
   }
 
   isHovered(date: NgbDate) {
@@ -77,7 +90,7 @@ export class EventComponent implements OnInit {
 
   getEvents() {
     if ((this.toDate != null && this.fromDate != null) || this.filter != null) {
-      this.eventService.getEventsBetweenDates(this.fromDate, this.toDate, (this.page - 1) * 10, this.filter).subscribe(
+      this.eventService.getEventsBetweenDates((this.page - 1) * 10, this.fromDate, this.toDate, this.filter).subscribe(
         data => {
           this.events = [];
           this.totalEvents = data.count;
@@ -97,10 +110,13 @@ export class EventComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    timer(0, 10000).subscribe(() => {
+     this.subscription = timer(0, 10000).subscribe(() => {
       this.getEvents();
     })
+  }
 
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
 }

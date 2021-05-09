@@ -6,11 +6,11 @@
         <div class="col-md-8" *ngIf="selectionMap==1" style="display: flex; justify-content: space-between">
 
           <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="selectingDate">
-            <label ngbButtonLabel class="btn-primary">
-              <input style="height: 50px" ngbButton type="radio" (click)="filterCN()" [value]="0"> Costa Nova
+            <label style="height: 50px"  ngbButtonLabel class="btn-primary">
+              <input ngbButton type="radio" (click)="filterCN()" [value]="0"> Costa Nova
             </label>
-            <label ngbButtonLabel class="btn-primary">
-              <input style="height: 50px" ngbButton type="radio" (click)="filterBarra()" [value]="1"> Barra
+            <label style="height: 50px"  ngbButtonLabel class="btn-primary">
+              <input ngbButton type="radio" (click)="filterBarra()" [value]="1"> Barra
             </label>
           </div>
 
@@ -47,11 +47,11 @@
           </form>
         </div>
         <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="selectionMap">
-          <label ngbButtonLabel class="btn-primary">
-            <input style="height: 50px" ngbButton type="radio" [value]="0"> All
+          <label style="height: 50px"  ngbButtonLabel class="btn-primary">
+            <input  ngbButton type="radio" (click)="clearAllFilters()" [value]="0"> All
           </label>
-          <label ngbButtonLabel class="btn-primary">
-            <input style="height: 50px" ngbButton type="radio" [value]="1"> Filter
+          <label style="height: 50px" ngbButtonLabel class="btn-primary">
+            <input ngbButton type="radio" [value]="1"> Filter
           </label>
         </div>
       </div>
