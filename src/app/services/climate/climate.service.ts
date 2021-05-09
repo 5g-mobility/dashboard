@@ -14,10 +14,10 @@ export class ClimateService {
   constructor(private http: HttpClient) { }
 
   getBarraClimate(): Observable<any> {
-    return this.http.get<any>(this.baseURL + '?location=BA', httpOptions);
+    return this.http.get<any>(this.baseURL + '?location=BA&limit=1', httpOptions);
   }
 
   getCostaNovaClimate(): Observable<any> {
-    return this.http.get<any>(this.baseURL + '?location=CN', httpOptions);
+    return this.http.get<any>(this.baseURL + '?location=CN&limit=1', httpOptions);
   }
 }

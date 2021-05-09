@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import {ClimateService} from "../../services/climate/climate.service";
-import {EventService} from "../../services/event/event.service";
-import {NgbCalendar, NgbDate, NgbDateParserFormatter} from "@ng-bootstrap/ng-bootstrap";
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {timer} from "rxjs";
+import {Component, OnInit} from '@angular/core';
+import {ClimateService} from '../../services/climate/climate.service';
+import {EventService} from '../../services/event/event.service';
+import {NgbCalendar, NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
+import {FormBuilder, FormGroup} from '@angular/forms';
+import {timer} from 'rxjs';
 
 @Component({
   selector: 'app-event',
@@ -17,6 +17,8 @@ export class EventComponent implements OnInit {
   hoveredDate: NgbDate | null = null;
   events: Event[] = [];
   filter: string;
+  page: number = Number(1);
+  totalEvents: number;
   selectingdate = 0
   public radioGroupForm: FormGroup;
 
@@ -68,15 +70,35 @@ export class EventComponent implements OnInit {
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
   }
 
+  changePage(page: number) {
+    this.page = page;
+    this.getEvents();
+  }
+
+  getEvents() {
+    if ((this.toDate != null && this.fromDate != null) || this.filter != null) {
+      this.eventService.getEventsBetweenDates(this.fromDate, this.toDate, (this.page - 1) * 10, this.filter).subscribe(
+        data => {
+          this.events = [];
+          this.totalEvents = data.count;
+          data.results.forEach(d => {
+            this.events.push(d)
+          })
+        });
+    } else {
+      this.eventService.getAllEvents((this.page - 1) * 10).subscribe(data => {
+        this.events = [];
+        this.totalEvents = data.count;
+        data.results.forEach(d => {
+          this.events.push(d)
+        });
+      });
+    }
+  }
+
   ngOnInit(): void {
-    timer(0, 10000).subscribe( () => {
-      this.events = []
-      if ((this.toDate != null && this.fromDate != null) || this.filter != null) {
-        this.eventService.getEventsBetweenDates(this.fromDate, this.toDate, this.filter).subscribe(
-          data => data.results.forEach( d => {this.events.push(d)}));
-      } else {
-        this.eventService.getAllEvents().subscribe(data => data.results.forEach( d => {this.events.push(d)}));
-      }
+    timer(0, 10000).subscribe(() => {
+      this.getEvents();
     })
 
   }

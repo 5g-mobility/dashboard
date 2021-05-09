@@ -20,15 +20,19 @@ import { ConditionsComponent } from 'app/pages/conditions/conditions.component';
 import { ExcessiveSpeedComponent } from 'app/pages/excessive-speed/excessive-speed.component';
 import { RoadInfoComponent } from 'app/pages/road-info/road-info.component';
 import { EventComponent } from 'app/pages/event/event.component';
+import {NgxSpinnerModule} from 'ngx-spinner';
+import {NgxPaginationModule} from 'ngx-pagination';
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(AdminLayoutRoutes),
     NgbModule,
-    FormsModule, 
+    FormsModule,
     ReactiveFormsModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    NgxSpinnerModule,
+    NgxPaginationModule
   ],
   declarations: [
     ConditionsComponent,

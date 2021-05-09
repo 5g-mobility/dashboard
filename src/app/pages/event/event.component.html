@@ -87,9 +87,10 @@
                             </th>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let e of events">
+                            <tr *ngFor="let e of events | paginate: { itemsPerPage: 10 , currentPage: page,
+                            totalItems: totalEvents }">
                                 <td>
-                                    {{e.timestamp.slice(0, 21)}}
+                                    {{e.timestamp | date:'medium'}}
                                 </td>
                                 <td>
                                     {{e.location}}
@@ -117,6 +118,9 @@
                         </tbody>
                     </table>
                 </div>
+              <div class="col-12" style="display: flex; justify-content: center">
+                <pagination-controls (pageChange)="changePage(page = $event)"></pagination-controls>
+              </div>
             </div>
         </div>
     </div>

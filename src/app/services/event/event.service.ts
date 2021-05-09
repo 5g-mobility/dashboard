@@ -17,11 +17,11 @@ export class EventService {
   constructor(private http: HttpClient) {
   }
 
-  getAllEvents(): Observable<any> {
-    return this.http.get<any>(this.baseURL, httpOptions)
+  getAllEvents(offset: number): Observable<any> {
+    return this.http.get<any>(this.baseURL + '?offset=' + offset, httpOptions)
   }
 
-  getEventsBetweenDates(from: NgbDate, to: NgbDate, filter?: string): Observable<any> {
+  getEventsBetweenDates(from: NgbDate, to: NgbDate, offset: number, filter?: string, limit?: number): Observable<any> {
     const from_str = from.year + '-' + from.month.toLocaleString('en-US', {
       minimumIntegerDigits: 2,
       useGrouping: false
@@ -38,9 +38,11 @@ export class EventService {
       useGrouping: false
     }) + 'T00:00'
     if (filter == null) {
-      return this.http.get<any>(this.baseURL + '?timestamp__gte=' + from_str + '&timestamp__lte=' + to_str, httpOptions)
+      return this.http.get<any>(this.baseURL + '?timestamp__gte=' + from_str + '&timestamp__lte=' + to_str + '&offset=' + offset +
+        (limit === null ? '' : '&limit=' + limit), httpOptions)
     }
-    return this.http.get<any>(this.baseURL + '?timestamp__gte=' + from_str + '&timestamp__lte=' + to_str + filter, httpOptions)
+    return this.http.get<any>(this.baseURL + '?timestamp__gte=' + from_str + '&timestamp__lte=' + to_str + filter + '&offset=' + offset
+      + (limit === null ? '' : '&limit=' + limit), httpOptions)
   }
 
   getEventsLast5Mins(filter?: string): Observable<any> {

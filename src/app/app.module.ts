@@ -1,5 +1,5 @@
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { NgModule } from '@angular/core';
+import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ToastrModule } from "ngx-toastr";
 
@@ -20,6 +20,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { HttpClientModule } from '@angular/common/http';
+import {NgxPaginationModule} from 'ngx-pagination';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgxSpinnerModule} from 'ngx-spinner';
 
 
 @NgModule({
@@ -39,10 +42,14 @@ import { HttpClientModule } from '@angular/common/http';
     NgbModule,
     CommonModule,
     FormsModule,
+    BrowserModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgxPaginationModule,
+    NgxSpinnerModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule { }

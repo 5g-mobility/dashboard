@@ -10,6 +10,7 @@ import {ClimateService} from '../../services/climate/climate.service';
 import {faSmog} from '@fortawesome/free-solid-svg-icons/faSmog';
 import {EventService} from '../../services/event/event.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'app-conditions',
@@ -32,6 +33,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   public chartEmail;
   public radioGroupForm: FormGroup;
   private subscription;
+  private starting = true;
 
 
   mapMarkers: any[] = [];
@@ -219,7 +221,8 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   constructor(private climateService: ClimateService, private eventService: EventService,
-              private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private formBuilder: FormBuilder) {
+              private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private formBuilder: FormBuilder,
+              private spinner: NgxSpinnerService) {
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
@@ -258,7 +261,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getEventsByDate() {
-    this.eventService.getEventsBetweenDates(this.fromDate, this.toDate, '&event_type=CO' + this.filterToSearch).subscribe(
+    this.eventService.getEventsBetweenDates(this.fromDate, this.toDate, 0, '&event_type=CO' + this.filterToSearch, 100).subscribe(
       data => {
         data.results.forEach(r => {
           if (r.event_class === 'RA') {
@@ -335,33 +338,21 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.mapMarkers.push(marker);
           }
         })
+        this.spinner.hide();
+        this.starting = false;
       }
     )
   }
 
 
   ngOnInit(): void {
+    this.spinner.show();
     this.radioGroupForm = this.formBuilder.group({});
 
     this.subscription = timer(0, 10000).subscribe(() => {
       // para a parte das conditions
       this.climateService.getBarraClimate().subscribe(
         dataBA => {
-
-
-          this.climateService.getCostaNovaClimate().subscribe(dataCN => {
-            this.ultimoClimateCN = dataCN.results[0];
-
-
-            // condition Barra
-            if (this.ultimoClimateCN.condition === 'FG') {
-              this.conditionCN = 'Foggy';
-            } else if (this.ultimoClimateCN.condition === 'RN') {
-              this.conditionCN = 'Rainy';
-            } else if (this.ultimoClimateCN.condition === 'CL') {
-              this.conditionCN = 'Clean Skies';
-            }
-          })
 
           this.ultimoClimateBA = dataBA.results[0];
 
@@ -374,12 +365,28 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.conditionBA = 'Clean Skies';
           }
           this.dataAtual = new Date().toLocaleTimeString();
+
+
         }
       );
 
-    if (this.dataSelection === 0) {
-      this.getEventsLast5Min();
-    }
+      this.climateService.getCostaNovaClimate().subscribe(dataCN => {
+        this.ultimoClimateCN = dataCN.results[0];
+
+
+        // condition Barra
+        if (this.ultimoClimateCN.condition === 'FG') {
+          this.conditionCN = 'Foggy';
+        } else if (this.ultimoClimateCN.condition === 'RN') {
+          this.conditionCN = 'Rainy';
+        } else if (this.ultimoClimateCN.condition === 'CL') {
+          this.conditionCN = 'Clean Skies';
+        }
+      })
+
+      if (this.dataSelection === 0) {
+        this.getEventsLast5Min();
+      }
 
     });
 
