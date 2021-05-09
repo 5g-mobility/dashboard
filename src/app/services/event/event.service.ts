@@ -37,23 +37,26 @@ export class EventService {
       minimumIntegerDigits: 2,
       useGrouping: false
     }) + 'T00:00'
-    console.log(from_str, to_str);
     if (filter == null) {
       return this.http.get<any>(this.baseURL + '?timestamp__gte=' + from_str + '&timestamp__lte=' + to_str, httpOptions)
     }
     return this.http.get<any>(this.baseURL + '?timestamp__gte=' + from_str + '&timestamp__lte=' + to_str + filter, httpOptions)
   }
 
-  getEventsLast5Mins(): Observable<any> {
+  getEventsLast5Mins(filter?: string): Observable<any> {
     const date = new Date();
     date.setMinutes(date.getMinutes() - 5);
-    return this.http.get<any>(this.baseURL + '?timestamp__lte=' + date.toISOString() + '&event_type=CO' , httpOptions)
+
+    if (filter == null) {
+      return this.http.get<any>(this.baseURL + '?timestamp__gte=' + date.toISOString(), httpOptions)
+    }
+    return this.http.get<any>(this.baseURL + '?timestamp__gte=' + date.toISOString()  + filter, httpOptions)
   }
 
   getExcessiveSpeedLast5Mins(): Observable<any> {
     const date: Date = new Date();
     date.setMinutes(date.getMinutes() - 5);
-    return this.http.get<any>(this.baseURL + '?timestamp__lte=' + date.toISOString() + '&event_type=CO&event_class=CS' , httpOptions )
+    return this.http.get<any>(this.baseURL + '?timestamp__gte=' + date.toISOString() + '&event_type=CO&event_class=CS' , httpOptions )
   }
 
   getExcessiveSpeedBetweenDates(from: NgbDate, to: NgbDate): Observable<any> {

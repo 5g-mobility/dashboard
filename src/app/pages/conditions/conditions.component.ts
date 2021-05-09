@@ -25,9 +25,8 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   foggy = faSmog;
   private map;
   dataSelection = 0;
-  typeSelection = -1;
-  filterToSearch: string;
-  dataselection = -1
+  typeSelection = 0;
+  filterToSearch: String = '';
   public ctx;
   public canvas: any;
   public chartEmail;
@@ -36,15 +35,15 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
 
   mapMarkers: any[] = [];
-  ultimoBA: Climate;
-  ultimoCN: Climate;
+  ultimoClimateBA: Climate;
+  ultimoClimateCN: Climate;
   conditionBA: string;
   conditionCN: string;
   dataAtual: String;
 
   hoveredDate: NgbDate | null = null;
 
-  fromDate: NgbDate | null;
+  fromDate: NgbDate;
   toDate: NgbDate | null;
 
 
@@ -126,8 +125,10 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
+      this.selectDate();
     } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
       this.toDate = date;
+      this.selectDate();
     } else {
       this.fromDate = date;
       this.toDate = null;
@@ -135,57 +136,57 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   filterRain() {
-    this.onFilter()
     if (this.filterToSearch !== '&event_class=RA') {
       this.filterToSearch = '&event_class=RA'
     } else {
-      this.filterToSearch = null
+      this.filterToSearch = ''
     }
+    this.onFilter()
   }
 
   filterFog() {
-    this.onFilter()
     if (this.filterToSearch !== '&event_class=FO') {
       this.filterToSearch = '&event_class=FO'
     } else {
-      this.filterToSearch = null
+      this.filterToSearch = ''
     }
+    this.onFilter()
   }
 
   filterNoLight() {
-    this.onFilter()
     if (this.filterToSearch !== '&event_class=NL') {
       this.filterToSearch = '&event_class=NL'
     } else {
-      this.filterToSearch = null
+      this.filterToSearch = ''
     }
+    this.onFilter()
   }
 
   filterLight() {
-    this.onFilter()
     if (this.filterToSearch !== '&event_class=LT') {
       this.filterToSearch = '&event_class=LT'
     } else {
-      this.filterToSearch = null
+      this.filterToSearch = ''
     }
+    this.onFilter()
   }
 
   filterOutsideTemp() {
-    this.onFilter()
     if (this.filterToSearch !== '&event_class=OT') {
       this.filterToSearch = '&event_class=OT'
     } else {
-      this.filterToSearch = null
+      this.filterToSearch = ''
     }
+    this.onFilter()
   }
 
   filterCarbon() {
-    this.onFilter()
     if (this.filterToSearch !== '&event_class=CF') {
       this.filterToSearch = '&event_class=CF'
     } else {
-      this.filterToSearch = null
+      this.filterToSearch = ''
     }
+    this.onFilter()
   }
 
   onFilter() {
@@ -193,6 +194,11 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.map.removeLayer(this.mapMarkers[i]);
     }
     this.mapMarkers = [];
+    if (this.dataSelection === 0) {
+      this.getEventsLast5Min();
+    } else {
+      this.getEventsByDate();
+    }
   }
 
   isHovered(date: NgbDate) {
@@ -214,6 +220,8 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private climateService: ClimateService, private eventService: EventService,
               private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private formBuilder: FormBuilder) {
+    this.fromDate = calendar.getToday();
+    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
 
   private initMap(): void {
@@ -236,7 +244,8 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.map.removeLayer(this.mapMarkers[i]);
     }
     this.mapMarkers = [];
-    this.dataselection = 0;
+    this.dataSelection = 0;
+    this.getEventsLast5Min();
   }
 
   selectDate() {
@@ -244,8 +253,92 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.map.removeLayer(this.mapMarkers[i]);
     }
     this.mapMarkers = [];
-    this.dataselection = 1;
+    this.dataSelection = 1;
+    this.getEventsByDate();
   }
+
+  getEventsByDate() {
+    this.eventService.getEventsBetweenDates(this.fromDate, this.toDate, '&event_type=CO' + this.filterToSearch).subscribe(
+      data => {
+        data.results.forEach(r => {
+          if (r.event_class === 'RA') {
+            const marker = L.marker([r.latitude, r.longitude], {icon: this.rainMarker});
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Rain Detected"</p></div>');
+            marker.addTo(this.map);
+            this.mapMarkers.push(marker);
+          } else if (r.event_class === 'FO') {
+            const marker = L.marker([r.latitude, r.longitude], {icon: this.fogMarker});
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Fog Detected"</p></div>');
+            marker.addTo(this.map);
+            this.mapMarkers.push(marker);
+            this.mapMarkers.push(marker);
+          } else if (r.event_class === 'NL') {
+            const marker = L.marker([r.latitude, r.longitude], {icon: this.noLight});
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Medium Lights OFF"</p></div>');
+            marker.addTo(this.map);
+            this.mapMarkers.push(marker);
+          } else if (r.event_class === 'LT') {
+            const marker = L.marker([r.latitude, r.longitude], {icon: this.light});
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Medium Lights ON"</p></div>');
+            marker.addTo(this.map);
+            this.mapMarkers.push(marker);
+          } else if (r.event_class === 'OT') {
+            const marker = L.marker([r.latitude, r.longitude], {icon: this.outsideTemp});
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Outside Temperature"</p></div>');
+            marker.addTo(this.map);
+            this.mapMarkers.push(marker);
+          } else if (r.event_class === 'CF') {
+            const marker = L.marker([40.629779, -8.737498], {icon: this.carbon});
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Carbon Emission"</p></div>');
+            marker.addTo(this.map);
+            this.mapMarkers.push(marker);
+          }
+        })
+      }
+    )
+  }
+
+  getEventsLast5Min() {
+    this.eventService.getEventsLast5Mins('&event_type=CO' + this.filterToSearch).subscribe(
+      data => {
+        data.results.forEach(r => {
+          if (r.event_class === 'RA') {
+            const marker = L.marker([r.latitude, r.longitude], {icon: this.rainMarker});
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Rain Detected"</p></div>');
+            marker.addTo(this.map);
+            this.mapMarkers.push(marker);
+          } else if (r.event_class === 'FO') {
+            const marker = L.marker([r.latitude, r.longitude], {icon: this.fogMarker});
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Fog Detected"</p></div>');
+            marker.addTo(this.map);
+            this.mapMarkers.push(marker);
+            this.mapMarkers.push(marker);
+          } else if (r.event_class === 'NL') {
+            const marker = L.marker([r.latitude, r.longitude], {icon: this.noLight});
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Medium Lights OFF"</p></div>');
+            marker.addTo(this.map);
+            this.mapMarkers.push(marker);
+          } else if (r.event_class === 'LT') {
+            const marker = L.marker([r.latitude, r.longitude], {icon: this.light});
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Medium Lights ON"</p></div>');
+            marker.addTo(this.map);
+            this.mapMarkers.push(marker);
+          } else if (r.event_class === 'OT') {
+            const marker = L.marker([r.latitude, r.longitude], {icon: this.outsideTemp});
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Outside Temperature"</p></div>');
+            marker.addTo(this.map);
+            this.mapMarkers.push(marker);
+          } else if (r.event_class === 'CF') {
+            const marker = L.marker([40.629779, -8.737498], {icon: this.carbon});
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Carbon Emission"</p></div>');
+            marker.addTo(this.map);
+            this.mapMarkers.push(marker);
+          }
+        })
+      }
+    )
+  }
+
 
   ngOnInit(): void {
     this.radioGroupForm = this.formBuilder.group({});
@@ -255,81 +348,39 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
       this.climateService.getBarraClimate().subscribe(
         dataBA => {
 
+
           this.climateService.getCostaNovaClimate().subscribe(dataCN => {
-            this.ultimoCN = dataCN.results[0];
+            this.ultimoClimateCN = dataCN.results[0];
+
 
             // condition Barra
-            if (this.ultimoCN.condition === 'FG') {
+            if (this.ultimoClimateCN.condition === 'FG') {
               this.conditionCN = 'Foggy';
-            } else if (this.ultimoCN.condition === 'RN') {
+            } else if (this.ultimoClimateCN.condition === 'RN') {
               this.conditionCN = 'Rainy';
-            } else if (this.ultimoCN.condition === 'CL') {
+            } else if (this.ultimoClimateCN.condition === 'CL') {
               this.conditionCN = 'Clean Skies';
             }
           })
 
-          this.ultimoBA = dataBA.results[0];
+          this.ultimoClimateBA = dataBA.results[0];
 
           // condition Barra
-          if (this.ultimoBA.condition === 'FG') {
+          if (this.ultimoClimateBA.condition === 'FG') {
             this.conditionBA = 'Foggy';
-          } else if (this.ultimoBA.condition === 'RN') {
+          } else if (this.ultimoClimateBA.condition === 'RN') {
             this.conditionBA = 'Rainy';
-          } else if (this.ultimoBA.condition === 'CL') {
+          } else if (this.ultimoClimateBA.condition === 'CL') {
             this.conditionBA = 'Clean Skies';
           }
           this.dataAtual = new Date().toLocaleTimeString();
         }
       );
 
-      // CLICOU EM SELECT DATE
-      if (this.dataselection === 1) {
-        // então ir buscar as datas, pesquisar pelos eventos entre essas datas
-        this.eventService.getEventsBetweenDates(this.fromDate, this.toDate, '&event_type=CO' + this.filterToSearch).subscribe(
-          data => {
-            data.results.forEach(r => {
-              if (r.event_class === 'RA') {
-                const marker = L.marker([r.latitude, r.longitude], {icon: this.rainMarker});
-                marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Rain Detected"</p></div>');
-                marker.addTo(this.map);
-                this.mapMarkers.push(marker);
-              } else if (r.event_class === 'FO') {
-                const marker = L.marker([r.latitude, r.longitude], {icon: this.fogMarker});
-                marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Fog Detected"</p></div>');
-                marker.addTo(this.map);
-                this.mapMarkers.push(marker);
-                this.mapMarkers.push(marker);
-              } else if (r.event_class === 'NL') {
-                const marker = L.marker([r.latitude, r.longitude], {icon: this.noLight});
-                marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Medium Lights OFF"</p></div>');
-                marker.addTo(this.map);
-                this.mapMarkers.push(marker);
-              } else if (r.event_class === 'LT') {
-                const marker = L.marker([r.latitude, r.longitude], {icon: this.light});
-                marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Medium Lights ON"</p></div>');
-                marker.addTo(this.map);
-                this.mapMarkers.push(marker);
-              } else if (r.event_class === 'OT') {
-                const marker = L.marker([r.latitude, r.longitude], {icon: this.outsideTemp});
-                marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Outside Temperature"</p></div>');
-                marker.addTo(this.map);
-                this.mapMarkers.push(marker);
-              } else if (r.event_class === 'CF') {
-                const marker = L.marker([40.629779, -8.737498], {icon: this.carbon});
-                marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Carbon Emission"</p></div>');
-                marker.addTo(this.map);
-                this.mapMarkers.push(marker);
-              }
-            })
-          }
-        )
-      } else {
-        this.eventService.getEventsLast5Mins().subscribe(
-          data => {
-            console.log(data.results)
-          }
-        )
-      }
+    if (this.dataSelection === 0) {
+      this.getEventsLast5Min();
+    }
+
     });
 
     this.canvas = document.getElementById('chartBarra');
