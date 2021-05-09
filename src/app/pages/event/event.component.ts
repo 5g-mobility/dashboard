@@ -70,8 +70,8 @@ export class EventComponent implements OnInit {
 
   ngOnInit(): void {
     timer(0, 10000).subscribe( () => {
+      this.events = []
       if ((this.toDate != null && this.fromDate != null) || this.filter != null) {
-        this.events = []
         this.eventService.getEventsBetweenDates(this.fromDate, this.toDate, this.filter).subscribe(
           data => data.results.forEach( d => {this.events.push(d)}));
       } else {
