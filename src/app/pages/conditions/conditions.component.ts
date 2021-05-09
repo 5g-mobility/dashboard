@@ -33,7 +33,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   public chartEmail;
   public radioGroupForm: FormGroup;
   private subscription;
-  private starting = true;
+  starting = true;
 
 
   mapMarkers: any[] = [];
