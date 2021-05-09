@@ -2,8 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import Chart from 'chart.js';
 import { NgbDate, NgbCalendar, NgbDateParserFormatter, NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { faWalking, faBiking, faDog, faExclamationTriangle, faClock, faTruck, faCarSide, faMotorcycle, faTachometerAlt } from '@fortawesome/free-solid-svg-icons';
-
-
+import {EventService} from '../../services/event/event.service';
+import {stringify} from '@angular/compiler/src/util';
+import {time} from 'ionicons/icons';
+import {DailyInflowService} from '../../services/daily-inflow/daily-inflow.service';
 
 @Component({
   selector: 'app-road-info',
@@ -24,14 +26,42 @@ export class RoadInfoComponent implements OnInit {
   public canvas: any;
   public chartCars;
 
+  locationBttn = 0
+  hrs24Bttn = 0
+
+
+  maxBACars: number[] = [];
+  maxCNCars: number[] = [];
+  maxLabels: string[] = [];
+
+  circulatingCA: number;
+  circulatingTR: number;
+  circulatingMC: number;
+  circulatingData: number[] = [];
+
   hoveredDate: NgbDate | null = null;
+
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
 
-  constructor(private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
-    this.fromDate = calendar.getToday();
-    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+
+  constructor(private eventService: EventService, private dailyService: DailyInflowService, private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
   }
+
+  Barra() {
+    console.log('barra')
+
+  }
+
+  Ria() {
+    console.log('ria')
+  }
+
+  Duna() {
+    console.log('duna')
+  }
+
+
 
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
@@ -39,9 +69,102 @@ export class RoadInfoComponent implements OnInit {
     } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
       this.toDate = date;
     } else {
-      this.toDate = null;
       this.fromDate = date;
+      this.toDate = null;
     }
+  }
+
+
+  constructMaxCarsGraph() {
+    const speedCanvas = document.getElementById('dailyInflowTraffic');
+
+    const BA = {
+      data: [],
+      fill: false,
+      label: 'Max Number of Cars - Praia da Barra',
+      borderColor: '#fbc658',
+      backgroundColor: 'transparent',
+      pointBorderColor: '#fbc658',
+      pointRadius: 4,
+      pointHoverRadius: 4,
+      pointBorderWidth: 8,
+    };
+
+    const CN = {
+      data: [],
+      fill: false,
+      label: 'Max Number of Cars - Costa Nova',
+      borderColor: '#51CACF',
+      backgroundColor: 'transparent',
+      pointBorderColor: '#51CACF',
+      pointRadius: 4,
+      pointHoverRadius: 4,
+      pointBorderWidth: 8
+    };
+
+    const dailyData = {
+      labels: [],
+      datasets: [BA, CN]
+    };
+
+    const chartOptions = {
+      legend: {
+        display: true,
+        position: 'bottom',
+      }
+    };
+
+    const lineChart = new Chart(speedCanvas, {
+      type: 'line',
+      hover: false,
+      data: dailyData,
+      options: chartOptions,
+    });
+
+  }
+
+  constructTopSpeedGraph() {
+    const topSpeedCanvas = document.getElementById('topSpeedGraph');
+
+    const dataTopSpeed = {
+      data: [],
+      fill: false,
+      label: 'Max Speed of The Day',
+      borderColor: '#EF8157',
+      backgroundColor: 'transparent',
+      pointBorderColor: '#EF8157',
+      pointRadius: 4,
+      pointHoverRadius: 4,
+      pointBorderWidth: 8
+    };
+
+    const dailyData = {
+      labels: [],
+      datasets: [dataTopSpeed]
+    };
+
+    const chartOptions = {
+      legend: {
+        display: true,
+        position: 'bottom',
+      },
+      scales: {
+       yAxes: [{
+          ticks: {
+             max: 300,
+             min: 0,
+             stepSize: 50,
+          }
+       }]
+    }
+    };
+
+    const lineChart = new Chart(topSpeedCanvas, {
+      type: 'line',
+      hover: false,
+      data: dailyData,
+      options: chartOptions,
+    });
   }
 
   isHovered(date: NgbDate) {
@@ -61,107 +184,16 @@ export class RoadInfoComponent implements OnInit {
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
   }
 
-  ngOnInit(): void {
-    var speedCanvas = document.getElementById("dailyInflowTraffic");
 
-    var dataEventNumber = {
-      data: [0, 19, 15, 20, 30, 40, 40, 50, 25, 30, 50, 70, 0,
-        19, 15, 20, 30, 40, 40, 50, 25, 30, 50, 70, 50, 20, 60,
-        55, 76, 34, 21],
-      fill: false,
-      label: 'Max Number of Cars - Praia da Barra',
-      borderColor: '#fbc658',
-      backgroundColor: 'transparent',
-      pointBorderColor: '#fbc658',
-      pointRadius: 4,
-      pointHoverRadius: 4,
-      pointBorderWidth: 8,
-    };
-
-    var dataTopSpeed = {
-      data: [150, 120, 95, 200, 220, 300, 93, 97, 100, 110, 99, 91, 102,
-        145, 185, 170, 160, 112, 133, 141, 121, 105, 100, 96, 95, 91, 93,
-        92, 97, 94, 91],
-      fill: false,
-      label: 'Max Number of Cars - Costa Nova',
-      borderColor: '#51CACF',
-      backgroundColor: 'transparent',
-      pointBorderColor: '#51CACF',
-      pointRadius: 4,
-      pointHoverRadius: 4,
-      pointBorderWidth: 8
-    };
-
-    var dailyData = {
-      labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-        "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
-        "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
-        "31"],
-      datasets: [dataEventNumber, dataTopSpeed]
-    };
-
-    var chartOptions = {
-      legend: {
-        display: true,
-        position: 'bottom',
-      }
-    };
-
-    var lineChart = new Chart(speedCanvas, {
-      type: 'line',
-      hover: false,
-      data: dailyData,
-      options: chartOptions,
-    });
-
-
-    var topSpeedCanvas = document.getElementById("topSpeedGraph");
-
-    var dataTopSpeed = {
-      data: [150, 120, 95, 200, 220, 300, 93, 97, 100, 110, 99, 91, 102,
-        145, 185, 170, 160, 112, 133, 141, 121, 105, 100, 96, 95, 91, 93,
-        92, 97, 94, 91],
-      fill: false,
-      label: 'Max Speed of The Day',
-      borderColor: '#EF8157',
-      backgroundColor: 'transparent',
-      pointBorderColor: '#EF8157',
-      pointRadius: 4,
-      pointHoverRadius: 4,
-      pointBorderWidth: 8
-    };
-
-    var dailyData = {
-      labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-        "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
-        "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
-        "31"],
-      datasets: [dataTopSpeed]
-    };
-
-    var chartOptions = {
-      legend: {
-        display: true,
-        position: 'bottom',
-      }
-    };
-
-    var lineChart = new Chart(topSpeedCanvas, {
-      type: 'line',
-      hover: false,
-      data: dailyData,
-      options: chartOptions,
-    });
-
-
-    this.canvas = document.getElementById("chartCars");
-    this.ctx = this.canvas.getContext("2d");
+  constructCirculatingVehiclesGraph() {
+    this.canvas = document.getElementById('chartCars');
+    this.ctx = this.canvas.getContext('2d');
     this.chartCars = new Chart(this.ctx, {
       type: 'pie',
       data: {
         labels: ['Cars', 'Trucks', 'Motorcycles'],
         datasets: [{
-          label: "Cars",
+          label: 'Cars',
           pointRadius: 0,
           pointHoverRadius: 0,
           backgroundColor: [
@@ -170,7 +202,7 @@ export class RoadInfoComponent implements OnInit {
             '#ef8157'
           ],
           borderWidth: 0,
-          data: [100, 50, 20]
+          data: [1, 2, 3]
         }]
       },
 
@@ -198,7 +230,7 @@ export class RoadInfoComponent implements OnInit {
             },
             gridLines: {
               drawBorder: true,
-              zeroLineColor: "transparent",
+              zeroLineColor: 'transparent',
               color: 'rgba(255,255,255,0.05)'
             }
 
@@ -209,7 +241,7 @@ export class RoadInfoComponent implements OnInit {
             gridLines: {
               drawBorder: false,
               color: 'rgba(255,255,255,0.1)',
-              zeroLineColor: "transparent"
+              zeroLineColor: 'transparent'
             },
             ticks: {
               display: false,
@@ -218,6 +250,9 @@ export class RoadInfoComponent implements OnInit {
         },
       }
     });
+  }
+
+  ngOnInit(): void {
   }
 
 }

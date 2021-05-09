@@ -1,75 +1,143 @@
+<div>
+  <ngx-spinner [fullScreen]="true" ></ngx-spinner>
+</div>
 <div class="row">
-    <div class="col-md-12">
-        <div class="card">
-            <div class="card-header" style="display: flex; justify-content: space-between;">
-                <h5 class="card-title">Latest Events</h5>
-                <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="selectionMap">
-                    <label ngbButtonLabel class="btn-primary">
-                        <input ngbButton type="radio" [value]="0"> All
-                    </label>
-                    <label ngbButtonLabel class="btn-primary">
-                        <input ngbButton type="radio" [value]="1"> Select Date
-                    </label>
-                    <label ngbButtonLabel class="btn-primary">
-                        <input ngbButton type="radio" [value]="2"> Select Location
-                    </label>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table" style="table-layout: fixed;">
-                        <thead class=" text-primary">
-                            <th>
-                                Timestamp
-                            </th>
-                            <th>
-                                Location
-                            </th>
-                            <th>
-                                Type
-                            </th>
-                            <th>
-                                Class
-                            </th>
-                            <th>
-                                Speed (km/h)
-                            </th>
-                            <th>
-                                GeoLocation
-                            </th>
-                            <th>
-                                CO2 Emission (g/km)
-                            </th>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let e of events">
-                                <td>
-                                    {{e.timestamp}}
-                                </td>
-                                <td>
-                                    {{e.location}}
-                                </td>
-                                <td>
-                                    {{e.type}}
-                                </td>
-                                <td>
-                                    {{e.class}}
-                                </td>
-                                <td>
-                                    {{e.speed}}
-                                </td>
-                                <td>
-                                    {{e.geolocation}}
-                                </td>
-                                <td>
-                                    {{e.co2}}
-                                </td>
-                            </tr>
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header" style="display: flex; justify-content: space-between;">
+        <h5 class="card-title">Latest Events</h5>
+        <div class="col-md-8" *ngIf="selectionMap==1" style="display: flex; justify-content: space-between">
 
-                        </tbody>
-                    </table>
+          <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="selectingDate">
+            <label style="height: 50px"  ngbButtonLabel class="btn-primary">
+              <input ngbButton type="radio" (click)="filterCN()" [value]="0"> Costa Nova
+            </label>
+            <label style="height: 50px"  ngbButtonLabel class="btn-primary">
+              <input ngbButton type="radio" (click)="filterBarra()" [value]="1"> Barra
+            </label>
+              <div class="col">
+                <div ngbDropdown class="d-inline-block">
+                  <button class="btn btn-secondary dropdown-toggle" id="dropdownBasic1" ngbDropdownToggle>Type </button>
+                  <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button (click)="clearAllFilters()" ngbDropdownItem>Clear Filter</button>
+                    <button (click)="filterRain()" ngbDropdownItem>Rain</button>
+                    <button (click)="filterFog()" ngbDropdownItem>Fog</button>
+                    <button (click)="filterNoLight()" ngbDropdownItem>No Light</button>
+                    <button (click)="filterLight()" ngbDropdownItem>Light</button>
+                    <button (click)="filterOutsideTemp()" ngbDropdownItem>Outside Temperature</button>
+                    <button (click)="filterCarbon()" ngbDropdownItem>Carbon Footprint</button>
+                  </div>
                 </div>
+              </div>
+          </div>
+
+
+          <form class="form-inline">
+            <div class="form-group hidden">
+              <div class="input-group">
+                <!-- PARTE PARA DAR TOGGLE DO DATAPICKER -->
+                <input style="z-index: -1" name="datepicker" class="form-control" ngbDatepicker
+                       #datepicker="ngbDatepicker"
+                       [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2"
+                       [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1">
+                <ng-template #t let-date let-focused="focused">
+                            <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                                  [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                                  (mouseleave)="hoveredDate = null">
+                                {{ date.day }}
+                            </span>
+                </ng-template>
+              </div>
             </div>
+            <div class="form-group" style="margin-top:2%">
+              <!-- PARTE ONDE APARECEM AS DATAS ESCOLHIDAS -->
+              <button class="btn btn-outline-secondary calendar fa fa-calendar"
+                      (click)="datepicker.toggle()" type="button">
+              </button>
+              <input #dpFromDate class="form-control input-sm" placeholder="yyyy-mm-dd" name="dpFromDate"
+                     [value]="formatter.format(fromDate)"
+                     (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+              <input #dpToDate class="form-control input-sm" placeholder="yyyy-mm-dd" name="dpToDate"
+                     [value]="formatter.format(toDate)"
+                     (input)="toDate = validateInput(toDate, dpToDate.value)">
+            </div>
+          </form>
         </div>
+        <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="selectionMap">
+          <label style="height: 50px"  ngbButtonLabel class="btn-primary">
+            <input  ngbButton type="radio" (click)="clearAllFilters()" [value]="0"> All
+          </label>
+          <label style="height: 50px" ngbButtonLabel class="btn-primary">
+            <input ngbButton type="radio" [value]="1"> Filter
+          </label>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table" style="table-layout: fixed;">
+            <thead class=" text-primary">
+            <th>
+              Timestamp
+            </th>
+            <th>
+              Location
+            </th>
+            <th>
+              Type
+            </th>
+            <th>
+              Class
+            </th>
+            <th>
+              Speed (km/h)
+            </th>
+            <th>
+              GeoLocation
+            </th>
+            <th>
+              CO2 Emission
+            </th>
+            <th>
+              Temperature
+            </th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let e of events | paginate: { itemsPerPage: 10 , currentPage: page,
+                            totalItems: totalEvents }">
+              <td>
+                {{e.timestamp | date:'medium'}}
+              </td>
+              <td>
+                {{e.location}}
+              </td>
+              <td>
+                {{e.event_type}}
+              </td>
+              <td>
+                {{e.event_class}}
+              </td>
+              <td>
+                {{e.velocity}}
+              </td>
+              <td>
+                [{{e.latitude}}, {{e.longitude}}]
+              </td>
+              <td>
+                {{e.co2}}
+              </td>
+              <td>
+                {{e.temperature}}
+              </td>
+            </tr>
+
+            </tbody>
+          </table>
+          <div class="col-12" style="display: flex; justify-content: center">
+            <pagination-controls (pageChange)="changePage(page = $event)"></pagination-controls>
+          </div>
+        </div>
+
+      </div>
     </div>
+  </div>
 </div>

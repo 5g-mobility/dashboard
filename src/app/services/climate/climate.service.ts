@@ -10,16 +10,14 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class ClimateService {
-  private baseURL = 'http://localhost:8000/5g-mobility/daily-inflow/'
+  private baseURL = 'http://localhost:8000/5g-mobility/climate/'
   constructor(private http: HttpClient) { }
 
-  getClimate(field?: string, search?: string): Observable<any> {
-    let url = this.baseURL;
-    if (field != null && search != null) {
-      url += '/?' + field + '=' + search;
-    } else {
-      url = this.baseURL;
-    }
-    return this.http.get<any>(url, httpOptions);
+  getBarraClimate(): Observable<any> {
+    return this.http.get<any>(this.baseURL + '?location=BA&limit=1', httpOptions);
+  }
+
+  getCostaNovaClimate(): Observable<any> {
+    return this.http.get<any>(this.baseURL + '?location=CN&limit=1', httpOptions);
   }
 }

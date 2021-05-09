@@ -38,20 +38,15 @@ export class DashboardComponent implements OnInit {
   events: Event[] = [];
   climate: Climate[] = []
   dailyInflow: DailyInflow[] = []
+  currentInflow: { [id: string]: DailyInflow } = {}
 
   constructor( private eventService: EventService, private climateService: ClimateService, private dailyService: DailyInflowService ) {
   }
 
-  getEvents(): void {
-    this.eventService.getEvent().subscribe(
-      data =>  data.results.forEach(
-        e => this.events.push(e)
-      )
-    );
-  }
+
 
   getClimate(): void {
-    this.climateService.getClimate().subscribe(
+    this.climateService.getBarraClimate().subscribe(
       data => data.results.forEach(
         c => this.climate.push(c)
       )
@@ -61,13 +56,24 @@ export class DashboardComponent implements OnInit {
   getDaily(): void {
     this.dailyService.getDaily().subscribe(
       data => data.results.forEach(
-        d => this.dailyInflow.push(d)
+        d => {
+          this.dailyInflow.push(d)
+          if ( d.current != null ) {
+            if ( d.location === 'BA' ) {
+              this.currentInflow['BA'] = d
+            }
+            if ( d.location === 'CN' ) {
+              this.currentInflow['CN'] = d
+            }
+          }
+        }
       )
     )
   }
 
+
     ngOnInit() {
-      this.getEvents()
+
       this.getClimate()
       this.getDaily()
 

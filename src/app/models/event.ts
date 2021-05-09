@@ -7,6 +7,6 @@ export class Event {
   velocity: number;
   latitude: number;
   longitude: number;
-  co2km: number;
+  co2: number;
   temperature: number;
 }
