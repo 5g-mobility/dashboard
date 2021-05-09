@@ -46,7 +46,7 @@ export class DashboardComponent implements OnInit {
 
 
   getClimate(): void {
-    this.climateService.getClimate().subscribe(
+    this.climateService.getBarraClimate().subscribe(
       data => data.results.forEach(
         c => this.climate.push(c)
       )

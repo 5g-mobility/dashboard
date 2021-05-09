@@ -1,22 +1,22 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { faCloudShowersHeavy, faLeaf, faCloudSun, faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
+import {Component, OnInit, AfterViewInit, OnDestroy} from '@angular/core';
+import {faCloudShowersHeavy, faLeaf, faCloudSun, faSun, faMoon} from '@fortawesome/free-solid-svg-icons';
 import * as L from 'leaflet';
 import 'leaflet-extra-markers/dist/js/leaflet.extra-markers.js';
-import { NgbDate, NgbCalendar, NgbDateParserFormatter, NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import {NgbDate, NgbCalendar, NgbDateParserFormatter, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import Chart from 'chart.js';
 import {timer} from 'rxjs';
 import {Climate} from '../../models/climate';
 import {ClimateService} from '../../services/climate/climate.service';
 import {faSmog} from '@fortawesome/free-solid-svg-icons/faSmog';
 import {EventService} from '../../services/event/event.service';
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-conditions',
   templateUrl: './conditions.component.html',
   styleUrls: ['./conditions.component.scss']
 })
-export class ConditionsComponent implements OnInit, AfterViewInit {
+export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   rainy = faCloudShowersHeavy;
   leafIcon = faLeaf;
   sunCloudIcon = faCloudSun;
@@ -32,6 +32,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
   public canvas: any;
   public chartEmail;
   public radioGroupForm: FormGroup;
+  private subscription;
 
 
   mapMarkers: any[] = [];
@@ -135,7 +136,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
 
   filterRain() {
     this.onFilter()
-    if (this.filterToSearch !== '&event_class=RA' ) {
+    if (this.filterToSearch !== '&event_class=RA') {
       this.filterToSearch = '&event_class=RA'
     } else {
       this.filterToSearch = null
@@ -144,7 +145,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
 
   filterFog() {
     this.onFilter()
-    if (this.filterToSearch !== '&event_class=FO' ) {
+    if (this.filterToSearch !== '&event_class=FO') {
       this.filterToSearch = '&event_class=FO'
     } else {
       this.filterToSearch = null
@@ -153,7 +154,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
 
   filterNoLight() {
     this.onFilter()
-    if (this.filterToSearch !== '&event_class=NL' ) {
+    if (this.filterToSearch !== '&event_class=NL') {
       this.filterToSearch = '&event_class=NL'
     } else {
       this.filterToSearch = null
@@ -162,7 +163,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
 
   filterLight() {
     this.onFilter()
-    if (this.filterToSearch !== '&event_class=LT' ) {
+    if (this.filterToSearch !== '&event_class=LT') {
       this.filterToSearch = '&event_class=LT'
     } else {
       this.filterToSearch = null
@@ -171,7 +172,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
 
   filterOutsideTemp() {
     this.onFilter()
-    if (this.filterToSearch !== '&event_class=OT' ) {
+    if (this.filterToSearch !== '&event_class=OT') {
       this.filterToSearch = '&event_class=OT'
     } else {
       this.filterToSearch = null
@@ -180,7 +181,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
 
   filterCarbon() {
     this.onFilter()
-    if (this.filterToSearch !== '&event_class=CF' ) {
+    if (this.filterToSearch !== '&event_class=CF') {
       this.filterToSearch = '&event_class=CF'
     } else {
       this.filterToSearch = null
@@ -247,83 +248,82 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.radioGroupForm = this.formBuilder.group({
-    });
+    this.radioGroupForm = this.formBuilder.group({});
 
-    timer(0, 10000).subscribe(() => {
+    this.subscription = timer(0, 10000).subscribe(() => {
       // para a parte das conditions
-      this.climateService.getClimate().subscribe(
-        data => {
-          if (data.results[data.results.length - 1].location === 'BA') {
-            this.ultimoBA = data.results[data.results.length - 1];
-            this.ultimoCN = data.results[data.results.length - 2];
-          } else if (data.results[data.results.length - 2].location === 'BA') {
-            this.ultimoBA = data.results[data.results.length - 2];
-            this.ultimoCN = data.results[data.results.length - 1];
-          }
+      this.climateService.getBarraClimate().subscribe(
+        dataBA => {
 
-          this.dataAtual = new Date().toLocaleTimeString();
+          this.climateService.getCostaNovaClimate().subscribe(dataCN => {
+            this.ultimoCN = dataCN.results[0];
+
+            // condition Barra
+            if (this.ultimoCN.condition === 'FG') {
+              this.conditionCN = 'Foggy';
+            } else if (this.ultimoCN.condition === 'RN') {
+              this.conditionCN = 'Rainy';
+            } else if (this.ultimoCN.condition === 'CL') {
+              this.conditionCN = 'Clean Skies';
+            }
+          })
+
+          this.ultimoBA = dataBA.results[0];
+
           // condition Barra
-          if (this.ultimoBA.condition === 'FO') {
+          if (this.ultimoBA.condition === 'FG') {
             this.conditionBA = 'Foggy';
-          } else if (this.ultimoBA.condition === 'RA') {
+          } else if (this.ultimoBA.condition === 'RN') {
             this.conditionBA = 'Rainy';
           } else if (this.ultimoBA.condition === 'CL') {
             this.conditionBA = 'Clean Skies';
           }
-          // condition Costa Nova
-          if (this.ultimoCN.condition === 'FO') {
-            this.conditionCN = 'Foggy';
-          } else if (this.ultimoCN.condition === 'RA') {
-            this.conditionCN = 'Rainy';
-          } else if (this.ultimoCN.condition === 'CL') {
-            this.conditionCN = 'Clean Skies';
-          }
+          this.dataAtual = new Date().toLocaleTimeString();
         }
-        );
+      );
+
       // CLICOU EM SELECT DATE
       if (this.dataselection === 1) {
         // então ir buscar as datas, pesquisar pelos eventos entre essas datas
-            this.eventService.getEventsBetweenDates(this.fromDate, this.toDate, '&event_type=CO' + this.filterToSearch ).subscribe(
-              data => {
-                data.results.forEach(r => {
-                  console.log(r)
-                  if (r.event_class === 'RA') {
-                    const marker = L.marker([r.latitude, r.longitude], {icon: this.rainMarker});
-                    marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Rain Detected"</p></div>');
-                    marker.addTo(this.map);
-                    this.mapMarkers.push(marker);
-                  } else if (r.event_class === 'FO') {
-                    const marker = L.marker([r.latitude, r.longitude], {icon: this.fogMarker});
-                    marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Fog Detected"</p></div>');
-                    marker.addTo(this.map);
-                    this.mapMarkers.push(marker);
-                    this.mapMarkers.push(marker);
-                  } else if (r.event_class === 'NL') {
-                    const marker = L.marker([r.latitude, r.longitude], {icon: this.noLight});
-                    marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Medium Lights OFF"</p></div>');
-                    marker.addTo(this.map);
-                    this.mapMarkers.push(marker);
-                  } else if (r.event_class === 'LT') {
-                    const marker = L.marker([r.latitude, r.longitude], {icon: this.light});
-                    marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Medium Lights ON"</p></div>');
-                    marker.addTo(this.map);
-                    this.mapMarkers.push(marker);
-                  } else if (r.event_class === 'OT') {
-                    const marker = L.marker([r.latitude, r.longitude], {icon: this.outsideTemp});
-                    marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Outside Temperature"</p></div>');
-                    marker.addTo(this.map);
-                    this.mapMarkers.push(marker);
-                  } else if (r.event_class === 'CF') {
-                    const marker = L.marker([40.629779, -8.737498], {icon: this.carbon});
-                    marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Carbon Emission"</p></div>');
-                    marker.addTo(this.map);
-                    this.mapMarkers.push(marker);
-                  }
-                })
+        this.eventService.getEventsBetweenDates(this.fromDate, this.toDate, '&event_type=CO' + this.filterToSearch).subscribe(
+          data => {
+            data.results.forEach(r => {
+              if (r.event_class === 'RA') {
+                const marker = L.marker([r.latitude, r.longitude], {icon: this.rainMarker});
+                marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Rain Detected"</p></div>');
+                marker.addTo(this.map);
+                this.mapMarkers.push(marker);
+              } else if (r.event_class === 'FO') {
+                const marker = L.marker([r.latitude, r.longitude], {icon: this.fogMarker});
+                marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Fog Detected"</p></div>');
+                marker.addTo(this.map);
+                this.mapMarkers.push(marker);
+                this.mapMarkers.push(marker);
+              } else if (r.event_class === 'NL') {
+                const marker = L.marker([r.latitude, r.longitude], {icon: this.noLight});
+                marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Medium Lights OFF"</p></div>');
+                marker.addTo(this.map);
+                this.mapMarkers.push(marker);
+              } else if (r.event_class === 'LT') {
+                const marker = L.marker([r.latitude, r.longitude], {icon: this.light});
+                marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Medium Lights ON"</p></div>');
+                marker.addTo(this.map);
+                this.mapMarkers.push(marker);
+              } else if (r.event_class === 'OT') {
+                const marker = L.marker([r.latitude, r.longitude], {icon: this.outsideTemp});
+                marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Outside Temperature"</p></div>');
+                marker.addTo(this.map);
+                this.mapMarkers.push(marker);
+              } else if (r.event_class === 'CF') {
+                const marker = L.marker([40.629779, -8.737498], {icon: this.carbon});
+                marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Carbon Emission"</p></div>');
+                marker.addTo(this.map);
+                this.mapMarkers.push(marker);
               }
-            )
-          } else {
+            })
+          }
+        )
+      } else {
         this.eventService.getEventsLast5Mins().subscribe(
           data => {
             console.log(data.results)
@@ -333,139 +333,143 @@ export class ConditionsComponent implements OnInit, AfterViewInit {
     });
 
     this.canvas = document.getElementById('chartBarra');
-      this.ctx = this.canvas.getContext('2d');
-      this.chartEmail = new Chart(this.ctx, {
-        type: 'pie',
-        data: {
-          labels: [1, 2, 3],
-          datasets: [{
-            label: 'Emails',
-            pointRadius: 0,
-            pointHoverRadius: 0,
-            backgroundColor: [
-              '#4acccd',
-              '#fcc468',
-              '#ef8157'
-            ],
-            borderWidth: 0,
-            data: [300, 500, 200]
-          }]
+    this.ctx = this.canvas.getContext('2d');
+    this.chartEmail = new Chart(this.ctx, {
+      type: 'pie',
+      data: {
+        labels: [1, 2, 3],
+        datasets: [{
+          label: 'Emails',
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          backgroundColor: [
+            '#4acccd',
+            '#fcc468',
+            '#ef8157'
+          ],
+          borderWidth: 0,
+          data: [300, 500, 200]
+        }]
+      },
+
+      options: {
+
+        legend: {
+          display: false
         },
 
-        options: {
-
-          legend: {
-            display: false
-          },
-
-          pieceLabel: {
-            render: 'percentage',
-            fontColor: ['white'],
-            precision: 2
-          },
-
-          tooltips: {
-            enabled: false
-          },
-
-          scales: {
-            yAxes: [{
-
-              ticks: {
-                display: false
-              },
-              gridLines: {
-                drawBorder: false,
-                zeroLineColor: "transparent",
-                color: 'rgba(255,255,255,0.05)'
-              }
-
-            }],
-
-            xAxes: [{
-              barPercentage: 1.6,
-              gridLines: {
-                drawBorder: false,
-                color: 'rgba(255,255,255,0.1)',
-                zeroLineColor: "transparent"
-              },
-              ticks: {
-                display: false,
-              }
-            }]
-          },
-        }
-      });
-
-      this.canvas = document.getElementById("chartCostaNova");
-      this.ctx = this.canvas.getContext("2d");
-      this.chartEmail = new Chart(this.ctx, {
-        type: 'pie',
-        data: {
-          labels: [1, 2, 3],
-          datasets: [{
-            label: "Emails",
-            pointRadius: 0,
-            pointHoverRadius: 0,
-            backgroundColor: [
-              '#4acccd',
-              '#fcc468',
-              '#ef8157'
-            ],
-            borderWidth: 0,
-            data: [400, 200, 400]
-          }]
+        pieceLabel: {
+          render: 'percentage',
+          fontColor: ['white'],
+          precision: 2
         },
 
-        options: {
+        tooltips: {
+          enabled: false
+        },
 
-          legend: {
-            display: false
-          },
+        scales: {
+          yAxes: [{
 
-          pieceLabel: {
-            render: 'percentage',
-            fontColor: ['white'],
-            precision: 2
-          },
+            ticks: {
+              display: false
+            },
+            gridLines: {
+              drawBorder: false,
+              zeroLineColor: 'transparent',
+              color: 'rgba(255,255,255,0.05)'
+            }
 
-          tooltips: {
-            enabled: false
-          },
+          }],
 
-          scales: {
-            yAxes: [{
+          xAxes: [{
+            barPercentage: 1.6,
+            gridLines: {
+              drawBorder: false,
+              color: 'rgba(255,255,255,0.1)',
+              zeroLineColor: 'transparent'
+            },
+            ticks: {
+              display: false,
+            }
+          }]
+        },
+      }
+    });
 
-              ticks: {
-                display: false
-              },
-              gridLines: {
-                drawBorder: false,
-                zeroLineColor: "transparent",
-                color: 'rgba(255,255,255,0.05)'
-              }
+    this.canvas = document.getElementById('chartCostaNova');
+    this.ctx = this.canvas.getContext('2d');
+    this.chartEmail = new Chart(this.ctx, {
+      type: 'pie',
+      data: {
+        labels: [1, 2, 3],
+        datasets: [{
+          label: 'Emails',
+          pointRadius: 0,
+          pointHoverRadius: 0,
+          backgroundColor: [
+            '#4acccd',
+            '#fcc468',
+            '#ef8157'
+          ],
+          borderWidth: 0,
+          data: [400, 200, 400]
+        }]
+      },
 
-            }],
+      options: {
 
-            xAxes: [{
-              barPercentage: 1.6,
-              gridLines: {
-                drawBorder: false,
-                color: 'rgba(255,255,255,0.1)',
-                zeroLineColor: "transparent"
-              },
-              ticks: {
-                display: false,
-              }
-            }]
-          },
-        }
-      });
+        legend: {
+          display: false
+        },
+
+        pieceLabel: {
+          render: 'percentage',
+          fontColor: ['white'],
+          precision: 2
+        },
+
+        tooltips: {
+          enabled: false
+        },
+
+        scales: {
+          yAxes: [{
+
+            ticks: {
+              display: false
+            },
+            gridLines: {
+              drawBorder: false,
+              zeroLineColor: 'transparent',
+              color: 'rgba(255,255,255,0.05)'
+            }
+
+          }],
+
+          xAxes: [{
+            barPercentage: 1.6,
+            gridLines: {
+              drawBorder: false,
+              color: 'rgba(255,255,255,0.1)',
+              zeroLineColor: 'transparent'
+            },
+            ticks: {
+              display: false,
+            }
+          }]
+        },
+      }
+    });
 
   }
 
   ngAfterViewInit(): void {
     this.initMap();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
 }

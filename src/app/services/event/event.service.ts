@@ -37,6 +37,7 @@ export class EventService {
       minimumIntegerDigits: 2,
       useGrouping: false
     }) + 'T00:00'
+    console.log(from_str, to_str);
     if (filter == null) {
       return this.http.get<any>(this.baseURL + '?timestamp__gte=' + from_str + '&timestamp__lte=' + to_str, httpOptions)
     }
@@ -46,43 +47,13 @@ export class EventService {
   getEventsLast5Mins(): Observable<any> {
     const date = new Date();
     date.setMinutes(date.getMinutes() - 5);
-    // ex: 2021-04-25T16:33:04.446000
-    const last5 = date.getFullYear() + '-' + date.getMonth().toLocaleString('en-US', {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    }) + '-' + date.getDay().toLocaleString('en-US', {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    }) + 'T' + date.getHours().toLocaleString('en-US', {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    }) + ':' + date.getMinutes().toLocaleString('en-US', {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    }) + ':' + date.getSeconds().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
-    console.log(last5)
-    return this.http.get<any>(this.baseURL + '?timestamp__lte=' + last5 + '&event_type=CO' , httpOptions)
+    return this.http.get<any>(this.baseURL + '?timestamp__lte=' + date.toISOString() + '&event_type=CO' , httpOptions)
   }
 
   getExcessiveSpeedLast5Mins(): Observable<any> {
-    const date = new Date();
+    const date: Date = new Date();
     date.setMinutes(date.getMinutes() - 5);
-    // ex: 2021-04-25T16:33:04.446000
-    const last5 = date.getFullYear() + '-' + date.getMonth().toLocaleString('en-US', {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    }) + '-' + date.getDay().toLocaleString('en-US', {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    }) + 'T' + date.getHours().toLocaleString('en-US', {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    }) + ':' + date.getMinutes().toLocaleString('en-US', {
-      minimumIntegerDigits: 2,
-      useGrouping: false
-    }) + ':' + date.getSeconds().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})
-    console.log(last5)
-    return this.http.get<any>(this.baseURL + '?timestamp__lte=' + last5 + '&event_type=CO&event_class=CS' , httpOptions )
+    return this.http.get<any>(this.baseURL + '?timestamp__lte=' + date.toISOString() + '&event_type=CO&event_class=CS' , httpOptions )
   }
 
   getExcessiveSpeedBetweenDates(from: NgbDate, to: NgbDate): Observable<any> {
@@ -101,7 +72,6 @@ export class EventService {
       minimumIntegerDigits: 2,
       useGrouping: false
     }) + 'T00:00'
-    console.log(from_str, to_str)
     return this.http.get<any>(this.baseURL + '?timestamp__gte=' + from_str + '&timestamp__lte=' + to_str + '&event_type=CO&event_class=CS', httpOptions)
   }
 }

@@ -13,7 +13,11 @@ export class ClimateService {
   private baseURL = 'http://localhost:8000/5g-mobility/climate/'
   constructor(private http: HttpClient) { }
 
-  getClimate(): Observable<any> {
-    return this.http.get<any>(this.baseURL, httpOptions);
+  getBarraClimate(): Observable<any> {
+    return this.http.get<any>(this.baseURL + '?location=BA', httpOptions);
+  }
+
+  getCostaNovaClimate(): Observable<any> {
+    return this.http.get<any>(this.baseURL + '?location=CN', httpOptions);
   }
 }

@@ -1,5 +1,5 @@
 
-<div class="row">
+<div *ngIf="conditionBA && conditionCN" class="row">
     <div class="col-lg-6 col-md-6 col-sm-6">
         <div class="card card-stats">
             <div class="card-header">
@@ -24,8 +24,8 @@
                     <div class="col-6 col-md-6 col-sm-12">
                         <div style="display: flex; align-items: center; justify-content: space-around;">
                             <div style="width: 55px; height: 55px;">
-                              <fa-icon *ngIf="ultimoBA.condition==='FO'" style="color: #6570C6;" [icon]="foggy" size="4x"></fa-icon>
-                              <fa-icon *ngIf="ultimoBA.condition==='RA'" style="color: #6570C6;" [icon]="rainy" size="4x"></fa-icon>
+                              <fa-icon *ngIf="ultimoBA.condition==='FG'" style="color: #6570C6;" [icon]="foggy" size="4x"></fa-icon>
+                              <fa-icon *ngIf="ultimoBA.condition==='RN'" style="color: #6570C6;" [icon]="rainy" size="4x"></fa-icon>
                               <fa-icon *ngIf="ultimoBA.condition==='CL'" style="color: #6570C6;" [icon]="cleanSkies" size="4x"></fa-icon>
                             </div>
                             <div class="numbers" style="display: flex; flex-direction: column; align-items: center;">
@@ -69,8 +69,8 @@
                     <div class="col-6 col-md-6 col-sm-12">
                         <div style="display: flex; align-items: center; justify-content: space-around;">
                             <div style="width: 55px; height: 55px;">
-                              <fa-icon *ngIf="ultimoCN.condition==='FO'" style="color: #d0cdd1;" [icon]="foggy" size="4x"></fa-icon>
-                              <fa-icon *ngIf="ultimoCN.condition==='RA'" style="color: #6570C6;" [icon]="rainy" size="4x"></fa-icon>
+                              <fa-icon *ngIf="ultimoCN.condition==='FG'" style="color: #d0cdd1;" [icon]="foggy" size="4x"></fa-icon>
+                              <fa-icon *ngIf="ultimoCN.condition==='RN'" style="color: #6570C6;" [icon]="rainy" size="4x"></fa-icon>
                               <fa-icon *ngIf="ultimoCN.condition==='CL'" style="color: #6570C6;" [icon]="cleanSkies" size="4x"></fa-icon>
                             </div>
                             <div class="numbers" style="display: flex; flex-direction: column; align-items: center;">
@@ -97,17 +97,6 @@
         <div class="card">
             <div class="card-header" style="display: flex; justify-content: space-between;">
                 <h5 class="card-title">Events Map</h5>
-                <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="dataSelection">
-                    <label ngbButtonLabel class="btn-primary">
-                      <input ngbButton type="radio" (click)="last5min()" [value]="0"> Last 5 Minutes
-                    </label>
-                    <label ngbButtonLabel class="btn-primary">
-                      <input ngbButton type="radio" (click)="selectDate()" [value]="1"> Select Date
-                    </label>
-                </div>
-            </div>
-          <div *ngIf="dataSelection==1" class="d-flex flex-row-reverse">
-            <div class="p-2">
               <form [formGroup]="radioGroupForm">
                 <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" formControlName="model">
                   <label ngbButtonLabel class="btn-primary">
@@ -130,6 +119,17 @@
                   </label>
                 </div>
               </form>
+                <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="dataSelection">
+                    <label ngbButtonLabel class="btn-primary">
+                      <input style="height: 50px" ngbButton type="radio" (click)="last5min()" [value]="0"> Last 5 Minutes
+                    </label>
+                    <label ngbButtonLabel class="btn-primary">
+                      <input style="height: 50px" ngbButton type="radio" (click)="selectDate()" [value]="1"> Select Date
+                    </label>
+                </div>
+            </div>
+          <div *ngIf="dataSelection==1" class="d-flex flex-row-reverse">
+            <div class="p-2">
               <form class="form-inline" >
                 <div class="form-group hidden" >
                     <div class="input-group" >

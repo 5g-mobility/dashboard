@@ -1,27 +1,25 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import {Component, OnInit, AfterViewInit, OnDestroy} from '@angular/core';
 import Chart from 'chart.js';
 import * as L from 'leaflet';
 import 'leaflet-extra-markers/dist/js/leaflet.extra-markers.js';
-import { NgbDate, NgbCalendar, NgbDateParserFormatter, NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs/internal/Observable';
-import {timer} from 'rxjs';
+import {NgbDate, NgbCalendar, NgbDateParserFormatter, NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {interval, timer} from 'rxjs';
 import {ClimateService} from '../../services/climate/climate.service';
-import {now} from 'moment';
 import {EventService} from '../../services/event/event.service';
-import {FormBuilder, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-excessive-speed',
   templateUrl: './excessive-speed.component.html',
   styleUrls: ['./excessive-speed.component.scss']
 })
-export class ExcessiveSpeedComponent implements OnInit, AfterViewInit {
+export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy {
   private map;
   selectTime = 0;
   markers: any[] = [];
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
+  private subscription;
 
   carMarker = (L as any).ExtraMarkers.icon({
     shape: 'circle',
@@ -59,8 +57,10 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit {
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
+      this.selectDate();
     } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
       this.toDate = date;
+      this.selectDate();
     } else {
       this.toDate = null;
       this.fromDate = date;
@@ -86,43 +86,44 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit {
 
   getLast5min() {
     this.eventService.getExcessiveSpeedLast5Mins().subscribe(
-          data => data.results.forEach( d => {
-                console.log(d)
-                const marker = L.marker([d.latitude, d.longitude], { icon: this.carMarker });
-                marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + d.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Speed</h6><p style="margin-top: 0px;text-align: center;">' + d.velocity + ' km/h</p></div>');
-                marker.addTo(this.map);
-                this.markers.push(marker);
-          })
-        )
-  }
-
-  getEventsBetweenDates() {
-    if (this.toDate != null && this.fromDate != null) {
-      this.eventService.getExcessiveSpeedBetweenDates(this.fromDate, this.toDate).subscribe(
-  data => data.results.forEach( d => {
-        console.log(d)
-        console.log(this.toDate, this.fromDate)
-        const marker = L.marker([d.latitude, d.longitude], { icon: this.carMarker });
+      data => data.results.forEach(d => {
+        const marker = L.marker([d.latitude, d.longitude], {icon: this.carMarker});
         marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + d.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Speed</h6><p style="margin-top: 0px;text-align: center;">' + d.velocity + ' km/h</p></div>');
         marker.addTo(this.map);
         this.markers.push(marker);
       })
     )
+  }
+
+  getEventsBetweenDates() {
+    if (this.toDate != null && this.fromDate != null) {
+      this.eventService.getExcessiveSpeedBetweenDates(this.fromDate, this.toDate).subscribe(
+        data => data.results.forEach(d => {
+          const marker = L.marker([d.latitude, d.longitude], {icon: this.carMarker});
+          marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + d.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Speed</h6><p style="margin-top: 0px;text-align: center;">' + d.velocity + ' km/h</p></div>');
+          marker.addTo(this.map);
+          this.markers.push(marker);
+        })
+      )
     }
   }
 
 
   ngOnInit(): void {
-    timer(0, 10000).subscribe( () => {
-      if (this.selectTime === 0) {
-        // ultimos 5 minutos
+    this.subscription = timer(0, 10000).subscribe(() => {
+        if (this.selectTime === 0) {
+          // ultimos 5 minutos
           this.getLast5min()
-      } else {
-        // selected date
-        this.getEventsBetweenDates()
-     }
-    }
+        } else {
+          // selected date
+          this.getEventsBetweenDates()
+        }
+      }
     )
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -131,24 +132,24 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit {
   }
 
   last5min() {
-    console.log('last 5 min')
     for (let i = 0; i < this.markers.length; i++) {
       this.map.removeLayer(this.markers[i]);
     }
     this.markers = []
+    this.getLast5min();
   }
 
   selectDate() {
-    console.log('selecting date')
     for (let i = 0; i < this.markers.length; i++) {
       this.map.removeLayer(this.markers[i]);
     }
     this.markers = []
+    this.getEventsBetweenDates();
   }
 
 
   createGraph() {
-    const speedCanvas = document.getElementById("dailyExcessiveChart");
+    const speedCanvas = document.getElementById('dailyExcessiveChart');
 
     const dataEventNumber = {
       data: [0, 19, 15, 20, 30, 40, 40, 50, 25, 30, 50, 70, 0,
@@ -179,10 +180,10 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit {
     };
 
     const dailyData = {
-      labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10",
-        "11", "12", "13", "14", "15", "16", "17", "18", "19", "20",
-        "21", "22", "23", "24", "25", "26", "27", "28", "29", "30",
-        "31"],
+      labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+        '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
+        '21', '22', '23', '24', '25', '26', '27', '28', '29', '30',
+        '31'],
       datasets: [dataEventNumber, dataTopSpeed]
     };
 
