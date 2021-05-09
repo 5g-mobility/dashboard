@@ -2,7 +2,7 @@
 
 Angular application based on [Paper Dashboard Angular](https://www.creative-tim.com/product/paper-dashboard-angular)
 
-## Running on your environment
+## Run on your environment
 
 **node.js** is required to run an _Angular_ application. The installation guide can be found [here](https://nodejs.org/en/).
 
