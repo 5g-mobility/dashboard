@@ -11,6 +11,8 @@ import {faSmog} from '@fortawesome/free-solid-svg-icons/faSmog';
 import {EventService} from '../../services/event/event.service';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {MiscellaneousService} from '../../services/miscellaneous/miscellaneous.service';
+import {CarbonFootprint} from '../../models/carbon-footprint';
 
 @Component({
   selector: 'app-conditions',
@@ -33,15 +35,17 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   public chartEmail;
   public radioGroupForm: FormGroup;
   private subscription;
-  starting = true;
-
-
+  dataChartBa: number[];
+  dataChartCN: number[];
+  carbonFootprintCostaNova: CarbonFootprint;
+  carbonFootprintBarra: CarbonFootprint;
   mapMarkers: any[] = [];
   ultimoClimateBA: Climate;
   ultimoClimateCN: Climate;
   conditionBA: string;
   conditionCN: string;
   dataAtual: String;
+  private subscription2;
 
   hoveredDate: NgbDate | null = null;
 
@@ -230,7 +234,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   constructor(private climateService: ClimateService, private eventService: EventService,
               private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private formBuilder: FormBuilder,
-              private spinner: NgxSpinnerService) {
+              private spinner: NgxSpinnerService, private miscellaneousService: MiscellaneousService) {
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
@@ -266,6 +270,13 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.mapMarkers = [];
     this.dataSelection = 1;
     this.getEventsByDate();
+  }
+
+  checkAllDoneLoading() {
+    if (this.carbonFootprintCostaNova !== undefined && this.carbonFootprintBarra !== undefined && this.dataChartCN !== undefined
+      && this.dataChartBa !== undefined && this.ultimoClimateBA !== undefined && this.ultimoClimateCN !== undefined) {
+      this.spinner.hide();
+    }
   }
 
   getEventsByDate() {
@@ -309,6 +320,20 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
     )
   }
 
+  getChartDataBarra() {
+    this.miscellaneousService.getConditionsChartStats('BA').subscribe(data => {
+      this.dataChartBa = [data.RN, data.CL, data.FG];
+      this.loadCharts();
+    })
+  }
+
+  getChartDataCostaNova() {
+    this.miscellaneousService.getConditionsChartStats('CN').subscribe(data => {
+      this.dataChartCN = [data.RN, data.CL, data.FG];
+      this.loadCharts();
+    })
+  }
+
   getEventsLast5Min() {
     this.eventService.getEventsLast5Mins('&event_type=CO' + this.filterToSearch).subscribe(
       data => {
@@ -346,67 +371,74 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.mapMarkers.push(marker);
           }
         })
-        this.spinner.hide();
-        this.starting = false;
+        this.checkAllDoneLoading();
       }
     )
   }
 
   getConditions() {
     this.climateService.getBarraClimate().subscribe(
-    dataBA => {
+      dataBA => {
 
-      this.ultimoClimateBA = dataBA.results[0];
+        this.ultimoClimateBA = dataBA.results[0];
+
+        // condition Barra
+        if (this.ultimoClimateBA.condition === 'FG') {
+          this.conditionBA = 'Foggy';
+        } else if (this.ultimoClimateBA.condition === 'RN') {
+          this.conditionBA = 'Rainy';
+        } else if (this.ultimoClimateBA.condition === 'CL') {
+          this.conditionBA = 'Clean Skies';
+        }
+        this.dataAtual = new Date().toLocaleTimeString();
+
+        this.checkAllDoneLoading();
+
+      }
+    );
+
+    this.climateService.getCostaNovaClimate().subscribe(dataCN => {
+      this.ultimoClimateCN = dataCN.results[0];
 
       // condition Barra
-      if (this.ultimoClimateBA.condition === 'FG') {
-        this.conditionBA = 'Foggy';
-      } else if (this.ultimoClimateBA.condition === 'RN') {
-        this.conditionBA = 'Rainy';
-      } else if (this.ultimoClimateBA.condition === 'CL') {
-        this.conditionBA = 'Clean Skies';
+      if (this.ultimoClimateCN.condition === 'FG') {
+        this.conditionCN = 'Foggy';
+      } else if (this.ultimoClimateCN.condition === 'RN') {
+        this.conditionCN = 'Rainy';
+      } else if (this.ultimoClimateCN.condition === 'CL') {
+        this.conditionCN = 'Clean Skies';
       }
-      this.dataAtual = new Date().toLocaleTimeString();
 
+      this.checkAllDoneLoading();
+    })
 
-    }
-  );
-
-  this.climateService.getCostaNovaClimate().subscribe(dataCN => {
-    this.ultimoClimateCN = dataCN.results[0];
-
-    // condition Barra
-    if (this.ultimoClimateCN.condition === 'FG') {
-      this.conditionCN = 'Foggy';
-    } else if (this.ultimoClimateCN.condition === 'RN') {
-      this.conditionCN = 'Rainy';
-    } else if (this.ultimoClimateCN.condition === 'CL') {
-      this.conditionCN = 'Clean Skies';
-    }
-  })
-
-    if (this.dataSelection === 0) {
-      this.getEventsLast5Min();
-    }
   }
 
-  ngOnInit(): void {
-    this.spinner.show();
-    this.radioGroupForm = this.formBuilder.group({});
-
-    this.subscription = timer(0, 10000).subscribe(() => {
-      // para a parte das conditions
-      this.getConditions()
+  getCO2Barra() {
+    this.miscellaneousService.getCarbonFootprint('BA').subscribe(data => {
+      this.carbonFootprintBarra = data;
+      this.checkAllDoneLoading();
     });
 
+  }
+
+  getCO2CostaNova() {
+    this.miscellaneousService.getCarbonFootprint('CN').subscribe(data => {
+      this.carbonFootprintCostaNova = data;
+      this.checkAllDoneLoading();
+    });
+
+  }
+
+  loadCharts() {
     this.canvas = document.getElementById('chartBarra');
     this.ctx = this.canvas.getContext('2d');
     this.chartEmail = new Chart(this.ctx, {
       type: 'pie',
       data: {
-        labels: [1, 2, 3],
+        labels: ['Rain', 'Clean', 'Fog'],
         datasets: [{
-          label: 'Emails',
+          label: 'Estatísticas',
           pointRadius: 0,
           pointHoverRadius: 0,
           backgroundColor: [
@@ -415,7 +447,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
             '#ef8157'
           ],
           borderWidth: 0,
-          data: [300, 500, 200]
+          data: this.dataChartBa
         }]
       },
 
@@ -432,7 +464,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
         },
 
         tooltips: {
-          enabled: false
+          enabled: true
         },
 
         scales: {
@@ -469,9 +501,9 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.chartEmail = new Chart(this.ctx, {
       type: 'pie',
       data: {
-        labels: [1, 2, 3],
+        labels: ['Rain', 'Clean', 'Fog'],
         datasets: [{
-          label: 'Emails',
+          label: 'Estatísticas',
           pointRadius: 0,
           pointHoverRadius: 0,
           backgroundColor: [
@@ -480,7 +512,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
             '#ef8157'
           ],
           borderWidth: 0,
-          data: [400, 200, 400]
+          data: this.dataChartCN
         }]
       },
 
@@ -497,7 +529,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
         },
 
         tooltips: {
-          enabled: false
+          enabled: true
         },
 
         scales: {
@@ -529,6 +561,34 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
       }
     });
 
+    this.checkAllDoneLoading();
+  }
+
+  ngOnInit(): void {
+    this.spinner.show();
+
+    this.subscription2 = timer(0, 45000).subscribe(() => {
+      this.getChartDataBarra();
+
+      this.getChartDataCostaNova();
+
+      this.getCO2Barra();
+      this.getCO2CostaNova();
+
+    });
+
+    this.radioGroupForm = this.formBuilder.group({});
+
+    this.subscription = timer(0, 10000).subscribe(() => {
+      // para a parte das conditions
+      this.getConditions();
+
+      if (this.dataSelection === 0) {
+        this.getEventsLast5Min();
+      }
+    });
+
+
   }
 
   ngAfterViewInit(): void {
@@ -537,6 +597,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.subscription2.unsubscribe();
   }
 
 }

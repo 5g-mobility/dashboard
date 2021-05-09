@@ -4,6 +4,7 @@ import {EventService} from '../../services/event/event.service';
 import {NgbCalendar, NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {timer} from 'rxjs';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'app-event',
@@ -25,7 +26,8 @@ export class EventComponent implements OnInit, OnDestroy {
   public radioGroupForm: FormGroup;
 
   constructor(private climateService: ClimateService, private eventService: EventService,
-              private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private formBuilder: FormBuilder) {
+              private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private formBuilder: FormBuilder,
+              private spinner: NgxSpinnerService) {
   }
 
   onDateSelection(date: NgbDate) {
@@ -151,7 +153,8 @@ export class EventComponent implements OnInit, OnDestroy {
           this.totalEvents = data.count;
           data.results.forEach(d => {
             this.events.push(d)
-          })
+          });
+          this.spinner.hide();
         });
     } else {
       this.eventService.getAllEvents((this.page - 1) * 10).subscribe(data => {
@@ -160,11 +163,13 @@ export class EventComponent implements OnInit, OnDestroy {
         data.results.forEach(d => {
           this.events.push(d)
         });
+        this.spinner.hide();
       });
     }
   }
 
   ngOnInit(): void {
+    this.spinner.show()
      this.subscription = timer(0, 10000).subscribe(() => {
       this.getEvents();
     })

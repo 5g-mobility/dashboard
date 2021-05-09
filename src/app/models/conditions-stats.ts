@@ -1,5 +1,5 @@
 export class ConditionsStats {
   FG: number;
-  CL: Date;
-  RN: string;
+  CL: number;
+  RN: number;
 }
