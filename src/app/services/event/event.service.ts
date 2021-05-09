@@ -22,7 +22,11 @@ export class EventService {
   }
 
   getEventsBetweenDates(offset: number, from?: NgbDate, to?: NgbDate, filter?: string, limit?: number): Observable<any> {
-    if (from != null && to != null) {
+    console.log(offset, from, to, filter, limit)
+    // ATENÇÃO:
+    // PARA UNS CASOS É PRECISO VERIFICAR POR NULL, PARA OUTROS POR UNIDENTIFIED, NÃO ALTERAR
+
+    if (from != null && to != null)  {
       const from_str = from.year + '-' + from.month.toLocaleString('en-US', {
         minimumIntegerDigits: 2,
         useGrouping: false
@@ -38,14 +42,15 @@ export class EventService {
         minimumIntegerDigits: 2,
         useGrouping: false
       }) + 'T00:00'
-      if (filter == null) {
-        return this.http.get<any>(this.baseURL + '?timestamp__gte=' + from_str + '&timestamp__lte=' + to_str + '&offset=' + offset +
+
+      if (filter === null || filter === undefined) {
+        return this.http.get<any>(this.baseURL + (from_str === undefined ? '' : '?timestamp__gte=' + from_str) + (to_str === undefined ? '' : '&timestamp__lte=' + to_str)  + '&offset=' + offset +
         (limit === null || limit === undefined ? '' : '&limit=' + limit), httpOptions)
       }
-      return this.http.get<any>(this.baseURL + '?timestamp__gte=' + from_str + '&timestamp__lte=' + to_str + filter + '&offset=' + offset
-        + (limit === null ? '' : '&limit=' + limit), httpOptions)
+      return this.http.get<any>(this.baseURL + (from_str === undefined ? '' : '?timestamp__gte=' + from_str) + (to_str === undefined ? '' : '&timestamp__lte=' + to_str)  +  '&offset=' + offset
+        + (limit === null || limit === undefined ? '' : '&limit=' + limit), httpOptions)
     }
-    return this.http.get<any>(this.baseURL + '?offset=' + offset + (limit === null ? '' : '&limit=' + limit) + (filter === null ? '' : '' + filter) + (filter === null ? '' : '' + filter) , httpOptions )
+    return this.http.get<any>(this.baseURL + '?offset=' + offset + (limit === null || limit === undefined ? '' : '&limit=' + limit) + (filter === null || filter === undefined ? '' : '' + filter) , httpOptions )
   }
 
   getEventsLast5Mins(filter?: string): Observable<any> {

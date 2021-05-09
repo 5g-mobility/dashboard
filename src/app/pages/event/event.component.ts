@@ -20,6 +20,7 @@ export class EventComponent implements OnInit, OnDestroy {
   page: number = Number(1);
   totalEvents: number;
   private subscription;
+  filterToSearch: String = '';
   selectingDate = -1;
   public radioGroupForm: FormGroup;
 
@@ -45,6 +46,7 @@ export class EventComponent implements OnInit, OnDestroy {
     this.filter = null;
     this.selectionMap = -1;
     this.selectingDate = -1;
+    this.filterToSearch = ''
     this.getEvents()
   }
 
@@ -62,6 +64,59 @@ export class EventComponent implements OnInit, OnDestroy {
       this.filter = '&location=BA'
     } else {
       this.filter = null
+    }
+    this.getEvents()
+  }
+
+    filterRain() {
+    if (this.filterToSearch !== '&event_class=RA') {
+      this.filterToSearch = '&event_class=RA'
+    } else {
+      this.filterToSearch = ''
+    }
+    this.getEvents()
+  }
+
+  filterFog() {
+    if (this.filterToSearch !== '&event_class=FO') {
+      this.filterToSearch = '&event_class=FO'
+    } else {
+      this.filterToSearch = ''
+    }
+    this.getEvents()
+  }
+
+  filterNoLight() {
+    if (this.filterToSearch !== '&event_class=NL') {
+      this.filterToSearch = '&event_class=NL'
+    } else {
+      this.filterToSearch = ''
+    }
+    this.getEvents()
+  }
+
+  filterLight() {
+    if (this.filterToSearch !== '&event_class=LT') {
+      this.filterToSearch = '&event_class=LT'
+    } else {
+      this.filterToSearch = ''
+    }
+  }
+
+  filterOutsideTemp() {
+    if (this.filterToSearch !== '&event_class=OT') {
+      this.filterToSearch = '&event_class=OT'
+    } else {
+      this.filterToSearch = ''
+    }
+    this.getEvents()
+  }
+
+  filterCarbon() {
+    if (this.filterToSearch !== '&event_class=CF') {
+      this.filterToSearch = '&event_class=CF'
+    } else {
+      this.filterToSearch = ''
     }
     this.getEvents()
   }
@@ -89,8 +144,8 @@ export class EventComponent implements OnInit, OnDestroy {
   }
 
   getEvents() {
-    if ((this.toDate != null && this.fromDate != null) || this.filter != null) {
-      this.eventService.getEventsBetweenDates((this.page - 1) * 10, this.fromDate, this.toDate, this.filter).subscribe(
+    if ((this.toDate != null && this.fromDate != null) || this.filter != null || this.filterToSearch !== '') {
+      this.eventService.getEventsBetweenDates((this.page - 1) * 10, this.fromDate, this.toDate, this.filterToSearch + (this.filter === null || this.filter === undefined ? '' : this.filter)).subscribe(
         data => {
           this.events = [];
           this.totalEvents = data.count;

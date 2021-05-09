@@ -12,6 +12,20 @@
             <label style="height: 50px"  ngbButtonLabel class="btn-primary">
               <input ngbButton type="radio" (click)="filterBarra()" [value]="1"> Barra
             </label>
+              <div class="col">
+                <div ngbDropdown class="d-inline-block">
+                  <button class="btn btn-secondary dropdown-toggle" id="dropdownBasic1" ngbDropdownToggle>Type </button>
+                  <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                    <button (click)="clearAllFilters()" ngbDropdownItem>Clear Filter</button>
+                    <button (click)="filterRain()" ngbDropdownItem>Rain</button>
+                    <button (click)="filterFog()" ngbDropdownItem>Fog</button>
+                    <button (click)="filterNoLight()" ngbDropdownItem>No Light</button>
+                    <button (click)="filterLight()" ngbDropdownItem>Light</button>
+                    <button (click)="filterOutsideTemp()" ngbDropdownItem>Outside Temperature</button>
+                    <button (click)="filterCarbon()" ngbDropdownItem>Carbon Footprint</button>
+                  </div>
+                </div>
+              </div>
           </div>
 
 
