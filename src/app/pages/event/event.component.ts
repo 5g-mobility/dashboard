@@ -19,7 +19,7 @@ export class EventComponent implements OnInit {
   filter: string;
   page: number = Number(1);
   totalEvents: number;
-  selectingdate = 0
+  selectingDate = 0
   public radioGroupForm: FormGroup;
 
   constructor(private climateService: ClimateService, private eventService: EventService,
