@@ -269,6 +269,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getEventsByDate() {
+    console.log(this.filterToSearch)
     this.eventService.getEventsBetweenDates(0, this.fromDate, this.toDate, '&event_type=CO' + this.filterToSearch, 100).subscribe(
       data => {
         data.results.forEach(r => {

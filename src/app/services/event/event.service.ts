@@ -22,10 +22,8 @@ export class EventService {
   }
 
   getEventsBetweenDates(offset: number, from?: NgbDate, to?: NgbDate, filter?: string, limit?: number): Observable<any> {
-    console.log(offset, from, to, filter, limit)
     // ATENÇÃO:
     // PARA UNS CASOS É PRECISO VERIFICAR POR NULL, PARA OUTROS POR UNIDENTIFIED, NÃO ALTERAR
-
     if (from != null && to != null)  {
       const from_str = from.year + '-' + from.month.toLocaleString('en-US', {
         minimumIntegerDigits: 2,
@@ -48,12 +46,13 @@ export class EventService {
         (limit === null || limit === undefined ? '' : '&limit=' + limit), httpOptions)
       }
       return this.http.get<any>(this.baseURL + (from_str === undefined ? '' : '?timestamp__gte=' + from_str) + (to_str === undefined ? '' : '&timestamp__lte=' + to_str)  +  '&offset=' + offset
-        + (limit === null || limit === undefined ? '' : '&limit=' + limit), httpOptions)
+        + (limit === null || limit === undefined ? '' : '&limit=' + limit) + (filter === null || filter === undefined ? '' : '' + filter) , httpOptions)
     }
     return this.http.get<any>(this.baseURL + '?offset=' + offset + (limit === null || limit === undefined ? '' : '&limit=' + limit) + (filter === null || filter === undefined ? '' : '' + filter) , httpOptions )
   }
 
   getEventsLast5Mins(filter?: string): Observable<any> {
+    console.log(filter)
     const date = new Date();
     date.setMinutes(date.getMinutes() - 5);
 

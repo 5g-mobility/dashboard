@@ -20,7 +20,8 @@ export class EventComponent implements OnInit, OnDestroy {
   page: number = Number(1);
   totalEvents: number;
   private subscription;
-  filterToSearch: String = '';
+  filterType: String = '';
+  filterClass: String = '';
   selectingDate = -1;
   public radioGroupForm: FormGroup;
 
@@ -46,10 +47,11 @@ export class EventComponent implements OnInit, OnDestroy {
     this.filter = null;
     this.selectionMap = -1;
     this.selectingDate = -1;
-    this.filterToSearch = ''
+    this.filterType = ''
     this.getEvents()
   }
 
+  // FILTER BY CLASS! !!!!!!!!!!!!!
   filterCN() {
     if (this.filter !== '&location=CN') {
       this.filter = '&location=CN'
@@ -69,54 +71,172 @@ export class EventComponent implements OnInit, OnDestroy {
   }
 
     filterRain() {
-    if (this.filterToSearch !== '&event_class=RA') {
-      this.filterToSearch = '&event_class=RA'
+    if (this.filterType !== '&event_class=RA') {
+      this.filterType = '&event_class=RA'
     } else {
-      this.filterToSearch = ''
+      this.filterType = ''
     }
     this.getEvents()
   }
 
   filterFog() {
-    if (this.filterToSearch !== '&event_class=FO') {
-      this.filterToSearch = '&event_class=FO'
+    if (this.filterType !== '&event_class=FO') {
+      this.filterType = '&event_class=FO'
     } else {
-      this.filterToSearch = ''
+      this.filterType = ''
     }
     this.getEvents()
   }
 
   filterNoLight() {
-    if (this.filterToSearch !== '&event_class=NL') {
-      this.filterToSearch = '&event_class=NL'
+    if (this.filterType !== '&event_class=NL') {
+      this.filterType = '&event_class=NL'
     } else {
-      this.filterToSearch = ''
+      this.filterType = ''
     }
     this.getEvents()
   }
 
   filterLight() {
-    if (this.filterToSearch !== '&event_class=LT') {
-      this.filterToSearch = '&event_class=LT'
+    if (this.filterType !== '&event_class=LT') {
+      this.filterType = '&event_class=LT'
     } else {
-      this.filterToSearch = ''
+      this.filterType = ''
     }
   }
 
   filterOutsideTemp() {
-    if (this.filterToSearch !== '&event_class=OT') {
-      this.filterToSearch = '&event_class=OT'
+    if (this.filterType !== '&event_class=OT') {
+      this.filterType = '&event_class=OT'
     } else {
-      this.filterToSearch = ''
+      this.filterType = ''
+    }
+    this.getEvents()
+  }
+
+  filterAnimal() {
+    if (this.filterType !== '&event_class=AN') {
+      this.filterType = '&event_class=AN'
+    } else {
+      this.filterType = ''
+    }
+    this.getEvents()
+  }
+
+  filterPerson() {
+    if (this.filterType !== '&event_class=PE') {
+      this.filterType = '&event_class=PE'
+    } else {
+      this.filterType = ''
+    }
+    this.getEvents()
+  }
+
+  filterStrangeObject() {
+    if (this.filterType !== '&event_class=SO') {
+      this.filterType = '&event_class=SO'
+    } else {
+      this.filterType = ''
+    }
+    this.getEvents()
+  }
+
+  filterStoppedCar() {
+    if (this.filterType !== '&event_class=SC') {
+      this.filterType = '&event_class=SC'
+    } else {
+      this.filterType = ''
+    }
+    this.getEvents()
+  }
+
+  filterCar() {
+    if (this.filterType !== '&event_class=CA') {
+      this.filterType = '&event_class=CA'
+    } else {
+      this.filterType = ''
+    }
+    this.getEvents()
+  }
+
+  filterBicycle() {
+    if (this.filterType !== '&event_class=BC') {
+      this.filterType = '&event_class=BC'
+    } else {
+      this.filterType = ''
+    }
+    this.getEvents()
+  }
+
+  filterMotorcycle() {
+    if (this.filterType !== '&event_class=MC') {
+      this.filterType = '&event_class=MC'
+    } else {
+      this.filterType = ''
+    }
+    this.getEvents()
+  }
+
+  filterTruck() {
+    if (this.filterType !== '&event_class=TR') {
+      this.filterType = '&event_class=TR'
+    } else {
+      this.filterType = ''
+    }
+    this.getEvents()
+  }
+
+  filterCarSpeeding() {
+    if (this.filterType !== '&event_class=CS') {
+      this.filterType = '&event_class=CS'
+    } else {
+      this.filterType = ''
     }
     this.getEvents()
   }
 
   filterCarbon() {
-    if (this.filterToSearch !== '&event_class=CF') {
-      this.filterToSearch = '&event_class=CF'
+    if (this.filterType !== '&event_class=CF') {
+      this.filterType = '&event_class=CF'
     } else {
-      this.filterToSearch = ''
+      this.filterType = ''
+    }
+    this.getEvents()
+  }
+
+  // FILTER BY TYPE !!!
+  filterRoadTraffic() {
+    if (this.filterClass !== '&event_type=CF') {
+      this.filterClass = '&event_type=CF'
+    } else {
+      this.filterClass = ''
+    }
+    this.getEvents()
+  }
+
+  filterRoadDanger() {
+    if (this.filterClass !== '&event_type=RD') {
+      this.filterClass = '&event_type=RD'
+    } else {
+      this.filterClass = ''
+    }
+    this.getEvents()
+  }
+
+  filterBikeLanes() {
+    if (this.filterClass !== '&event_type=BL') {
+      this.filterClass = '&event_type=BL'
+    } else {
+      this.filterClass = ''
+    }
+    this.getEvents()
+  }
+
+  filterConditions() {
+    if (this.filterClass !== '&event_type=CO') {
+      this.filterClass = '&event_type=CO'
+    } else {
+      this.filterClass = ''
     }
     this.getEvents()
   }
@@ -144,8 +264,8 @@ export class EventComponent implements OnInit, OnDestroy {
   }
 
   getEvents() {
-    if ((this.toDate != null && this.fromDate != null) || this.filter != null || this.filterToSearch !== '') {
-      this.eventService.getEventsBetweenDates((this.page - 1) * 10, this.fromDate, this.toDate, this.filterToSearch + (this.filter === null || this.filter === undefined ? '' : this.filter)).subscribe(
+    if ((this.toDate != null && this.fromDate != null) || this.filter != null || this.filterType !== '') {
+      this.eventService.getEventsBetweenDates((this.page - 1) * 10, this.fromDate, this.toDate, this.filterType + '' + this.filterClass + (this.filter === null || this.filter === undefined ? '' : this.filter)).subscribe(
         data => {
           this.events = [];
           this.totalEvents = data.count;
