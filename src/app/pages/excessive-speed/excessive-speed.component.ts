@@ -92,7 +92,7 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   getLast5min() {
-    this.eventService.getExcessiveSpeedLast5Mins().subscribe(
+    this.eventService.getExcessiveSpeedLast5Mins(1000).subscribe(
       data => data.results.forEach(d => {
         const marker = L.marker([d.latitude, d.longitude], {icon: this.carMarker});
         marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + d.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Speed</h6><p style="margin-top: 0px;text-align: center;">' + d.velocity + ' km/h</p></div>');
@@ -105,7 +105,7 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
 
   getEventsBetweenDates() {
     if (this.toDate != null && this.fromDate != null) {
-      this.eventService.getExcessiveSpeedBetweenDates(this.fromDate, this.toDate).subscribe(
+      this.eventService.getExcessiveSpeedBetweenDates(this.fromDate, this.toDate, 1000).subscribe(
         data => data.results.forEach(d => {
           const marker = L.marker([d.latitude, d.longitude], {icon: this.carMarker});
           marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + d.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Speed</h6><p style="margin-top: 0px;text-align: center;">' + d.velocity + ' km/h</p></div>');

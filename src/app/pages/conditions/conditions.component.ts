@@ -9,7 +9,7 @@ import {Climate} from '../../models/climate';
 import {ClimateService} from '../../services/climate/climate.service';
 import {faSmog} from '@fortawesome/free-solid-svg-icons/faSmog';
 import {EventService} from '../../services/event/event.service';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {MiscellaneousService} from '../../services/miscellaneous/miscellaneous.service';
 import {CarbonFootprint} from '../../models/carbon-footprint';
@@ -46,11 +46,13 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   conditionCN: string;
   dataAtual: String;
   private subscription2;
+  limit: number = 1000;
 
   hoveredDate: NgbDate | null = null;
 
   fromDate: NgbDate;
   toDate: NgbDate | null;
+
 
 
   // DROPLET ICONS
@@ -280,7 +282,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getEventsByDate() {
-    this.eventService.getEventsBetweenDates(0, this.fromDate, this.toDate, '&event_type=CO' + this.filterToSearch, 100).subscribe(
+    this.eventService.getEventsBetweenDates(0, this.fromDate, this.toDate, '&event_type=CO' + this.filterToSearch, 1000).subscribe(
       data => {
         data.results.forEach(r => {
           if (r.event_class === 'RA') {
@@ -335,7 +337,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getEventsLast5Min() {
-    this.eventService.getEventsLast5Mins('&event_type=CO' + this.filterToSearch).subscribe(
+    this.eventService.getEventsLast5Mins('&event_type=CO' + this.filterToSearch, 1000).subscribe(
       data => {
         data.results.forEach(r => {
           if (r.event_class === 'RA') {

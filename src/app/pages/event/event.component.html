@@ -1,38 +1,56 @@
 <div>
-  <ngx-spinner [fullScreen]="true" ></ngx-spinner>
+  <ngx-spinner [fullScreen]="true"></ngx-spinner>
 </div>
 <div class="row">
   <div class="col-md-12">
     <div class="card">
-      <div class="card-header" style="display: flex; justify-content: space-between;">
+      <div class="card-header" [style.justify-content]="selectionMap==1 ? 'space-around' : 'space-between'" style="display: flex; align-items: center">
         <h5 class="card-title">Latest Events</h5>
-        <div class="col-md-8" *ngIf="selectionMap==1" style="display: flex; justify-content: space-between">
 
-          <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="selectingDate">
-            <label style="height: 50px"  ngbButtonLabel class="btn-primary">
+          <div *ngIf="selectionMap==1" class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="selectingDate">
+            <label style="height: 40px" ngbButtonLabel class="btn-primary">
               <input ngbButton type="radio" (click)="filterCN()" [value]="0"> Costa Nova
             </label>
-            <label style="height: 50px"  ngbButtonLabel class="btn-primary">
+            <label style="height: 40px" ngbButtonLabel class="btn-primary">
               <input ngbButton type="radio" (click)="filterBarra()" [value]="1"> Barra
             </label>
-              <div class="col">
-                <div ngbDropdown class="d-inline-block">
-                  <button class="btn btn-secondary dropdown-toggle" id="dropdownBasic1" ngbDropdownToggle>Type </button>
-                  <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                    <button (click)="clearAllFilters()" ngbDropdownItem>Clear Filter</button>
-                    <button (click)="filterRain()" ngbDropdownItem>Rain</button>
-                    <button (click)="filterFog()" ngbDropdownItem>Fog</button>
-                    <button (click)="filterNoLight()" ngbDropdownItem>No Light</button>
-                    <button (click)="filterLight()" ngbDropdownItem>Light</button>
-                    <button (click)="filterOutsideTemp()" ngbDropdownItem>Outside Temperature</button>
-                    <button (click)="filterCarbon()" ngbDropdownItem>Carbon Footprint</button>
-                  </div>
-                </div>
-              </div>
           </div>
 
 
-          <form class="form-inline">
+          <div *ngIf="selectionMap==1" ngbDropdown class="d-inline-block" style="margin-top: 10px">
+            <button class="btn btn-secondary dropdown-toggle" id="dropdownBasic1" ngbDropdownToggle>Class</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button (click)="filterAnimal()" ngbDropdownItem>Animal</button>
+              <button (click)="filterPerson()" ngbDropdownItem>Person</button>
+              <button (click)="filterStrangeObject()" ngbDropdownItem>Strange Object</button>
+              <button (click)="filterStoppedCar()" ngbDropdownItem>Stopped Car</button>
+              <button (click)="filterCar()" ngbDropdownItem>Car</button>
+              <button (click)="filterBicycle()" ngbDropdownItem>Bicycle</button>
+              <button (click)="filterMotorcycle()" ngbDropdownItem>Motorcycle</button>
+              <button (click)="filterTruck()" ngbDropdownItem>Truck</button>
+              <button (click)="filterRain()" ngbDropdownItem>Rain</button>
+              <button (click)="filterFog()" ngbDropdownItem>Fog</button>
+              <button (click)="filterNoLight()" ngbDropdownItem>No Light</button>
+              <button (click)="filterLight()" ngbDropdownItem>Light</button>
+              <button (click)="filterOutsideTemp()" ngbDropdownItem>Outside Temperature</button>
+              <button (click)="filterCarSpeeding()" ngbDropdownItem>Car Speeding</button>
+              <button (click)="filterCarbon()" ngbDropdownItem>Carbon Footprint</button>
+            </div>
+          </div>
+
+
+          <div *ngIf="selectionMap==1" ngbDropdown class="d-inline-block"  style="margin-top: 10px">
+            <button class="btn btn-secondary dropdown-toggle" id="dropdownBasic2" ngbDropdownToggle>Type</button>
+            <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+              <button (click)="filterRoadTraffic()" ngbDropdownItem>Road Traffic</button>
+              <button (click)="filterRoadDanger()" ngbDropdownItem>Road Danger</button>
+              <button (click)="filterBikeLanes()" ngbDropdownItem>Bike Lanes</button>
+              <button (click)="filterConditions()" ngbDropdownItem>Conditions</button>
+            </div>
+          </div>
+
+
+          <form *ngIf="selectionMap==1" class="form-inline">
             <div class="form-group hidden">
               <div class="input-group">
                 <!-- PARTE PARA DAR TOGGLE DO DATAPICKER -->
@@ -62,13 +80,16 @@
                      (input)="toDate = validateInput(toDate, dpToDate.value)">
             </div>
           </form>
-        </div>
+
         <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="selectionMap">
-          <label style="height: 50px"  ngbButtonLabel class="btn-primary">
-            <input  ngbButton type="radio" (click)="clearAllFilters()" [value]="0"> All
+          <label style="height: 40px" ngbButtonLabel class="btn-primary">
+            <input ngbButton type="radio" (click)="clearAllFilters()" [value]="0"> All
           </label>
-          <label style="height: 50px" ngbButtonLabel class="btn-primary">
+          <label style="height: 40px" ngbButtonLabel class="btn-primary">
             <input ngbButton type="radio" [value]="1"> Filter
+          </label>
+          <label ngbButtonLabel style="height: 40px" class="btn-primary">
+            <input ngbButton type="radio" (click)="clearAllFilters()" [value]="2"> Clear Filters
           </label>
         </div>
       </div>
