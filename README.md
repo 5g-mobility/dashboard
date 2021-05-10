@@ -2,7 +2,7 @@
 
 Angular application based on [Paper Dashboard Angular](https://www.creative-tim.com/product/paper-dashboard-angular)
 
-## Running
+## Run on your environment
 
 **node.js** is required to run an _Angular_ application. The installation guide can be found [here](https://nodejs.org/en/).
 
@@ -15,7 +15,7 @@ When installing _node.js_, _npm_ should also be installed on the computer.
 2. Install the dependencies using ```npm install```
 
 
-## How to run the Web Application
+### How to run the Web Application
 
 Within the project directory, run the following:
 

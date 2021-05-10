@@ -4,6 +4,7 @@ import {EventService} from '../../services/event/event.service';
 import {NgbCalendar, NgbDate, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {timer} from 'rxjs';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'app-event',
@@ -11,7 +12,7 @@ import {timer} from 'rxjs';
   styleUrls: ['./event.component.scss']
 })
 export class EventComponent implements OnInit, OnDestroy {
-  selectionMap = -1 ;
+  selectionMap = 0 ;
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
   hoveredDate: NgbDate | null = null;
@@ -26,7 +27,8 @@ export class EventComponent implements OnInit, OnDestroy {
   public radioGroupForm: FormGroup;
 
   constructor(private climateService: ClimateService, private eventService: EventService,
-              private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private formBuilder: FormBuilder) {
+              private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private formBuilder: FormBuilder,
+              private spinner: NgxSpinnerService) {
   }
 
   onDateSelection(date: NgbDate) {
@@ -45,10 +47,12 @@ export class EventComponent implements OnInit, OnDestroy {
     this.toDate = null;
     this.fromDate = null;
     this.filter = null;
-    this.selectionMap = -1;
     this.selectingDate = -1;
-    this.filterType = ''
-    this.getEvents()
+    this.filterType = '';
+    this.getEvents();
+    timer(50).subscribe(data=> {
+      this.selectionMap = 0;
+    })
   }
 
   // FILTER BY CLASS! !!!!!!!!!!!!!
@@ -271,7 +275,8 @@ export class EventComponent implements OnInit, OnDestroy {
           this.totalEvents = data.count;
           data.results.forEach(d => {
             this.events.push(d)
-          })
+          });
+          this.spinner.hide();
         });
     } else {
       this.eventService.getAllEvents((this.page - 1) * 10).subscribe(data => {
@@ -280,11 +285,13 @@ export class EventComponent implements OnInit, OnDestroy {
         data.results.forEach(d => {
           this.events.push(d)
         });
+        this.spinner.hide();
       });
     }
   }
 
   ngOnInit(): void {
+    this.spinner.show()
      this.subscription = timer(0, 10000).subscribe(() => {
       this.getEvents();
     })

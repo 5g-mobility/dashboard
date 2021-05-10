@@ -5,28 +5,28 @@
     <div class="col-lg-6 col-md-6 col-sm-6">
       <div class="card card-stats">
         <div class="card-header">
-          <h5 class="card-title" *ngIf="!starting">Praia da Barra
+          <h5 class="card-title" *ngIf="ultimoClimateBA">Praia da Barra
             <fa-icon *ngIf="ultimoClimateBA.daytime" style="color: #1D3150;" [icon]="cleanSkies"></fa-icon>
             <fa-icon *ngIf="!ultimoClimateBA.daytime" style="color: #1D3150;" [icon]="moonIcon"></fa-icon>
             {{ultimoClimateBA.temperature}}º
           </h5>
 
         </div>
-        <div class="card-body ">
+        <div *ngIf="ultimoClimateBA && carbonFootprintBarra" class="card-body ">
           <div class="row" style="margin: 10px 15px;">
             <div class="col-6 col-md-6 col-sm-12">
               <div style="display: flex; align-items: center; justify-content: space-around;">
                 <fa-icon style="color: #7FD45F;" [icon]="leafIcon" size="4x"></fa-icon>
                 <div class="numbers" style="display: flex; flex-direction: column; align-items: center;">
                   <p class="card-category">Carboon Footprint (CO2)</p>
-                  <p class="card-title">800g
+                  <p class="card-title">{{carbonFootprintBarra.CO2}}g
                   <p>
                 </div>
               </div>
             </div>
             <div class="col-6 col-md-6 col-sm-12">
               <div style="display: flex; align-items: center; justify-content: space-around;">
-                <div *ngIf="!starting" style="width: 55px; height: 55px;">
+                <div style="width: 55px; height: 55px;">
                   <fa-icon *ngIf="ultimoClimateBA.condition==='FG'" style="color: #6570C6;" [icon]="foggy"
                            size="4x"></fa-icon>
                   <fa-icon *ngIf="ultimoClimateBA.condition==='RN'" style="color: #6570C6;" [icon]="rainy"
@@ -36,7 +36,7 @@
                 </div>
                 <div class="numbers" style="display: flex; flex-direction: column; align-items: center;">
                   <p class="card-category">Climate Condition</p>
-                  <p *ngIf="!starting" class="card-title">{{conditionBA}}
+                  <p class="card-title">{{conditionBA}}
                   <p>
                 </div>
               </div>
@@ -46,35 +46,35 @@
         <div class="card-footer ">
           <hr>
           <div class="stats">
-            <i *ngIf="!starting" class="fa fa-refresh"></i> Updated at {{dataAtual}}
+            <i *ngIf="ultimoClimateBA" class="fa fa-refresh"></i> Updated at {{dataAtual}}
           </div>
         </div>
       </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-6">
       <div class="card card-stats">
-        <div class="card-header">
-          <h5 *ngIf="!starting" class="card-title">Costa Nova
+        <div *ngIf="ultimoClimateCN" class="card-header">
+          <h5 class="card-title">Costa Nova
             <fa-icon *ngIf="ultimoClimateCN.daytime" style="color: #1D3150;" [icon]="cleanSkies"></fa-icon>
             <fa-icon *ngIf="!ultimoClimateCN.daytime" style="color: #1D3150;" [icon]="moonIcon"></fa-icon>
             {{ultimoClimateCN.temperature}}º
           </h5>
         </div>
-        <div class="card-body ">
+        <div *ngIf="ultimoClimateCN && carbonFootprintCostaNova" class="card-body ">
           <div class="row" style="margin: 10px 15px;">
             <div class="col-6 col-md-6 col-sm-12">
               <div style="display: flex; align-items: center; justify-content: space-around;">
                 <fa-icon style="color: #7FD45F;" [icon]="leafIcon" size="4x"></fa-icon>
                 <div class="numbers" style="display: flex; flex-direction: column; align-items: center;">
                   <p class="card-category">Carboon Footprint (CO2)</p>
-                  <p class="card-title">400g
+                  <p class="card-title">{{carbonFootprintCostaNova.CO2}}g
                   <p>
                 </div>
               </div>
             </div>
             <div class="col-6 col-md-6 col-sm-12">
               <div style="display: flex; align-items: center; justify-content: space-around;">
-                <div *ngIf="!starting" style="width: 55px; height: 55px;">
+                <div style="width: 55px; height: 55px;">
                   <fa-icon *ngIf="ultimoClimateCN.condition==='FG'" style="color: #d0cdd1;" [icon]="foggy"
                            size="4x"></fa-icon>
                   <fa-icon *ngIf="ultimoClimateCN.condition==='RN'" style="color: #6570C6;" [icon]="rainy"
@@ -84,7 +84,7 @@
                 </div>
                 <div class="numbers" style="display: flex; flex-direction: column; align-items: center;">
                   <p class="card-category">Climate Condition</p>
-                  <p *ngIf="!starting" class="card-title">{{conditionCN}}
+                  <p class="card-title">{{conditionCN}}
                   <p>
                 </div>
               </div>
@@ -94,7 +94,7 @@
         <div class="card-footer ">
           <hr>
           <div class="stats">
-            <i *ngIf="!starting" class="fa fa-refresh"></i> Updated at {{dataAtual}}
+            <i *ngIf="ultimoClimateCN" class="fa fa-refresh"></i> Updated at {{dataAtual}}
           </div>
         </div>
       </div>
@@ -104,7 +104,7 @@
   <div class="row">
     <div class="col-md-12">
       <div class="card">
-        <div class="card-header" style="display: flex; justify-content: space-between;">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center">
           <h5 class="card-title">Events Map</h5>
 
           <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="typeSelection">
@@ -150,7 +150,7 @@
                     <!-- PARTE PARA DAR TOGGLE DO DATAPICKER -->
                     <input style="z-index: -1" name="datepicker" class="form-control" ngbDatepicker
                            #datepicker="ngbDatepicker"
-                           [autoClose]="'outside'" (close)="closeData()" (dateSelect)="onDateSelection($event)"
+                           [autoClose]="'outside'" (dateSelect)="onDateSelection($event)"
                            [displayMonths]="2"
                            [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1">
                     <ng-template #t let-date let-focused="focused">

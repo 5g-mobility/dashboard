@@ -6,6 +6,8 @@ import {NgbDate, NgbCalendar, NgbDateParserFormatter, NgbModule} from '@ng-boots
 import {interval, timer} from 'rxjs';
 import {ClimateService} from '../../services/climate/climate.service';
 import {EventService} from '../../services/event/event.service';
+import {MiscellaneousService} from '../../services/miscellaneous/miscellaneous.service';
+import {NgxSpinnerService} from 'ngx-spinner';
 
 @Component({
   selector: 'app-excessive-speed',
@@ -19,7 +21,11 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
   hoveredDate: NgbDate | null = null;
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
+  dailyExcessiveSpeedNumber: number[] = [];
+  dailyExcessiveSpeedTop: number[] = [];
+  dailyExcessiveSpeedDate: string[] = [];
   private subscription;
+  private subscription2;
 
   carMarker = (L as any).ExtraMarkers.icon({
     shape: 'circle',
@@ -49,7 +55,8 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   constructor(private eventService: EventService, private climateService: ClimateService,
-              private calendar: NgbCalendar, public formatter: NgbDateParserFormatter) {
+              private calendar: NgbCalendar, public formatter: NgbDateParserFormatter, private miscellaneousService: MiscellaneousService,
+              private spinner: NgxSpinnerService) {
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
@@ -85,19 +92,20 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   getLast5min() {
-    this.eventService.getExcessiveSpeedLast5Mins().subscribe(
+    this.eventService.getExcessiveSpeedLast5Mins(1000).subscribe(
       data => data.results.forEach(d => {
         const marker = L.marker([d.latitude, d.longitude], {icon: this.carMarker});
         marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + d.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Speed</h6><p style="margin-top: 0px;text-align: center;">' + d.velocity + ' km/h</p></div>');
         marker.addTo(this.map);
         this.markers.push(marker);
+        this.checkAllDoneLoading();
       })
     )
   }
 
   getEventsBetweenDates() {
     if (this.toDate != null && this.fromDate != null) {
-      this.eventService.getExcessiveSpeedBetweenDates(this.fromDate, this.toDate).subscribe(
+      this.eventService.getExcessiveSpeedBetweenDates(this.fromDate, this.toDate, 1000).subscribe(
         data => data.results.forEach(d => {
           const marker = L.marker([d.latitude, d.longitude], {icon: this.carMarker});
           marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + d.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Speed</h6><p style="margin-top: 0px;text-align: center;">' + d.velocity + ' km/h</p></div>');
@@ -108,27 +116,54 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
+  getDailyExcessiveSpeed() {
+    this.dailyExcessiveSpeedTop = [];
+    this.dailyExcessiveSpeedDate = [];
+    this.dailyExcessiveSpeedNumber = [];
+    this.miscellaneousService.getDailyExcessiveSpeed().subscribe(data => {
+      data.forEach(item => {
+        this.dailyExcessiveSpeedNumber.push(item.number);
+        this.dailyExcessiveSpeedTop.push(item.top);
+        this.dailyExcessiveSpeedDate.push(item.day.substring(0, 5));
+        this.createGraph();
+        this.checkAllDoneLoading();
+      });
+    });
+  }
+
+  checkAllDoneLoading() {
+    if (this.dailyExcessiveSpeedDate.length > 0 && this.dailyExcessiveSpeedTop.length > 0
+      && this.dailyExcessiveSpeedNumber.length > 0) {
+      this.spinner.hide();
+    }
+  }
+
 
   ngOnInit(): void {
+    this.spinner.show()
     this.subscription = timer(0, 10000).subscribe(() => {
-        if (this.selectTime === 0) {
-          // ultimos 5 minutos
-          this.getLast5min()
-        } else {
-          // selected date
-          this.getEventsBetweenDates()
-        }
+      if (this.selectTime === 0) {
+        // ultimos 5 minutos
+        this.getLast5min()
+      } else {
+        // selected date
+        this.getEventsBetweenDates()
       }
-    )
+    });
+
+    this.subscription2 = timer(0, 30000).subscribe(() => {
+        this.getDailyExcessiveSpeed();
+      }
+    );
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.subscription2.unsubscribe();
   }
 
   ngAfterViewInit(): void {
     this.initMap();
-    this.createGraph()
   }
 
   last5min() {
@@ -152,9 +187,7 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
     const speedCanvas = document.getElementById('dailyExcessiveChart');
 
     const dataEventNumber = {
-      data: [0, 19, 15, 20, 30, 40, 40, 50, 25, 30, 50, 70, 0,
-        19, 15, 20, 30, 40, 40, 50, 25, 30, 50, 70, 50, 20, 60,
-        55, 76, 34, 21],
+      data: this.dailyExcessiveSpeedNumber,
       fill: false,
       label: 'Number of Excessive Speed Events of The Day',
       borderColor: '#fbc658',
@@ -166,11 +199,9 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
     };
 
     const dataTopSpeed = {
-      data: [150, 120, 95, 200, 220, 300, 93, 97, 100, 110, 99, 91, 102,
-        145, 185, 170, 160, 112, 133, 141, 121, 105, 100, 96, 95, 91, 93,
-        92, 97, 94, 91],
+      data: this.dailyExcessiveSpeedTop,
       fill: false,
-      label: 'Top Speed of The Day',
+      label: 'Top Speed of The Day (km/h)',
       borderColor: '#51CACF',
       backgroundColor: 'transparent',
       pointBorderColor: '#51CACF',
@@ -180,10 +211,7 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
     };
 
     const dailyData = {
-      labels: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
-        '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
-        '21', '22', '23', '24', '25', '26', '27', '28', '29', '30',
-        '31'],
+      labels: this.dailyExcessiveSpeedDate,
       datasets: [dataEventNumber, dataTopSpeed]
     };
 
