@@ -20,7 +20,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'icons',          component: IconsComponent },
     { path: 'notifications',  component: NotificationsComponent },
     { path: 'upgrade',        component: UpgradeComponent },
-    { path: 'excessive_speed',component: ExcessiveSpeedComponent },
+    { path: 'excessive_speed', component: ExcessiveSpeedComponent },
     { path: 'conditions',     component: ConditionsComponent },
     { path: 'event',       component: EventComponent},
     { path: 'road_info',       component: RoadInfoComponent},

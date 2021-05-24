@@ -22,7 +22,6 @@ import {CarbonFootprint} from '../../models/carbon-footprint';
 export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   rainy = faCloudShowersHeavy;
   leafIcon = faLeaf;
-  sunCloudIcon = faCloudSun;
   cleanSkies = faSun;
   moonIcon = faMoon;
   foggy = faSmog;
@@ -578,9 +577,6 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
       this.getChartDataCostaNova();
 
-      this.getCO2Barra();
-      this.getCO2CostaNova();
-
     });
 
     this.radioGroupForm = this.formBuilder.group({});
@@ -589,6 +585,8 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
       // para a parte das conditions
       this.getConditions();
       console.log(this.mapMarkers.length);
+      this.getCO2Barra();
+      this.getCO2CostaNova();
 
       if (this.dataSelection === 0) {
         this.getEventsLast5Min();
