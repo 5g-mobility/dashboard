@@ -46,7 +46,7 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   conditionCN: string;
   dataAtual: String;
   private subscription2;
-  limit: number = 1000;
+  limit: number = Number(1000);
 
   hoveredDate: NgbDate | null = null;
 
@@ -282,8 +282,9 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getEventsByDate() {
-    this.eventService.getEventsBetweenDates(0, this.fromDate, this.toDate, '&event_type=CO' + this.filterToSearch, 1000).subscribe(
+    this.eventService.getEventsBetweenDates(0, this.fromDate, this.toDate, '&event_type=CO' + this.filterToSearch, 50).subscribe(
       data => {
+        this.mapMarkers = [];
         data.results.forEach(r => {
           if (r.event_class === 'RA') {
             const marker = L.marker([r.latitude, r.longitude], {icon: this.rainMarker});
@@ -312,12 +313,13 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
             marker.addTo(this.map);
             this.mapMarkers.push(marker);
           } else if (r.event_class === 'CF') {
-            const marker = L.marker([40.629779, -8.737498], {icon: this.carbon});
+            const marker = L.marker([r.latitude, r.longitude], {icon: this.carbon});
             marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Carbon Emission"</p></div>');
             marker.addTo(this.map);
             this.mapMarkers.push(marker);
           }
         })
+        console.log(this.mapMarkers.length);
       }
     )
   }
@@ -337,42 +339,44 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getEventsLast5Min() {
-    this.eventService.getEventsLast5Mins('&event_type=CO' + this.filterToSearch, 1000).subscribe(
+    this.eventService.getEventsLast5Mins('&event_type=CO' + this.filterToSearch, 50).subscribe(
       data => {
+        this.mapMarkers = [];
         data.results.forEach(r => {
           if (r.event_class === 'RA') {
             const marker = L.marker([r.latitude, r.longitude], {icon: this.rainMarker});
-            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Rain Detected"</p></div>');
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">Rain Detected</p></div>');
             marker.addTo(this.map);
             this.mapMarkers.push(marker);
           } else if (r.event_class === 'FO') {
             const marker = L.marker([r.latitude, r.longitude], {icon: this.fogMarker});
-            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Fog Detected"</p></div>');
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">Fog Detected</p></div>');
             marker.addTo(this.map);
             this.mapMarkers.push(marker);
             this.mapMarkers.push(marker);
           } else if (r.event_class === 'NL') {
             const marker = L.marker([r.latitude, r.longitude], {icon: this.noLight});
-            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Medium Lights OFF"</p></div>');
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">No Light Detected</p></div>');
             marker.addTo(this.map);
             this.mapMarkers.push(marker);
           } else if (r.event_class === 'LT') {
             const marker = L.marker([r.latitude, r.longitude], {icon: this.light});
-            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Medium Lights ON"</p></div>');
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">Light Detected</p></div>');
             marker.addTo(this.map);
             this.mapMarkers.push(marker);
           } else if (r.event_class === 'OT') {
             const marker = L.marker([r.latitude, r.longitude], {icon: this.outsideTemp});
-            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Outside Temperature"</p></div>');
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">Outside Temperature is ' + r.temperature + 'ºC</p></div>');
             marker.addTo(this.map);
             this.mapMarkers.push(marker);
           } else if (r.event_class === 'CF') {
-            const marker = L.marker([40.629779, -8.737498], {icon: this.carbon});
-            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">"Carbon Emission"</p></div>');
+            const marker = L.marker([r.latitude, r.longitude], {icon: this.carbon});
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + r.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Type</h6><p style="margin-top: 0px;text-align: center;">Carbon Emissions are ' + r.co2 + 'g</p></div>');
             marker.addTo(this.map);
             this.mapMarkers.push(marker);
           }
         })
+        console.log(this.mapMarkers.length);
         this.checkAllDoneLoading();
       }
     )
@@ -581,9 +585,10 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.radioGroupForm = this.formBuilder.group({});
 
-    this.subscription = timer(0, 10000).subscribe(() => {
+    this.subscription = timer(0, 30000).subscribe(() => {
       // para a parte das conditions
       this.getConditions();
+      console.log(this.mapMarkers.length);
 
       if (this.dataSelection === 0) {
         this.getEventsLast5Min();
