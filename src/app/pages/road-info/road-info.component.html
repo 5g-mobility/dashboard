@@ -1,27 +1,28 @@
 <div>
-  <ngx-spinner [fullScreen]="true" ></ngx-spinner>
+  <ngx-spinner [fullScreen]="true"></ngx-spinner>
 </div>
-<div class="d-flex" >
-    <div class="mr-auto p-2 btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" (change)="updateInfo()" [(ngModel)]="selectedLocation" >
-      <label ngbButtonLabel style="background-color: #6570C6;">
-        <input ngbButton  type="radio" [value]="'PT'"> Ponte da Barra
-      </label>
-      <label ngbButtonLabel style="background-color: #6570C6;">
-        <input ngbButton type="radio" [value]="'DN'"> Duna
-      </label>
-      <label ngbButtonLabel style="background-color: #6570C6;">
-        <input ngbButton type="radio" [value]="'RA'"> Ria Ativa
-      </label>
-    </div>
+<div class="d-flex">
+  <div class="mr-auto p-2 btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" (change)="updateInfo()"
+       [(ngModel)]="selectedLocation">
+    <label ngbButtonLabel style="background-color: #6570C6;">
+      <input ngbButton type="radio" [value]="'PT'"> Ponte da Barra
+    </label>
+    <label ngbButtonLabel style="background-color: #6570C6;">
+      <input ngbButton type="radio" [value]="'DN'"> Duna
+    </label>
+    <label ngbButtonLabel style="background-color: #6570C6;">
+      <input ngbButton type="radio" [value]="'RA'"> Ria Ativa
+    </label>
+  </div>
 
-    <div class="p-2 btn-group btn-group-toggle" ngbRadioGroup name="radioBasic24hrs" [(ngModel)]="selectedDate">
-      <label ngbButtonLabel style="background-color: #6570C6;">
-          <input ngbButton type="radio" (click)="updateInfo()" [value]="0"> Last 24H
-      </label>
-      <label ngbButtonLabel style="background-color: #6570C6;">
-          <input ngbButton type="radio" [value]="1"> Select Date
-      </label>
-    </div>
+  <div class="p-2 btn-group btn-group-toggle" ngbRadioGroup name="radioBasic24hrs" [(ngModel)]="selectedDate">
+    <label ngbButtonLabel style="background-color: #6570C6;">
+      <input ngbButton type="radio" (click)="updateInfo(true)" [value]="0"> Last 24H
+    </label>
+    <label ngbButtonLabel style="background-color: #6570C6;">
+      <input ngbButton type="radio" [value]="1"> Select Date
+    </label>
+  </div>
 
 </div>
 
@@ -65,185 +66,194 @@
 </div>
 
 
-
 <div class="row" style="margin-top:2%">
-    <div class="col-lg-8 col-md-12 col-sm 12"
-        style="display: flex; flex-direction: column; justify-content: space-around;">
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="card card-stats">
-                    <div class="card-header">People on Bike Lanes</div>
-                    <div class="card-body ">
-                        <div class="row">
-                            <div class="col-5 col-md-4">
-                                <div class="icon-big text-center icon-warning">
-                                    <fa-icon style="color: #7FD45F;" [icon]="walkingIcon"></fa-icon>
-                                </div>
-                            </div>
-                            <div class="col-7 col-md-8" *ngIf="peopleBikeLanes !== undefined">
-                                <div class="numbers">
-                                    <p class="card-title">{{peopleBikeLanes.toString()}}
-                                    <p class="card-category">{{(animalsBikeLanes === 1 ? 'Person' : 'People')}}</p>
-                                    <p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer ">
-                        <hr>
-                      <div class="stats" *ngIf="dataBikeLanesUpdate">
-                        <i class="fa fa-refresh"></i>Updated at {{dataBikeLanesUpdate}}
-                      </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="card card-stats">
-                    <div class="card-header">Bikes on Bike Lanes</div>
-                    <div class="card-body ">
-                        <div class="row">
-                            <div class="col-5 col-md-4">
-                                <div class="icon-big text-center icon-warning">
-                                    <fa-icon style="color: #72C7CD;" [icon]="bikeIcon"></fa-icon>
-                                </div>
-                            </div>
-                            <div class="col-7 col-md-8" *ngIf="bikesBikeLanes !== undefined">
-                                <div class="numbers">
-                                    <p class="card-title">{{bikesBikeLanes.toString()}}
-                                    <p class="card-category">{{(animalsBikeLanes === 1 ? 'Bike' : 'Bikes')}}</p>
-
-                                    <p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer ">
-                        <hr>
-                        <div class="stats" *ngIf="dataBikeLanesUpdate">
-                            <i class="fa fa-refresh"></i>Updated at {{dataBikeLanesUpdate}}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="card card-stats">
-                    <div class="card-header">Animals on Bike Lanes</div>
-                    <div class="card-body ">
-                        <div class="row">
-                            <div class="col-5 col-md-4">
-                                <div class="icon-big text-center icon-warning">
-                                    <fa-icon style="color: #c96a1d;" [icon]="dogIcon"></fa-icon>
-                                </div>
-                            </div>
-                            <div class="col-7 col-md-8" *ngIf="animalsBikeLanes !== undefined">
-                                <div class="numbers">
-                                    <p class="card-title">{{animalsBikeLanes.toString()}}</p>
-                                    <p class="card-category">{{(animalsBikeLanes === 1 ? 'Animal' : 'Animals')}}</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-footer ">
-                        <hr>
-                      <div class="stats" *ngIf="dataBikeLanesUpdate">
-                        <i class="fa fa-refresh"></i>Updated at {{dataBikeLanesUpdate}}
-                      </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6 col-md-6 col-sm-6">
-                <div class="card card-stats danger-event">
-                    <div class="card-header">Last Road Danger Event</div>
-                    <div class="card-body" *ngIf="lastRoadDanger !== undefined">
-                        <div class="row">
-                            <div class="col-4 col-md-4">
-                                <div class="icon-big text-center icon-warning"
-                                    style="display: flex; justify-content: center;">
-                                    <fa-icon *ngIf="lastRoadDanger!==null" style="color: #F3C76B;" [icon]="exclamationTriangleIcon"></fa-icon>
-                                    <fa-icon *ngIf="lastRoadDanger===null" style="color: #F3C76B;" [icon]="checkMarkIcon"></fa-icon>
-
-
-                                </div>
-                            </div>
-                          <div *ngIf="lastRoadDanger !== null">
-                              <div *ngIf="lastRoadDanger.event_class === 'PE'" class="col-8 col-md-8"
-                                  style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                  <fa-icon style="color: white;" [icon]="walkingIcon" size="3x"></fa-icon>
-                                  <p  class="card-category">Person on Road Lane<p>
-                              </div>
-
-                              <div *ngIf="lastRoadDanger.event_class === 'SC'" class="col-8 col-md-8"
-                                   style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                <fa-icon style="color: white;" [icon]="carIcon" size="3x"></fa-icon>
-                                <p  class="card-category">Stopped Car on Road Lane<p>
-                              </div>
-
-                              <div *ngIf="lastRoadDanger.event_class === 'SO'" class="col-8 col-md-8"
-                                   style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                <fa-icon style="color: white;" [icon]="questionMarkIcon" size="3x"></fa-icon>
-                                <p  class="card-category">Strange Object on Road Lane<p>
-                              </div>
-                          </div>
-                          <div *ngIf="lastRoadDanger === null" class="col-8 col-md-8"
-                               style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                            <p  class="card-category">No Road Danger Event Detected<p>
-                          </div>
-
-                        </div>
-                        <div class="row" style="display: flex; justify-content: center;">
-                            <fa-icon *ngIf="lastRoadDanger !== null" style="color: white; margin-right: 5px;" [icon]="clockIcon"></fa-icon>
-                            <p class="card-category" style="margin-bottom: 0.5rem;"> {{(lastRoadDanger === null ? '' : lastRoadDanger.timestamp | date:'medium')}}
-                            <p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <div class="col-lg-4 col-md-12 col-sm-12">
+  <div class="col-lg-8 col-md-12 col-sm 12"
+       style="display: flex; flex-direction: column; justify-content: space-around;">
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-6">
         <div class="card card-stats">
-            <div class="card-header">Circulating Vehicles</div>
-            <div class="card-body">
-                <canvas style="max-height: 450px;" id="chartCars"></canvas>
-            </div>
-
-            <div class="card-footer ">
-                <hr>
-                <div class="stats" style="display: flex; justify-content: center; height: 3.5em">
-                    <i class="fa fa-refresh"></i> Updated at 09/04/2021 14:50
+          <div class="card-header">People on Bike Lanes</div>
+          <div class="card-body ">
+            <div class="row">
+              <div class="col-5 col-md-4">
+                <div class="icon-big text-center icon-warning">
+                  <fa-icon style="color: #7FD45F;" [icon]="walkingIcon"></fa-icon>
                 </div>
+              </div>
+              <div class="col-7 col-md-8" *ngIf="peopleBikeLanes !== undefined">
+                <div class="numbers">
+                  <p class="card-title">{{peopleBikeLanes.toString()}}
+                  <p class="card-category">{{(animalsBikeLanes === 1 ? 'Person' : 'People')}}</p>
+                  <p>
+                </div>
+              </div>
             </div>
+          </div>
+          <div class="card-footer ">
+            <hr>
+            <div class="stats" *ngIf="dataBikeLanesUpdate">
+              <i class="fa fa-refresh"></i>Updated at {{dataBikeLanesUpdate}}
+            </div>
+          </div>
         </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header">Bikes on Bike Lanes</div>
+          <div class="card-body ">
+            <div class="row">
+              <div class="col-5 col-md-4">
+                <div class="icon-big text-center icon-warning">
+                  <fa-icon style="color: #72C7CD;" [icon]="bikeIcon"></fa-icon>
+                </div>
+              </div>
+              <div class="col-7 col-md-8" *ngIf="bikesBikeLanes !== undefined">
+                <div class="numbers">
+                  <p class="card-title">{{bikesBikeLanes.toString()}}
+                  <p class="card-category">{{(animalsBikeLanes === 1 ? 'Bike' : 'Bikes')}}</p>
+
+                  <p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer ">
+            <hr>
+            <div class="stats" *ngIf="dataBikeLanesUpdate">
+              <i class="fa fa-refresh"></i>Updated at {{dataBikeLanesUpdate}}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    <div class="row">
+      <div class="col-lg-6 col-md-6 col-sm-6">
+        <div class="card card-stats">
+          <div class="card-header">Animals on Bike Lanes</div>
+          <div class="card-body ">
+            <div class="row">
+              <div class="col-5 col-md-4">
+                <div class="icon-big text-center icon-warning">
+                  <fa-icon style="color: #c96a1d;" [icon]="dogIcon"></fa-icon>
+                </div>
+              </div>
+              <div class="col-7 col-md-8" *ngIf="animalsBikeLanes !== undefined">
+                <div class="numbers">
+                  <p class="card-title">{{animalsBikeLanes.toString()}}</p>
+                  <p class="card-category">{{(animalsBikeLanes === 1 ? 'Animal' : 'Animals')}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer ">
+            <hr>
+            <div class="stats" *ngIf="dataBikeLanesUpdate">
+              <i class="fa fa-refresh"></i>Updated at {{dataBikeLanesUpdate}}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-6">
+        <div class="card card-stats danger-event">
+          <div class="card-header">Last Road Danger Event</div>
+          <div class="card-body" *ngIf="lastRoadDanger !== undefined">
+            <div class="row">
+              <div class="col-4 col-md-4">
+                <div class="icon-big text-center icon-warning"
+                     style="display: flex; justify-content: center;">
+                  <fa-icon *ngIf="lastRoadDanger!==null" style="color: #F3C76B;"
+                           [icon]="exclamationTriangleIcon"></fa-icon>
+                  <fa-icon *ngIf="lastRoadDanger===null" style="color: #F3C76B;" [icon]="checkMarkIcon"></fa-icon>
+
+
+                </div>
+              </div>
+              <ng-container *ngIf="lastRoadDanger !== null">
+                <div *ngIf="lastRoadDanger.event_class === 'PE'" class="col-8 col-md-8"
+                     style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                  <fa-icon style="color: white;" [icon]="walkingIcon" size="3x"></fa-icon>
+                  <p class="card-category">Person on Road Lane
+                  <p>
+                </div>
+
+                <div *ngIf="lastRoadDanger.event_class === 'SC'" class="col-8 col-md-8"
+                     style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                  <fa-icon style="color: white;" [icon]="carIcon" size="3x"></fa-icon>
+                  <p class="card-category">Stopped Car on Road Lane
+                  <p>
+                </div>
+
+                <div *ngIf="lastRoadDanger.event_class === 'SO'" class="col-8 col-md-8"
+                     style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                  <fa-icon style="color: white;" [icon]="questionMarkIcon" size="3x"></fa-icon>
+                  <p class="card-category">Strange Object on Road Lane
+                  <p>
+                </div>
+              </ng-container>
+              <div *ngIf="lastRoadDanger === null" class="col-8 col-md-8"
+                   style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                <p class="card-category">No Road Danger Event Detected
+                <p>
+              </div>
+
+            </div>
+            <div class="row" style="display: flex; justify-content: center;">
+              <fa-icon *ngIf="lastRoadDanger !== null" style="color: white; margin-right: 5px;"
+                       [icon]="clockIcon"></fa-icon>
+              <p class="card-category"
+                 style="margin-bottom: 0.5rem;"> {{(lastRoadDanger === null ? '' : lastRoadDanger.timestamp | date:'medium')}}
+              <p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-lg-4 col-md-12 col-sm-12">
+    <div class="card card-stats">
+      <div class="card-header">Circulating Vehicles</div>
+      <div class="card-body">
+        <canvas style="max-height: 450px;" id="chartCars"></canvas>
+      </div>
+      <div *ngIf="carsChartData && carsChartData[0] === 0 && carsChartData[1] === 0 && carsChartData[2] === 0 ">
+        <h5 style="text-align: center">No Vehicles Recorded</h5>
+      </div>
+
+      <div class="card-footer ">
+        <hr>
+        <div class="stats" style="display: flex; justify-content: center; height: 3.5em" *ngIf="dataCarsChartUpdate">
+          <i class="fa fa-refresh"></i> Updated at {{dataCarsChartUpdate}}
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="row">
-    <div class="col-md-12">
-        <div class="card card-chart">
-            <div class="card-header" style="display: flex; justify-content: space-between;">
-                <h5 class="card-title">Top Speed Summary</h5>
+  <div class="col-md-12">
+    <div class="card card-chart">
+      <div class="card-header" style="display: flex; justify-content: space-between;">
+        <h5 class="card-title">Last Month Top Speed Summary</h5>
 
-            </div>
-            <div class="card-body">
-                <canvas id="topSpeedGraph" width="400" height="100"></canvas>
-            </div>
-        </div>
+      </div>
+      <div class="card-body">
+        <canvas id="topSpeedGraph" width="400" height="100"></canvas>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="row">
-    <div class="col-md-12">
-        <div class="card card-chart">
-            <div class="card-header" style="display: flex; justify-content: space-between;">
-                <h5 class="card-title">Traffic Inflow Summary</h5>
-            </div>
-            <div class="card-body">
-                <canvas id="dailyInflowTraffic" width="400" height="100"></canvas>
-            </div>
-        </div>
+  <div class="col-md-12">
+    <div class="card card-chart">
+      <div class="card-header" style="display: flex; justify-content: space-between;">
+        <h5 class="card-title">Last Month Traffic Inflow Summary</h5>
+      </div>
+      <div class="card-body">
+        <canvas id="dailyInflowTraffic" width="400" height="100"></canvas>
+      </div>
     </div>
+  </div>
 </div>
