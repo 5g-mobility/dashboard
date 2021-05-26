@@ -1,15 +1,15 @@
 import {Component, OnInit, AfterViewInit, OnDestroy} from '@angular/core';
-import {faCloudShowersHeavy, faLeaf, faCloudSun, faSun, faMoon} from '@fortawesome/free-solid-svg-icons';
+import {faCloudShowersHeavy, faLeaf, faSun, faMoon} from '@fortawesome/free-solid-svg-icons';
 import * as L from 'leaflet';
 import 'leaflet-extra-markers/dist/js/leaflet.extra-markers.js';
-import {NgbDate, NgbCalendar, NgbDateParserFormatter, NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbDate, NgbCalendar, NgbDateParserFormatter} from '@ng-bootstrap/ng-bootstrap';
 import Chart from 'chart.js';
 import {timer} from 'rxjs';
 import {Climate} from '../../models/climate';
 import {ClimateService} from '../../services/climate/climate.service';
 import {faSmog} from '@fortawesome/free-solid-svg-icons/faSmog';
 import {EventService} from '../../services/event/event.service';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {MiscellaneousService} from '../../services/miscellaneous/miscellaneous.service';
 import {CarbonFootprint} from '../../models/carbon-footprint';

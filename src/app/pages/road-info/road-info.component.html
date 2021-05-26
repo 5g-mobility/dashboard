@@ -1,58 +1,69 @@
+<div>
+  <ngx-spinner [fullScreen]="true" ></ngx-spinner>
+</div>
 <div class="d-flex" >
-    <div class="mr-auto p-2 btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="locationBttn" >
+    <div class="mr-auto p-2 btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" (change)="updateInfo()" [(ngModel)]="selectedLocation" >
       <label ngbButtonLabel style="background-color: #6570C6;">
-        <input ngbButton (click)="Barra()" type="radio" [value]="0"> Ponte da Barra
+        <input ngbButton  type="radio" [value]="'PT'"> Ponte da Barra
       </label>
       <label ngbButtonLabel style="background-color: #6570C6;">
-        <input ngbButton (click)="Duna()" type="radio" [value]="1"> Duna
+        <input ngbButton type="radio" [value]="'DN'"> Duna
       </label>
       <label ngbButtonLabel style="background-color: #6570C6;">
-        <input ngbButton (click)="Ria()" type="radio" [value]="2"> Ria Ativa
+        <input ngbButton type="radio" [value]="'RA'"> Ria Ativa
       </label>
     </div>
 
-    <div class="p-2 btn-group btn-group-toggle" ngbRadioGroup name="radioBasic24hrs" [(ngModel)]="hrs24Bttn">
+    <div class="p-2 btn-group btn-group-toggle" ngbRadioGroup name="radioBasic24hrs" [(ngModel)]="selectedDate">
       <label ngbButtonLabel style="background-color: #6570C6;">
-          <input ngbButton type="radio" [value]="0"> Last 24H
+          <input ngbButton type="radio" (click)="updateInfo()" [value]="0"> Last 24H
       </label>
       <label ngbButtonLabel style="background-color: #6570C6;">
           <input ngbButton type="radio" [value]="1"> Select Date
       </label>
     </div>
 
-    <div class="p-2" *ngIf="hrs24Bttn==1">
-      <form class="form-inline" >
-        <div class="form-group hidden" >
-            <div class="input-group" >
-              <!-- PARTE PARA DAR TOGGLE DO DATAPICKER -->
-                <input style="margin-top:2%" name="datepicker" class="form-control" ngbDatepicker #datepicker="ngbDatepicker"
-                    [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2"
-                    [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1">
-                <ng-template #t let-date let-focused="focused">
-                    <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
-                        [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
-                        (mouseleave)="hoveredDate = null">
-                        {{ date.day }}
-                    </span>
-                </ng-template>
-            </div>
-        </div>
-        <div class="form-group" style="margin-top:2%">
-                <!-- PARTE ONDE APARECEM AS DATAS ESCOLHIDAS -->
-                <button class="btn btn-outline-secondary calendar fa fa-calendar"
-                    (click)="datepicker.toggle()" type="button">
-                </button>
-                <input #dpFromDate class="form-control input-sm" placeholder="yyyy-mm-dd" name="dpFromDate"
-                    [value]="formatter.format(fromDate)"
-                    (input)="fromDate = validateInput(fromDate, dpFromDate.value)" >
-                <input #dpToDate class="form-control input-sm" placeholder="yyyy-mm-dd" name="dpToDate"
-                    [value]="formatter.format(toDate)"
-                    (input)="toDate = validateInput(toDate, dpToDate.value)">
-        </div>
+</div>
 
+<div style="width: 100%; display: flex; justify-content: flex-end">
+  <div *ngIf="selectedDate===1" class="d-flex flex-row-reverse col-md-6"
+       style="height: 50px; justify-content: center">
+    <div class="p-2">
+      <form class="form-inline">
+        <div class="form-group hidden">
+          <div class="input-group">
+            <!-- PARTE PARA DAR TOGGLE DO DATAPICKER -->
+            <input style="z-index: -1" name="datepicker" class="form-control" ngbDatepicker
+                   #datepicker="ngbDatepicker"
+                   [autoClose]="'outside'" (dateSelect)="onDateSelection($event)"
+                   [displayMonths]="2"
+                   [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1">
+            <ng-template #t let-date let-focused="focused">
+                            <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                                  [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                                  (mouseleave)="hoveredDate = null">
+                                {{ date.day }}
+                            </span>
+            </ng-template>
+          </div>
+        </div>
+        <div class="form-group">
+          <!-- PARTE ONDE APARECEM AS DATAS ESCOLHIDAS -->
+          <button class="btn btn-outline-secondary calendar fa fa-calendar"
+                  (click)="datepicker.toggle()" type="button">
+          </button>
+          <input #dpFromDate class="form-control input-sm" placeholder="yyyy-mm-dd" name="dpFromDate"
+                 [value]="formatter.format(fromDate)"
+                 (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+          <input #dpToDate class="form-control input-sm" placeholder="yyyy-mm-dd" name="dpToDate"
+                 [value]="formatter.format(toDate)"
+                 (input)="toDate = validateInput(toDate, dpToDate.value)">
+        </div>
       </form>
     </div>
   </div>
+</div>
+
 
 
 <div class="row" style="margin-top:2%">
@@ -69,11 +80,10 @@
                                     <fa-icon style="color: #7FD45F;" [icon]="walkingIcon"></fa-icon>
                                 </div>
                             </div>
-                            <div class="col-7 col-md-8">
+                            <div class="col-7 col-md-8" *ngIf="peopleBikeLanes !== undefined">
                                 <div class="numbers">
-                                    <p class="card-title">100
-                                    <p class="card-category">People</p>
-
+                                    <p class="card-title">{{peopleBikeLanes.toString()}}
+                                    <p class="card-category">{{(animalsBikeLanes === 1 ? 'Person' : 'People')}}</p>
                                     <p>
                                 </div>
                             </div>
@@ -81,9 +91,9 @@
                     </div>
                     <div class="card-footer ">
                         <hr>
-                        <div class="stats">
-                            <i class="fa fa-refresh"></i> Updated Now
-                        </div>
+                      <div class="stats" *ngIf="dataBikeLanesUpdate">
+                        <i class="fa fa-refresh"></i>Updated at {{dataBikeLanesUpdate}}
+                      </div>
                     </div>
                 </div>
             </div>
@@ -97,10 +107,10 @@
                                     <fa-icon style="color: #72C7CD;" [icon]="bikeIcon"></fa-icon>
                                 </div>
                             </div>
-                            <div class="col-7 col-md-8">
+                            <div class="col-7 col-md-8" *ngIf="bikesBikeLanes !== undefined">
                                 <div class="numbers">
-                                    <p class="card-title">20
-                                    <p class="card-category">Bikes</p>
+                                    <p class="card-title">{{bikesBikeLanes.toString()}}
+                                    <p class="card-category">{{(animalsBikeLanes === 1 ? 'Bike' : 'Bikes')}}</p>
 
                                     <p>
                                 </div>
@@ -109,8 +119,8 @@
                     </div>
                     <div class="card-footer ">
                         <hr>
-                        <div class="stats">
-                            <i class="fa fa-refresh"></i> Updated Now
+                        <div class="stats" *ngIf="dataBikeLanesUpdate">
+                            <i class="fa fa-refresh"></i>Updated at {{dataBikeLanesUpdate}}
                         </div>
                     </div>
                 </div>
@@ -127,45 +137,64 @@
                                     <fa-icon style="color: #c96a1d;" [icon]="dogIcon"></fa-icon>
                                 </div>
                             </div>
-                            <div class="col-7 col-md-8">
+                            <div class="col-7 col-md-8" *ngIf="animalsBikeLanes !== undefined">
                                 <div class="numbers">
-                                    <p class="card-title">5</p>
-                                    <p class="card-category">Animals</p>
+                                    <p class="card-title">{{animalsBikeLanes.toString()}}</p>
+                                    <p class="card-category">{{(animalsBikeLanes === 1 ? 'Animal' : 'Animals')}}</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="card-footer ">
                         <hr>
-                        <div class="stats">
-                            <i class="fa fa-refresh"></i> Updated at 09/04/2021 14:50
-                        </div>
+                      <div class="stats" *ngIf="dataBikeLanesUpdate">
+                        <i class="fa fa-refresh"></i>Updated at {{dataBikeLanesUpdate}}
+                      </div>
                     </div>
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6">
                 <div class="card card-stats danger-event">
                     <div class="card-header">Last Road Danger Event</div>
-                    <div class="card-body ">
+                    <div class="card-body" *ngIf="lastRoadDanger !== undefined">
                         <div class="row">
                             <div class="col-4 col-md-4">
                                 <div class="icon-big text-center icon-warning"
                                     style="display: flex; justify-content: center;">
-                                    <fa-icon style="color: #F3C76B;" [icon]="exclamationTriangleIcon"></fa-icon>
+                                    <fa-icon *ngIf="lastRoadDanger!==null" style="color: #F3C76B;" [icon]="exclamationTriangleIcon"></fa-icon>
+                                    <fa-icon *ngIf="lastRoadDanger===null" style="color: #F3C76B;" [icon]="checkMarkIcon"></fa-icon>
 
 
                                 </div>
                             </div>
-                            <div class="col-8 col-md-8"
-                                style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
-                                <fa-icon style="color: white;" [icon]="walkingIcon" size="3x"></fa-icon>
-                                <p class="card-category">Person on Road Lane
-                                <p>
-                            </div>
+                          <div *ngIf="lastRoadDanger !== null">
+                              <div *ngIf="lastRoadDanger.event_class === 'PE'" class="col-8 col-md-8"
+                                  style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                  <fa-icon style="color: white;" [icon]="walkingIcon" size="3x"></fa-icon>
+                                  <p  class="card-category">Person on Road Lane<p>
+                              </div>
+
+                              <div *ngIf="lastRoadDanger.event_class === 'SC'" class="col-8 col-md-8"
+                                   style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <fa-icon style="color: white;" [icon]="carIcon" size="3x"></fa-icon>
+                                <p  class="card-category">Stopped Car on Road Lane<p>
+                              </div>
+
+                              <div *ngIf="lastRoadDanger.event_class === 'SO'" class="col-8 col-md-8"
+                                   style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                                <fa-icon style="color: white;" [icon]="questionMarkIcon" size="3x"></fa-icon>
+                                <p  class="card-category">Strange Object on Road Lane<p>
+                              </div>
+                          </div>
+                          <div *ngIf="lastRoadDanger === null" class="col-8 col-md-8"
+                               style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                            <p  class="card-category">No Road Danger Event Detected<p>
+                          </div>
+
                         </div>
                         <div class="row" style="display: flex; justify-content: center;">
-                            <fa-icon style="color: white; margin-right: 5px;" [icon]="clockIcon"></fa-icon>
-                            <p class="card-category" style="margin-bottom: 0.5rem;">10/04/2021 11:30
+                            <fa-icon *ngIf="lastRoadDanger !== null" style="color: white; margin-right: 5px;" [icon]="clockIcon"></fa-icon>
+                            <p class="card-category" style="margin-bottom: 0.5rem;"> {{(lastRoadDanger === null ? '' : lastRoadDanger.timestamp | date:'medium')}}
                             <p>
                         </div>
                     </div>
