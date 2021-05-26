@@ -82,8 +82,8 @@
       </div>
       <div class="card-footer ">
         <hr>
-        <div class="stats">
-          <i class="fa fa-clock-o"></i>
+        <div class="stats" *ngIf="dataAtualDailyInflow">
+          <i class="fa fa-clock-o"></i> Updated at {{dataAtualDailyInflow}}
         </div>
       </div>
     </div>
