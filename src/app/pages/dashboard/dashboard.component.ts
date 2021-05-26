@@ -14,6 +14,7 @@ import {MiscellaneousService} from '../../services/miscellaneous/miscellaneous.s
 import {CarbonFootprint} from '../../models/carbon-footprint';
 import {faSmog} from '@fortawesome/free-solid-svg-icons/faSmog';
 import {NgxSpinnerService} from 'ngx-spinner';
+import {DailyInflow} from '../../models/daily-inflow';
 
 @Component({
   selector: 'app-dashboard',
@@ -44,9 +45,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
   carbonFootprintBarra: CarbonFootprint;
   ultimoClimateBA: Climate;
   ultimoClimateCN: Climate;
+  ultimoDailyInflowBA: DailyInflow;
+  ultimoDailyInflowCN: DailyInflow;
   conditionBA: string;
   conditionCN: string;
   dataAtualWeather: String;
+  dataAtualDailyInflow: String;
   events: Event[] = [];
 
   constructor( private eventService: EventService, private climateService: ClimateService, private dailyService: DailyInflowService,
@@ -85,6 +89,28 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.conditionCN = 'Clean Skies';
       }
 
+      this.dataAtualDailyInflow = new Date().toLocaleTimeString();
+      this.checkAllDoneLoading();
+    })
+
+  }
+
+
+  getDailyInflow() {
+    this.dailyService.getTodayDailyInflowBarra().subscribe(
+      dataBA => {
+        this.ultimoDailyInflowBA = dataBA.results[0];
+
+        this.dataAtualDailyInflow = new Date().toLocaleTimeString();
+        this.checkAllDoneLoading();
+
+      }
+    );
+
+    this.dailyService.getTodayDailyInflowCosta().subscribe(dataCN => {
+      this.ultimoDailyInflowCN = dataCN.results[0];
+
+      this.dataAtualDailyInflow = new Date().toLocaleTimeString();
       this.checkAllDoneLoading();
     })
 
@@ -92,7 +118,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   checkAllDoneLoading() {
     if (this.carbonFootprintCostaNova !== undefined && this.carbonFootprintBarra !== undefined && this.ultimoClimateBA !== undefined
-      && this.ultimoClimateCN !== undefined) {
+      && this.ultimoClimateCN !== undefined && this.ultimoDailyInflowCN !== undefined && this.ultimoDailyInflowBA !== undefined) {
       this.spinner.hide();
     }
   }
@@ -122,6 +148,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.getConditions();
         this.getCO2Barra();
         this.getCO2CostaNova();
+        this.getDailyInflow()
 
       });
 

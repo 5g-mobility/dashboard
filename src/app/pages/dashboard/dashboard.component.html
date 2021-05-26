@@ -54,31 +54,29 @@
   <div class="col-lg-6 col-md-6 col-sm-6">
     <div class="card card-stats">
       <div class="card-header">
-        <h5 class="card-title">Traffic Inflow</h5>
+        <h5 class="card-title">Today's Traffic Inflow</h5>
       </div>
       <div class="card-body ">
         <div class="row">
-          <!--
-          <div class="col-6 col-md-6">
+          <div class="col-6 col-md-6" *ngIf="ultimoDailyInflowBA">
             <h5 style="color:#6570C6">Barra</h5>
               <p style="font-size:110%">
-                <b><fa-icon style="font-size:150%; color:#E18660;margin-right:3% " [icon]="max"></fa-icon> Maximum: </b>{{ currentInflow['BA'].maximum }}
+                <b><fa-icon style="font-size:150%; color:#E18660;margin-right:3% " [icon]="max"></fa-icon> Maximum: </b>{{ ultimoDailyInflowBA.maximum }}
               </p>
               <p style="font-size:110%">
-                <b><fa-icon style="font-size:150%; color:#6672C0;margin-right:7% " [icon]="rn"></fa-icon> Current: </b>{{ currentInflow['BA'].current }}
+                <b><fa-icon style="font-size:150%; color:#6672C0;margin-right:7% " [icon]="rn"></fa-icon> Current: </b>{{ ultimoDailyInflowBA.current }}
               </p>
 
           </div>
-          <div class="col-6 col-md-6">
+          <div class="col-6 col-md-6" *ngIf="ultimoDailyInflowCN">
             <h5 style="color:#6570C6">Costa Nova</h5>
               <p style="font-size:110%">
-                <b><fa-icon style="font-size:150%; color:#E18660;margin-right:3% " [icon]="max"></fa-icon> Maximum: </b> {{ currentInflow['CN'].maximum }}
+                <b><fa-icon style="font-size:150%; color:#E18660;margin-right:3% " [icon]="max"></fa-icon> Maximum: </b> {{ ultimoDailyInflowCN.maximum }}
               </p>
               <p style="font-size:110%">
-                <b><fa-icon style="font-size:150%; color:#6672C0;margin-right:7% " [icon]="rn"></fa-icon> Current: </b> {{ currentInflow['CN'].current }}
+                <b><fa-icon style="font-size:150%; color:#6672C0;margin-right:7% " [icon]="rn"></fa-icon> Current: </b> {{ ultimoDailyInflowCN.current }}
               </p>
           </div>
-          -->
         </div>
 
       </div>
