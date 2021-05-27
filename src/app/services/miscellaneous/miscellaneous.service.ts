@@ -71,6 +71,10 @@ export class MiscellaneousService {
     return this.http.get<any>(this.baseURL + 'max_daily_inflow_summary', httpOptions);
   }
 
+  getCurrentTrafficIndo() {
+    return this.http.get<any>(this.baseURL + 'current_traffic_stats', httpOptions);
+  }
+
   getBikeLanesInfo(location: string, from?: NgbDate, to?: NgbDate): Observable<any> {
     let to_str;
     let last_24h_str;

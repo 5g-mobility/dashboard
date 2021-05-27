@@ -126,17 +126,16 @@
             </div>
           </div>
           <div class="col-8">
-            <div class="row" style="padding-top:1%; margin-top: 7.5px;">
+            <div class="row" style="padding-top:1%; margin-top: 7.5px;" *ngIf="dataCurrentTrafficInfo">
               <div class="col-md-4 d-flex justify-content-center align-items-center">
-                <p style="color:green; font-size: 130%; font-weight: initial; text-align: center;"><b>Flowing
-                    normally</b></p>
+                <p [style.color]="currentTrafficInfoRA.color" style="font-size: 130%; font-weight: initial; text-align: center;"><b>{{currentTrafficInfoRA.traffic}}</b></p>
               </div>
               <div class="col-md-4 d-flex justify-content-center align-items-center">
-                <p style="color:red; font-size: 130%; font-weight: initial; text-align: center;"><b>Excessive speed</b>
+                <p [style.color]="currentTrafficInfoRA.color" style="font-size: 130%; font-weight: initial; text-align: center;"><b>{{currentTrafficInfoDN.traffic}}</b>
                 </p>
               </div>
               <div class="col-md-4 d-flex justify-content-center align-items-center">
-                <p style="color: #fd7e14; font-size: 130%; font-weight: initial; text-align: center;"><b>Slow</b></p>
+                <p [style.color]="currentTrafficInfoRA.color" style="font-size: 130%; font-weight: initial; text-align: center;"><b>{{currentTrafficInfoPT.traffic}}</b></p>
               </div>
             </div>
           </div>
@@ -152,16 +151,16 @@
             </div>
           </div>
           <div class="col-8">
-            <div class="row" style="padding-top:1%; margin-top: 7.5px;">
+            <div class="row" style="padding-top:1%; margin-top: 7.5px;" *ngIf="dataCurrentTrafficInfo">
 
               <div class="col-md-4 d-flex justify-content-center">
-                <p style="font-size: 130%; font-weight: initial">2 pedestrians</p>
+                <p style="font-size: 130%; font-weight: initial">{{currentTrafficInfoRA.people}} pedestrians</p>
               </div>
               <div class="col-md-4 d-flex justify-content-center">
-                <p style="font-size: 130%; font-weight: initial">5 pedestrians</p>
+                <p style="font-size: 130%; font-weight: initial">{{currentTrafficInfoDN.people}} pedestrians</p>
               </div>
               <div class="col-md-4 d-flex justify-content-center">
-                <p style="font-size: 130%; font-weight: initial">1 pedestrians</p>
+                <p style="font-size: 130%; font-weight: initial">{{currentTrafficInfoPT.people}} pedestrians</p>
               </div>
             </div>
           </div>
@@ -170,8 +169,8 @@
       </div>
       <div class="card-footer ">
         <hr>
-        <div class="stats">
-          <i class="fa fa-clock-o"></i> Updated at 09/04/2021 12:35
+        <div class="stats" *ngIf="dataCurrentTrafficInfo">
+          <i class="fa fa-clock-o"></i> Updated at {{dataCurrentTrafficInfo}}
         </div>
       </div>
     </div>

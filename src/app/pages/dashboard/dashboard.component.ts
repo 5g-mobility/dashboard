@@ -15,6 +15,7 @@ import {CarbonFootprint} from '../../models/carbon-footprint';
 import {faSmog} from '@fortawesome/free-solid-svg-icons/faSmog';
 import {NgxSpinnerService} from 'ngx-spinner';
 import {DailyInflow} from '../../models/daily-inflow';
+import {TrafficInfo} from '../../models/traffic-info';
 
 @Component({
   selector: 'app-dashboard',
@@ -37,8 +38,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
   rn = faExclamation;
   public canvas: any;
   public ctx;
-  public chartColor;
-  public chartEmail;
   public chartHours;
   private subscription;
   carbonFootprintCostaNova: CarbonFootprint;
@@ -51,10 +50,39 @@ export class DashboardComponent implements OnInit, OnDestroy {
   conditionCN: string;
   dataAtualWeather: String;
   dataAtualDailyInflow: String;
+  currentTrafficInfoPT: TrafficInfo;
+  currentTrafficInfoDN: TrafficInfo;
+  currentTrafficInfoRA: TrafficInfo;
+  dataCurrentTrafficInfo: String;
   events: Event[] = [];
 
   constructor( private eventService: EventService, private climateService: ClimateService, private dailyService: DailyInflowService,
                private miscellaneousService: MiscellaneousService, private spinner: NgxSpinnerService ) {
+  }
+
+  getCurrentTrafficInfo() {
+    this.miscellaneousService.getCurrentTrafficIndo().subscribe(
+      data => {
+        this.currentTrafficInfoPT = data['PT'];
+        this.currentTrafficInfoDN = data['DN'];
+        this.currentTrafficInfoRA = data['RA'];
+
+        [this.currentTrafficInfoPT, this.currentTrafficInfoDN, this.currentTrafficInfoRA].forEach(traffic => {
+          if (traffic.traffic === 'Flowing Normally') {
+            traffic.color = 'green';
+          } else if (traffic.traffic === 'Excessive Speed') {
+            traffic.color = 'red';
+          } else if (traffic.traffic === 'Slow') {
+            traffic.color = '#fd7e14';
+          }
+
+        })
+
+
+
+        this.dataCurrentTrafficInfo = new Date().toLocaleTimeString();
+        this.checkAllDoneLoading();
+      })
   }
 
 
@@ -118,7 +146,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   checkAllDoneLoading() {
     if (this.carbonFootprintCostaNova !== undefined && this.carbonFootprintBarra !== undefined && this.ultimoClimateBA !== undefined
-      && this.ultimoClimateCN !== undefined && this.ultimoDailyInflowCN !== undefined && this.ultimoDailyInflowBA !== undefined) {
+      && this.ultimoClimateCN !== undefined && this.ultimoDailyInflowCN !== undefined && this.ultimoDailyInflowBA !== undefined &&
+      this.dataCurrentTrafficInfo !== undefined) {
       this.spinner.hide();
     }
   }
@@ -149,6 +178,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.getCO2Barra();
         this.getCO2CostaNova();
         this.getDailyInflow()
+        this.getCurrentTrafficInfo()
 
       });
 
