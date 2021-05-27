@@ -22,8 +22,6 @@ export class EventService {
   }
 
   getEventsBetweenDates(offset: number, from?: NgbDate, to?: NgbDate, filter?: string, limit?: number): Observable<any> {
-    // ATENÇÃO:
-    // PARA UNS CASOS É PRECISO VERIFICAR POR NULL, PARA OUTROS POR UNIDENTIFIED, NÃO ALTERAR
     if (from != null && to != null) {
       const from_str = from.year + '-' + from.month.toLocaleString('en-US', {
         minimumIntegerDigits: 2,
@@ -56,7 +54,6 @@ export class EventService {
   }
 
   getEventsLast5Mins(filter?: string, limit?: number): Observable<any> {
-    console.log(filter)
     const date = new Date();
     date.setMinutes(date.getMinutes() - 5);
 
@@ -66,6 +63,39 @@ export class EventService {
     }
     return this.http.get<any>(this.baseURL + '?timestamp__gte=' + date.toISOString()
       + filter + (limit === null || limit === undefined ? '' : '&limit=' + limit), httpOptions)
+  }
+
+  getLastRoadDanger(location: string, from?: NgbDate, to?: NgbDate): Observable<any> {
+    let to_str;
+    let from_str;
+    let last_24h_str;
+
+    if (from !== null) {
+      from_str = from.year + '-' + from.month.toLocaleString('en-US', {
+        minimumIntegerDigits: 2,
+        useGrouping: false
+      }) + '-' + from.day.toLocaleString('en-US', {
+        minimumIntegerDigits: 2,
+        useGrouping: false
+      }) + 'T00:00'
+    } else {
+      last_24h_str = new Date(new Date().getTime() - (24 * 60 * 60 * 1000)).toISOString().slice(0, -1);
+    }
+
+    if (to !== null) {
+      to_str = to.year + '-' + to.month.toLocaleString('en-US', {
+        minimumIntegerDigits: 2,
+        useGrouping: false
+      }) + '-' + to.day.toLocaleString('en-US', {
+        minimumIntegerDigits: 2,
+        useGrouping: false
+      }) + 'T00:00'
+    }
+
+    return this.http.get<any>(this.baseURL + '?location=' + location +
+      '&limit=1' + '&event_type=RD' + '&timestamp__gte=' +  (from_str === null || from_str === undefined ? last_24h_str : from_str) +
+      (to_str === null || to_str === undefined ?
+        '' : '&timestamp__lte=' + to_str), httpOptions)
   }
 
   getExcessiveSpeedLast5Mins(limit?: number): Observable<any> {

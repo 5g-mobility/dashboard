@@ -24,6 +24,7 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
   dailyExcessiveSpeedNumber: number[] = [];
   dailyExcessiveSpeedTop: number[] = [];
   dailyExcessiveSpeedDate: string[] = [];
+  private loadingMap = true;
   private subscription;
   private subscription2;
 
@@ -95,15 +96,17 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
     this.eventService.getExcessiveSpeedLast5Mins(50).subscribe(
       data => {
         this.markers = [];
-        console.log(data.results.length);
-        console.log(this.markers.length);
-        data.results.forEach(d => {
-          const marker = L.marker([d.latitude, d.longitude], {icon: this.carMarker});
-          marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + d.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Speed</h6><p style="margin-top: 0px;text-align: center;">' + d.velocity + ' km/h</p></div>');
-          marker.addTo(this.map);
-          this.markers.push(marker);
-          this.checkAllDoneLoading();
-        })
+        if (data.results.length !== 0) {
+          data.results.forEach(d => {
+            const marker = L.marker([d.latitude, d.longitude], {icon: this.carMarker});
+            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + d.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Speed</h6><p style="margin-top: 0px;text-align: center;">' + d.velocity + ' km/h</p></div>');
+            marker.addTo(this.map);
+            this.markers.push(marker);
+          })
+        }
+
+        this.loadingMap = false;
+        this.checkAllDoneLoading();
       })
   }
 
@@ -112,12 +115,17 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
       this.eventService.getExcessiveSpeedBetweenDates(this.fromDate, this.toDate, 50).subscribe(
         data => {
           this.markers = [];
-          data.results.forEach(d => {
-            const marker = L.marker([d.latitude, d.longitude], {icon: this.carMarker});
-            marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + d.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Speed</h6><p style="margin-top: 0px;text-align: center;">' + d.velocity + ' km/h</p></div>');
-            marker.addTo(this.map);
-            this.markers.push(marker);
-          })
+          if (data.results.length !== 0) {
+            data.results.forEach(d => {
+              const marker = L.marker([d.latitude, d.longitude], {icon: this.carMarker});
+              marker.bindPopup('<div class="marker_car"><h6 style="text-align: center;">Timestamp</h6><p style="margin-top: 0px;text-align: center;">' + d.timestamp + '</p></div>' + '<div class="marker_car"><h6 style="text-align: center;">Speed</h6><p style="margin-top: 0px;text-align: center;">' + d.velocity + ' km/h</p></div>');
+              marker.addTo(this.map);
+              this.markers.push(marker);
+            })
+          }
+
+          this.loadingMap = false;
+          this.checkAllDoneLoading();
         })
     }
   }
@@ -127,19 +135,20 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
     this.dailyExcessiveSpeedDate = [];
     this.dailyExcessiveSpeedNumber = [];
     this.miscellaneousService.getDailyExcessiveSpeed().subscribe(data => {
-      data.forEach(item => {
-        this.dailyExcessiveSpeedNumber.push(item.number);
-        this.dailyExcessiveSpeedTop.push(item.top);
-        this.dailyExcessiveSpeedDate.push(item.day.substring(0, 5));
-        this.createGraph();
-        this.checkAllDoneLoading();
+      const keys = Object.keys(data).reverse();
+      keys.forEach(item => {
+        this.dailyExcessiveSpeedNumber.push(data[item]['number']);
+        this.dailyExcessiveSpeedTop.push(data[item]['top']);
+        this.dailyExcessiveSpeedDate.push(item.substring(0, 5));
       });
+      this.createGraph();
+      this.checkAllDoneLoading();
     });
   }
 
   checkAllDoneLoading() {
     if (this.dailyExcessiveSpeedDate.length > 0 && this.dailyExcessiveSpeedTop.length > 0
-      && this.dailyExcessiveSpeedNumber.length > 0) {
+      && this.dailyExcessiveSpeedNumber.length > 0 && this.loadingMap === false) {
       this.spinner.hide();
     }
   }
@@ -148,7 +157,6 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
   ngOnInit(): void {
     this.spinner.show()
     this.subscription = timer(0, 30000).subscribe(() => {
-      console.log(this.markers.length);
       if (this.selectTime === 0) {
         // ultimos 5 minutos
         this.getLast5min()
