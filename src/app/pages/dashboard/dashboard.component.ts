@@ -54,6 +54,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
   currentTrafficInfoDN: TrafficInfo;
   currentTrafficInfoRA: TrafficInfo;
   dataCurrentTrafficInfo: String;
+  eventOverviewText: String;
+  eventOverviewValue: String;
+  dataEventsOverview: String;
   events: Event[] = [];
 
   constructor( private eventService: EventService, private climateService: ClimateService, private dailyService: DailyInflowService,
@@ -81,6 +84,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.dataCurrentTrafficInfo = new Date().toLocaleTimeString();
         this.checkAllDoneLoading();
       })
+  }
+
+  getEventsOverview() {
+    this.miscellaneousService.getRandomEventsOverview().subscribe(
+      data => {
+        this.eventOverviewText = data.text;
+        this.eventOverviewValue = data.value;
+
+        this.dataEventsOverview = new Date().toLocaleTimeString();
+        this.checkAllDoneLoading();
+
+      }
+    );
   }
 
 
@@ -145,7 +161,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   checkAllDoneLoading() {
     if (this.carbonFootprintCostaNova !== undefined && this.carbonFootprintBarra !== undefined && this.ultimoClimateBA !== undefined
       && this.ultimoClimateCN !== undefined && this.ultimoDailyInflowCN !== undefined && this.ultimoDailyInflowBA !== undefined &&
-      this.dataCurrentTrafficInfo !== undefined) {
+      this.dataCurrentTrafficInfo !== undefined && this.dataEventsOverview !== undefined) {
       this.spinner.hide();
     }
   }
@@ -177,6 +193,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.getCO2CostaNova();
         this.getDailyInflow()
         this.getCurrentTrafficInfo()
+        this.getEventsOverview();
 
       });
 

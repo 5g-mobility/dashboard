@@ -75,6 +75,10 @@ export class MiscellaneousService {
     return this.http.get<any>(this.baseURL + 'current_traffic_stats', httpOptions);
   }
 
+  getRandomEventsOverview() {
+    return this.http.get<any>(this.baseURL + 'random_events_overview', httpOptions);
+  }
+
   getBikeLanesInfo(location: string, from?: NgbDate, to?: NgbDate): Observable<any> {
     let to_str;
     let last_24h_str;

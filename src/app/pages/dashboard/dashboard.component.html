@@ -207,11 +207,11 @@
         <h5 style="color:white;" class="card-title">Events Overview</h5>
       </div>
       <div class="card-body">
-        <div class="col-12 d-flex justify-content-center">
-          <h6 style="color:white;" class="card-title">Cars Speeding</h6>
+        <div class="col-12 d-flex justify-content-center" *ngIf="dataEventsOverview">
+          <h6 style="color:white;" class="card-title">{{eventOverviewText}}</h6>
         </div>
-        <div class="row d-flex flex-column align-items-center">
-          <p style="font-size: 450%;color:white"><b>23</b></p>
+        <div class="row d-flex flex-column align-items-center" *ngIf="dataEventsOverview">
+          <p style="font-size: 450%;color:white"><b>{{eventOverviewValue}}</b></p>
           <p style="color:white; margin-bottom: 50px;">LAST 24H</p>
           <div class="btn-group btn-group-toggle">
             <label style="background-color: white;" class="btn-primary" ngbButtonLabel>
@@ -222,8 +222,8 @@
       </div>
       <div class="card-footer ">
         <hr>
-        <div class="stats" style="color:white">
-          <i style="color:white" class="fa fa-clock-o"></i> Updated at 09/04/2021 12:35
+        <div class="stats" style="color:white" *ngIf="dataEventsOverview">
+          <i style="color:white" class="fa fa-clock-o"></i> Updated at {{dataEventsOverview}}
         </div>
       </div>
     </div>
