@@ -1,5 +1,5 @@
 <div>
-  <ngx-spinner [fullScreen]="true" ></ngx-spinner>
+  <ngx-spinner [fullScreen]="true"></ngx-spinner>
 </div>
 <div class="row">
   <div class="col-md-12">
@@ -44,7 +44,8 @@
             </div>
           </div>
 
-          <div class="btn-group btn-group-toggle col-md-3" style="height: 50px" ngbRadioGroup name="radioBasic" [(ngModel)]="selectTime">
+          <div class="btn-group btn-group-toggle col-md-3" style="height: 50px" ngbRadioGroup name="radioBasic"
+               [(ngModel)]="selectTime">
             <label ngbButtonLabel class="btn-primary" style="background-color: #6570C6;">
               <input ngbButton type="radio" (click)="last5min()" [value]="0"> Last 5 Minutes
             </label>

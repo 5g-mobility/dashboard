@@ -1,5 +1,5 @@
 <div>
-  <ngx-spinner [fullScreen]="true" ></ngx-spinner>
+  <ngx-spinner [fullScreen]="true"></ngx-spinner>
 </div>
 <div class="row">
 
@@ -11,7 +11,11 @@
       <div class="card-body ">
         <div class="row" style="margin-left: 10px;">
           <div class="col-6 col-md-6" *ngIf="ultimoClimateBA && carbonFootprintBarra">
-            <h5 style=" color:#6570C6">Barra <fa-icon *ngIf="ultimoClimateBA.daytime" style="color: #1D3150;" [icon]="cleanSkies"></fa-icon><fa-icon *ngIf="!ultimoClimateBA.daytime" style="color: #1D3150;" [icon]="moonIcon"></fa-icon> {{ultimoClimateBA.temperature}}º</h5>
+            <h5 style=" color:#6570C6">Barra
+              <fa-icon *ngIf="ultimoClimateBA.daytime" style="color: #1D3150;" [icon]="cleanSkies"></fa-icon>
+              <fa-icon *ngIf="!ultimoClimateBA.daytime" style="color: #1D3150;" [icon]="moonIcon"></fa-icon>
+              {{ultimoClimateBA.temperature}}º
+            </h5>
             <p style="font-size:110%; font-weight: bold">
               <fa-icon *ngIf="ultimoClimateBA.condition==='FG'" style="color: #6570C6;" [icon]="foggy"
                        size="2x"></fa-icon>
@@ -22,11 +26,16 @@
               {{conditionBA}}
             <p>
             <p style="font-size:110%; font-weight: bold">
-              <fa-icon style="font-size:150%; color:#93D16E;margin-right:3% " [icon]="leafIcon"></fa-icon>{{carbonFootprintBarra.CO2.toFixed(2)}}g
+              <fa-icon style="font-size:150%; color:#93D16E;margin-right:3% " [icon]="leafIcon"></fa-icon>
+              {{carbonFootprintBarra.CO2.toFixed(2)}}g
             <p>
           </div>
           <div class="col-6 col-md-6" *ngIf="ultimoClimateCN && carbonFootprintCostaNova">
-            <h5 style="color:#6570C6">Costa Nova <fa-icon *ngIf="ultimoClimateCN.daytime" style="color: #1D3150;" [icon]="cleanSkies"></fa-icon><fa-icon *ngIf="!ultimoClimateCN.daytime" style="color: #1D3150;" [icon]="moonIcon"></fa-icon> {{ultimoClimateCN.temperature}}º</h5>
+            <h5 style="color:#6570C6">Costa Nova
+              <fa-icon *ngIf="ultimoClimateCN.daytime" style="color: #1D3150;" [icon]="cleanSkies"></fa-icon>
+              <fa-icon *ngIf="!ultimoClimateCN.daytime" style="color: #1D3150;" [icon]="moonIcon"></fa-icon>
+              {{ultimoClimateCN.temperature}}º
+            </h5>
             <p style="font-size:110%; font-weight: bold">
               <fa-icon *ngIf="ultimoClimateCN.condition==='FG'" style="color: #6570C6;" [icon]="foggy"
                        size="2x"></fa-icon>
@@ -37,7 +46,8 @@
               {{conditionCN}}
             <p>
             <p style="font-size:110%; font-weight: bold">
-              <fa-icon style="font-size:150%; color:#93D16E;margin-right:3% " [icon]="leafIcon"></fa-icon>{{carbonFootprintCostaNova.CO2.toFixed(2)}}g
+              <fa-icon style="font-size:150%; color:#93D16E;margin-right:3% " [icon]="leafIcon"></fa-icon>
+              {{carbonFootprintCostaNova.CO2.toFixed(2)}}g
             <p>
           </div>
         </div>
@@ -60,22 +70,30 @@
         <div class="row">
           <div class="col-6 col-md-6" *ngIf="ultimoDailyInflowBA">
             <h5 style="color:#6570C6">Barra</h5>
-              <p style="font-size:110%">
-                <b><fa-icon style="font-size:150%; color:#E18660;margin-right:3% " [icon]="max"></fa-icon> Maximum: </b>{{ ultimoDailyInflowBA.maximum }}
-              </p>
-              <p style="font-size:110%">
-                <b><fa-icon style="font-size:150%; color:#6672C0;margin-right:7% " [icon]="rn"></fa-icon> Current: </b>{{ ultimoDailyInflowBA.current }}
-              </p>
+            <p style="font-size:110%">
+              <b>
+                <fa-icon style="font-size:150%; color:#E18660;margin-right:3% " [icon]="max"></fa-icon>
+                Maximum: </b>{{ ultimoDailyInflowBA.maximum }}
+            </p>
+            <p style="font-size:110%">
+              <b>
+                <fa-icon style="font-size:150%; color:#6672C0;margin-right:7% " [icon]="rn"></fa-icon>
+                Current: </b>{{ ultimoDailyInflowBA.current }}
+            </p>
 
           </div>
           <div class="col-6 col-md-6" *ngIf="ultimoDailyInflowCN">
             <h5 style="color:#6570C6">Costa Nova</h5>
-              <p style="font-size:110%">
-                <b><fa-icon style="font-size:150%; color:#E18660;margin-right:3% " [icon]="max"></fa-icon> Maximum: </b> {{ ultimoDailyInflowCN.maximum }}
-              </p>
-              <p style="font-size:110%">
-                <b><fa-icon style="font-size:150%; color:#6672C0;margin-right:7% " [icon]="rn"></fa-icon> Current: </b> {{ ultimoDailyInflowCN.current }}
-              </p>
+            <p style="font-size:110%">
+              <b>
+                <fa-icon style="font-size:150%; color:#E18660;margin-right:3% " [icon]="max"></fa-icon>
+                Maximum: </b> {{ ultimoDailyInflowCN.maximum }}
+            </p>
+            <p style="font-size:110%">
+              <b>
+                <fa-icon style="font-size:150%; color:#6672C0;margin-right:7% " [icon]="rn"></fa-icon>
+                Current: </b> {{ ultimoDailyInflowCN.current }}
+            </p>
           </div>
         </div>
 
@@ -128,14 +146,20 @@
           <div class="col-8">
             <div class="row" style="padding-top:1%; margin-top: 7.5px;" *ngIf="dataCurrentTrafficInfo">
               <div class="col-md-4 d-flex justify-content-center align-items-center">
-                <p [style.color]="currentTrafficInfoRA.color" style="font-size: 130%; font-weight: initial; text-align: center;"><b>{{currentTrafficInfoRA.traffic}}</b></p>
+                <p [style.color]="currentTrafficInfoRA.color"
+                   style="font-size: 130%; font-weight: initial; text-align: center;">
+                  <b>{{currentTrafficInfoRA.traffic}}</b></p>
               </div>
               <div class="col-md-4 d-flex justify-content-center align-items-center">
-                <p [style.color]="currentTrafficInfoRA.color" style="font-size: 130%; font-weight: initial; text-align: center;"><b>{{currentTrafficInfoDN.traffic}}</b>
+                <p [style.color]="currentTrafficInfoRA.color"
+                   style="font-size: 130%; font-weight: initial; text-align: center;">
+                  <b>{{currentTrafficInfoDN.traffic}}</b>
                 </p>
               </div>
               <div class="col-md-4 d-flex justify-content-center align-items-center">
-                <p [style.color]="currentTrafficInfoRA.color" style="font-size: 130%; font-weight: initial; text-align: center;"><b>{{currentTrafficInfoPT.traffic}}</b></p>
+                <p [style.color]="currentTrafficInfoRA.color"
+                   style="font-size: 130%; font-weight: initial; text-align: center;">
+                  <b>{{currentTrafficInfoPT.traffic}}</b></p>
               </div>
             </div>
           </div>

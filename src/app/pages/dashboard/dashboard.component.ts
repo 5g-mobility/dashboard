@@ -78,8 +78,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
         })
 
-
-
         this.dataCurrentTrafficInfo = new Date().toLocaleTimeString();
         this.checkAllDoneLoading();
       })
