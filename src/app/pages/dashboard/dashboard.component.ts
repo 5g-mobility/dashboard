@@ -45,6 +45,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
   ultimoClimateBA: Climate;
   ultimoClimateCN: Climate;
   ultimoDailyInflowBA: DailyInflow;
+  ultimoDailyInflowBT: DailyInflow
   ultimoDailyInflowCN: DailyInflow;
   conditionBA: string;
   conditionCN: string;
@@ -67,10 +68,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.miscellaneousService.getCurrentTrafficIndo().subscribe(
       data => {
         this.currentTrafficInfoPT = data['PT'];
-        this.currentTrafficInfoDN = data['DN'];
+        // this.currentTrafficInfoDN = data['DN'];
         this.currentTrafficInfoRA = data['RA'];
 
-        [this.currentTrafficInfoPT, this.currentTrafficInfoDN, this.currentTrafficInfoRA].forEach(traffic => {
+        [this.currentTrafficInfoPT, this.currentTrafficInfoRA].forEach(traffic => {
           if (traffic.traffic === 'Flowing Normally') {
             traffic.color = 'green';
           } else if (traffic.traffic === 'Excessive Speed') {
@@ -139,6 +140,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 
   getDailyInflow() {
+    this.dailyService.getTodayDailyInflowBoth().subscribe(
+      dataBT => {
+        this.ultimoDailyInflowBT = dataBT.results[0];
+
+        this.dataAtualDailyInflow = new Date().toLocaleTimeString();
+        this.checkAllDoneLoading();
+
+      }
+    );
+
+    /*
     this.dailyService.getTodayDailyInflowBarra().subscribe(
       dataBA => {
         this.ultimoDailyInflowBA = dataBA.results[0];
@@ -156,11 +168,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
       this.checkAllDoneLoading();
     })
 
+   */
+
   }
 
   checkAllDoneLoading() {
     if (this.carbonFootprintCostaNova !== undefined && this.carbonFootprintBarra !== undefined && this.ultimoClimateBA !== undefined
-      && this.ultimoClimateCN !== undefined && this.ultimoDailyInflowCN !== undefined && this.ultimoDailyInflowBA !== undefined &&
+      && this.ultimoClimateCN !== undefined && this.dataAtualDailyInflow !== undefined &&
       this.dataCurrentTrafficInfo !== undefined && this.dataEventsOverview !== undefined) {
       this.spinner.hide();
     }
