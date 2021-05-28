@@ -141,7 +141,8 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
         this.dailyExcessiveSpeedTop.push(data[item]['top']);
         this.dailyExcessiveSpeedDate.push(item.substring(0, 5));
       });
-      this.createGraph();
+      this.createGraphEvents();
+      this.createGraphSpeed();
       this.checkAllDoneLoading();
     });
   }
@@ -198,8 +199,8 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
 
-  createGraph() {
-    const speedCanvas = document.getElementById('dailyExcessiveChart');
+  createGraphEvents() {
+    const speedCanvas = document.getElementById('dailyExcessiveEventsChart');
 
     const dataEventNumber = {
       data: this.dailyExcessiveSpeedNumber,
@@ -212,6 +213,29 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
       pointHoverRadius: 4,
       pointBorderWidth: 8,
     };
+
+    const dailyData = {
+      labels: this.dailyExcessiveSpeedDate,
+      datasets: [dataEventNumber]
+    };
+
+    const chartOptions = {
+      legend: {
+        display: true,
+        position: 'bottom'
+      }
+    };
+
+    const lineChart = new Chart(speedCanvas, {
+      type: 'line',
+      hover: false,
+      data: dailyData,
+      options: chartOptions,
+    });
+  }
+
+  createGraphSpeed() {
+    const speedCanvas = document.getElementById('dailyExcessiveSpeedChart');
 
     const dataTopSpeed = {
       data: this.dailyExcessiveSpeedTop,
@@ -227,7 +251,7 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
 
     const dailyData = {
       labels: this.dailyExcessiveSpeedDate,
-      datasets: [dataEventNumber, dataTopSpeed]
+      datasets: [dataTopSpeed]
     };
 
     const chartOptions = {
