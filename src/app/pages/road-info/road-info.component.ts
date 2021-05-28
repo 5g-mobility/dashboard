@@ -54,6 +54,7 @@ export class RoadInfoComponent implements OnInit, OnDestroy {
   lastMonthTopSpeedDate: string[] = [];
   buildingChartSpeed = true;
   buildingChartTraffic = true;
+  lastMonthTrafficBT: number[] = [];
   lastMonthTrafficBA: number[] = [];
   lastMonthTrafficCN: number[] = [];
   lastMonthTrafficDate: string[] = [];
@@ -191,7 +192,7 @@ export class RoadInfoComponent implements OnInit, OnDestroy {
 
     const dailyData = {
       labels: this.lastMonthTopSpeedDate,
-      datasets: [dataTopSpeedPT, dataTopSpeedDN, dataTopSpeedRA]
+      datasets: [dataTopSpeedPT, dataTopSpeedRA]
     };
 
     const chartOptions = {
@@ -226,6 +227,18 @@ export class RoadInfoComponent implements OnInit, OnDestroy {
       pointBorderWidth: 8,
     };
 
+    const dataMaxCarsBT = {
+      data: this.lastMonthTrafficBT,
+      fill: false,
+      label: 'Max Number of Cars - Praia da Barra and Costa Nova',
+      borderColor: '#fbc658',
+      backgroundColor: 'transparent',
+      pointBorderColor: '#fbc658',
+      pointRadius: 4,
+      pointHoverRadius: 4,
+      pointBorderWidth: 8,
+    };
+
     const dataMaxCarsCN = {
       data: this.lastMonthTrafficCN,
       fill: false,
@@ -240,7 +253,7 @@ export class RoadInfoComponent implements OnInit, OnDestroy {
 
     const dailyData = {
       labels: this.lastMonthTrafficDate,
-      datasets: [dataMaxCarsBA, dataMaxCarsCN]
+      datasets: [dataMaxCarsBT]
     };
 
     const chartOptions = {
@@ -266,12 +279,17 @@ export class RoadInfoComponent implements OnInit, OnDestroy {
       this.lastMonthTrafficDate = [];
       this.lastMonthTrafficBA = [];
       this.lastMonthTrafficCN = [];
+      this.lastMonthTrafficBT = [];
       const keys = Object.keys(data);
       keys.forEach(item => {
         const dateKeys = Object.keys(data[item]).reverse();
         dateKeys.forEach(date => {
           if (item === 'CN') {
             this.lastMonthTrafficCN.push(data[item][date]);
+            // this.lastMonthTrafficDate.push(date.substring(0, 5));
+          }
+          if (item === 'BT') {
+            this.lastMonthTrafficBT.push(data[item][date]);
             this.lastMonthTrafficDate.push(date.substring(0, 5));
           }
           if (item === 'BA') {
@@ -296,7 +314,7 @@ export class RoadInfoComponent implements OnInit, OnDestroy {
         dateKeys.forEach(date => {
           if (item === 'PT') {
             this.lastMonthTopSpeedPT.push(data[item][date]);
-            this.lastMonthTrafficDate.push(date.substring(0, 5));
+            this.lastMonthTopSpeedDate.push(date.substring(0, 5));
           }
           if (item === 'DN') {
             this.lastMonthTopSpeedDN.push(data[item][date]);

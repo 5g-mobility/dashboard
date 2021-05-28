@@ -3,12 +3,12 @@
 </div>
 <div class="row">
 
-  <div class="col-lg-6 col-md-6 col-sm-6">
+  <div class="col-lg-6 col-md-7 col-sm-7">
     <div class="card card-stats">
       <div class="card-header">
         <h5 class="card-title">Conditions</h5>
       </div>
-      <div class="card-body ">
+      <div class="card-body" style="height: 160px">
         <div class="row" style="margin-left: 10px;">
           <div class="col-6 col-md-6" *ngIf="ultimoClimateBA && carbonFootprintBarra">
             <h5 style=" color:#6570C6">Barra
@@ -16,39 +16,39 @@
               <fa-icon *ngIf="!ultimoClimateBA.daytime" style="color: #1D3150;" [icon]="moonIcon"></fa-icon>
               {{ultimoClimateBA.temperature}}º
             </h5>
-            <p style="font-size:110%; font-weight: bold">
-              <fa-icon *ngIf="ultimoClimateBA.condition==='FG'" style="color: #6570C6;" [icon]="foggy"
+            <div style="display: flex; align-items: center">
+              <fa-icon *ngIf="ultimoClimateBA.condition==='FG'" style="color: #6570C6;margin-right:10px; width: 35px" [icon]="foggy"
                        size="2x"></fa-icon>
-              <fa-icon *ngIf="ultimoClimateBA.condition==='RN'" style="color: #6570C6;" [icon]="rainIcon"
+              <fa-icon *ngIf="ultimoClimateBA.condition==='RN'" style="color: #6570C6;margin-right:10px; width: 35px" [icon]="rainIcon"
                        size="2x"></fa-icon>
-              <fa-icon *ngIf="ultimoClimateBA.condition==='CL'" style="color: #6570C6;" [icon]="cleanSkies"
+              <fa-icon *ngIf="ultimoClimateBA.condition==='CL'" style="color: #6570C6;margin-right:10px; width: 35px" [icon]="cleanSkies"
                        size="2x"></fa-icon>
-              {{conditionBA}}
-            <p>
-            <p style="font-size:110%; font-weight: bold">
-              <fa-icon style="font-size:150%; color:#93D16E;margin-right:3% " [icon]="leafIcon"></fa-icon>
-              {{carbonFootprintBarra.CO2.toFixed(2)}}g
-            <p>
+              <p style="font-size:110%; font-weight: bold">{{conditionBA}}</p>
+            </div>
+            <div style="display: flex; align-items: center">
+              <fa-icon style="font-size:170%; color:#93D16E;margin-right:17px" [icon]="leafIcon"></fa-icon>
+              <p style="font-size:110%; font-weight: bold; margin: 0">{{carbonFootprintBarra.CO2.toFixed(2)}}g</p>
+            </div>
           </div>
-          <div class="col-6 col-md-6" *ngIf="ultimoClimateCN && carbonFootprintCostaNova">
+          <div class="col-6 col-md-6" *ngIf="ultimoClimateCN && carbonFootprintCostaNova" syy>
             <h5 style="color:#6570C6">Costa Nova
               <fa-icon *ngIf="ultimoClimateCN.daytime" style="color: #1D3150;" [icon]="cleanSkies"></fa-icon>
               <fa-icon *ngIf="!ultimoClimateCN.daytime" style="color: #1D3150;" [icon]="moonIcon"></fa-icon>
               {{ultimoClimateCN.temperature}}º
             </h5>
-            <p style="font-size:110%; font-weight: bold">
-              <fa-icon *ngIf="ultimoClimateCN.condition==='FG'" style="color: #6570C6;" [icon]="foggy"
+            <div style="display: flex; align-items: center">
+              <fa-icon *ngIf="ultimoClimateCN.condition==='FG'" style="color: #6570C6;margin-right:10px; width: 35px" [icon]="foggy"
                        size="2x"></fa-icon>
-              <fa-icon *ngIf="ultimoClimateCN.condition==='RN'" style="color: #6570C6;" [icon]="rainIcon"
+              <fa-icon *ngIf="ultimoClimateCN.condition==='RN'" style="color: #6570C6;margin-right:10px; width: 35px" [icon]="rainIcon"
                        size="2x"></fa-icon>
-              <fa-icon *ngIf="ultimoClimateCN.condition==='CL'" style="color: #6570C6;" [icon]="cleanSkies"
+              <fa-icon *ngIf="ultimoClimateCN.condition==='CL'" style="color: #6570C6;margin-right:10px; width: 35px" [icon]="cleanSkies"
                        size="2x"></fa-icon>
-              {{conditionCN}}
-            <p>
-            <p style="font-size:110%; font-weight: bold">
-              <fa-icon style="font-size:150%; color:#93D16E;margin-right:3% " [icon]="leafIcon"></fa-icon>
-              {{carbonFootprintCostaNova.CO2.toFixed(2)}}g
-            <p>
+              <p style="font-size:110%; font-weight: bold">{{conditionCN}}</p>
+            </div>
+            <div style="display: flex; align-items: center">
+              <fa-icon style="font-size:170%; color:#93D16E;margin-right:17px" [icon]="leafIcon"></fa-icon>
+              <p style="font-size:110%; font-weight: bold; margin: 0">{{carbonFootprintCostaNova.CO2.toFixed(2)}}g</p>
+            </div>
           </div>
         </div>
       </div>
@@ -61,13 +61,28 @@
     </div>
   </div>
 
-  <div class="col-lg-6 col-md-6 col-sm-6">
+  <div class="col-lg-6 col-md-5 col-sm-5">
     <div class="card card-stats">
       <div class="card-header">
         <h5 class="card-title">Today's Traffic Inflow</h5>
       </div>
-      <div class="card-body ">
+      <div class="card-body" style="height: 160px">
         <div class="row">
+          <div class="col-12 col-md-12" *ngIf="ultimoDailyInflowBT"
+               style="display: flex; flex-direction: column; align-items: center">
+            <h5 style="color:#6570C6">Barra and Costa Nova</h5>
+            <div style="width: 100%; text-align: center">
+              <p style="font-size:110%">
+                <fa-icon style="font-size:150%; color:#E18660;margin-right:3% " [icon]="max"></fa-icon>
+                <span><b>Maximum: </b>{{ ultimoDailyInflowBT.maximum }}</span>
+              </p>
+              <p style="font-size:110%;margin-right: 3%">
+                <fa-icon style="font-size:150%; color:#6672C0;margin-right:4.2% " [icon]="rn"></fa-icon>
+                <span><b>Current: </b>{{ ultimoDailyInflowBT.current }}</span>
+              </p>
+            </div>
+          </div>
+          <!--
           <div class="col-6 col-md-6" *ngIf="ultimoDailyInflowBA">
             <h5 style="color:#6570C6">Barra</h5>
             <p style="font-size:110%">
@@ -95,6 +110,7 @@
                 Current: </b> {{ ultimoDailyInflowCN.current }}
             </p>
           </div>
+          -->
         </div>
 
       </div>
@@ -119,15 +135,17 @@
           <div class="col-2"></div>
           <div class="col-8">
             <div class="row">
-              <div class="col-md-4 d-flex flex-column align-items-center">
+              <div class="col-md-6 d-flex flex-column align-items-center">
                 <fa-icon style="color: #366171;" [icon]="camera"></fa-icon>
                 <h6 style="font-size:140%">Ria Ativa</h6>
               </div>
+              <!--
               <div class="col-md-4 d-flex flex-column align-items-center">
                 <fa-icon style="color: #366171;" [icon]="camera"></fa-icon>
                 <h6 style="font-size:140%">Duna</h6>
               </div>
-              <div class="col-md-4 d-flex flex-column align-items-center">
+              -->
+              <div class="col-md-6 d-flex flex-column align-items-center">
                 <fa-icon style="color: #366171;" [icon]="camera"></fa-icon>
                 <h6 style="font-size:140%">Ponte Barra</h6>
               </div>
@@ -145,19 +163,21 @@
           </div>
           <div class="col-8">
             <div class="row" style="padding-top:1%; margin-top: 7.5px;" *ngIf="dataCurrentTrafficInfo">
-              <div class="col-md-4 d-flex justify-content-center align-items-center">
+              <div class="col-md-6 d-flex justify-content-center align-items-center">
                 <p [style.color]="currentTrafficInfoRA.color"
                    style="font-size: 130%; font-weight: initial; text-align: center;">
                   <b>{{currentTrafficInfoRA.traffic}}</b></p>
               </div>
+              <!--
               <div class="col-md-4 d-flex justify-content-center align-items-center">
-                <p [style.color]="currentTrafficInfoRA.color"
+                <p [style.color]="currentTrafficInfoDN.color"
                    style="font-size: 130%; font-weight: initial; text-align: center;">
                   <b>{{currentTrafficInfoDN.traffic}}</b>
                 </p>
               </div>
-              <div class="col-md-4 d-flex justify-content-center align-items-center">
-                <p [style.color]="currentTrafficInfoRA.color"
+              -->
+              <div class="col-md-6 d-flex justify-content-center align-items-center">
+                <p [style.color]="currentTrafficInfoPT.color"
                    style="font-size: 130%; font-weight: initial; text-align: center;">
                   <b>{{currentTrafficInfoPT.traffic}}</b></p>
               </div>
@@ -177,13 +197,15 @@
           <div class="col-8">
             <div class="row" style="padding-top:1%; margin-top: 7.5px;" *ngIf="dataCurrentTrafficInfo">
 
-              <div class="col-md-4 d-flex justify-content-center">
+              <div class="col-md-6 d-flex justify-content-center">
                 <p style="font-size: 130%; font-weight: initial">{{currentTrafficInfoRA.people}} pedestrians</p>
               </div>
+              <!--
               <div class="col-md-4 d-flex justify-content-center">
                 <p style="font-size: 130%; font-weight: initial">{{currentTrafficInfoDN.people}} pedestrians</p>
               </div>
-              <div class="col-md-4 d-flex justify-content-center">
+              -->
+              <div class="col-md-6 d-flex justify-content-center">
                 <p style="font-size: 130%; font-weight: initial">{{currentTrafficInfoPT.people}} pedestrians</p>
               </div>
             </div>
