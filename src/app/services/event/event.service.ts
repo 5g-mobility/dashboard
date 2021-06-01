@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/internal/Observable';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
+import {environment} from '../../../environments/environment';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -12,7 +13,7 @@ const httpOptions = {
 })
 
 export class EventService {
-  private baseURL = 'http://localhost:8000/5g-mobility/event/'
+  private baseURL = environment.baseURL + 'event/'
 
   constructor(private http: HttpClient) {
   }

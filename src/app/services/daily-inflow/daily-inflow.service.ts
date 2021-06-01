@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {DailyInflow} from '../../models/daily-inflow';
+import {environment} from '../../../environments/environment';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-type': 'application/json'})
@@ -11,7 +11,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class DailyInflowService {
-  private baseURL = 'http://localhost:8000/5g-mobility/daily-inflow/'
+  private baseURL = environment.baseURL + 'daily-inflow/'
   constructor(private http: HttpClient) { }
 
   getTodayDailyInflowBarra(): Observable<any> {

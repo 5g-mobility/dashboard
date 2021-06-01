@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {environment} from '../../../environments/environment';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-type': 'application/json'})
@@ -10,7 +11,7 @@ const httpOptions = {
   providedIn: 'root'
 })
 export class ClimateService {
-  private baseURL = 'http://localhost:8000/5g-mobility/climate/'
+  private baseURL = environment.baseURL + 'climate/'
   constructor(private http: HttpClient) { }
 
   getBarraClimate(): Observable<any> {

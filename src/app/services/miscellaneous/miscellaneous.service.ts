@@ -4,6 +4,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {ConditionsStats} from '../../models/conditions-stats';
 import {CarbonFootprint} from '../../models/carbon-footprint';
 import {NgbDate} from '@ng-bootstrap/ng-bootstrap';
+import {environment} from '../../../environments/environment';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -14,7 +15,7 @@ const httpOptions = {
 })
 
 export class MiscellaneousService {
-  private baseURL = 'http://localhost:8000/5g-mobility/'
+  private baseURL = environment.baseURL
 
   constructor(private http: HttpClient) {
   }
