@@ -18,6 +18,10 @@ export class DailyInflowService {
     return this.http.get<any>(this.baseURL + '?location=BA&limit=1', httpOptions);
   }
 
+  getTodayDailyInflowBoth(): Observable<any> {
+    return this.http.get<any>(this.baseURL + '?location=BT&limit=1', httpOptions);
+  }
+
   getTodayDailyInflowCosta(): Observable<any> {
     return this.http.get<any>(this.baseURL + '?location=CN&limit=1', httpOptions);
   }
