@@ -160,10 +160,10 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
     this.subscription = timer(0, 30000).subscribe(() => {
       if (this.selectTime === 0) {
         // ultimos 5 minutos
-        this.getLast5min()
+        this.last5min()
       } else {
         // selected date
-        this.getEventsBetweenDates()
+        this.selectDate()
       }
     });
 

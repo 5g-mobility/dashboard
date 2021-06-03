@@ -205,8 +205,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.getConditions();
         this.getCO2Barra();
         this.getCO2CostaNova();
-        this.getDailyInflow()
-        this.getCurrentTrafficInfo()
+        this.getDailyInflow();
+        this.getCurrentTrafficInfo();
         this.getEventsOverview();
 
       });

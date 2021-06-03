@@ -53,7 +53,6 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   toDate: NgbDate | null;
 
 
-
   // DROPLET ICONS
   rainMarker = (L as any).ExtraMarkers.icon({
     shape: 'circle',
@@ -131,9 +130,9 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   clearAllFilters() {
     this.filterToSearch = '';
     if (this.dataSelection === 1) {
-      this.getEventsByDate()
+      this.selectDate()
     } else {
-      this.getEventsLast5Min()
+      this.last5min()
     }
   }
 
@@ -210,9 +209,9 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.mapMarkers = [];
     if (this.dataSelection === 0) {
-      this.getEventsLast5Min();
+      this.last5min();
     } else {
-      this.getEventsByDate();
+      this.selectDate();
     }
   }
 
@@ -584,12 +583,14 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscription = timer(0, 30000).subscribe(() => {
       // para a parte das conditions
       this.getConditions();
-      console.log(this.mapMarkers.length);
       this.getCO2Barra();
       this.getCO2CostaNova();
 
       if (this.dataSelection === 0) {
-        this.getEventsLast5Min();
+        this.last5min();
+      } else {
+        // selected date
+        this.selectDate()
       }
     });
 
