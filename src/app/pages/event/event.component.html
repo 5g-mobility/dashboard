@@ -131,25 +131,25 @@
                 {{e.timestamp | date:'medium'}}
               </td>
               <td>
-                {{e.location}}
+                {{(e.location === 'BA' ? 'Barra' : (e.location === 'CN' ? 'Costa Nova' : (e.location === 'RA' ? 'Ria Ativa' : (e.location === 'PT' ? 'Ponte da Barra' : ''))))}}
               </td>
               <td>
-                {{e.event_type}}
+                {{(e.event_type === 'RT' ? 'Road Traffic' : (e.event_type === 'RD' ? 'Road Danger' : (e.event_type === 'CO' ? 'Conditions' : (e.event_type === 'BL' ? 'Bike Lanes' : ''))))}}
               </td>
               <td>
-                {{e.event_class}}
+                {{(e.event_class === 'AN' ? 'Animal' : (e.event_class === 'PE' ? 'Person' : (e.event_class === 'SO' ? 'Strange Object' : (e.event_class === 'SC' ? 'Stopped Car' : (e.event_class === 'CA' ? 'Car' : (e.event_class === 'BC' ? 'Bicycle' : (e.event_class === 'MC' ? 'Motorcycle' : (e.event_class === 'TR' ? 'Truck' : (e.event_class === 'RA' ? 'Rain' : (e.event_class === 'FO' ? 'Fog' : (e.event_class === 'NL' ? 'No Light' : (e.event_class === 'LT' ? 'Light' : (e.event_class === 'OT' ? 'Outside Temperature' : (e.event_class === 'CS' ? 'Car Speeding' : (e.event_class === 'CF' ? 'Carbon Footprint' : '')))))))))))))))}}
               </td>
               <td>
                 {{e.velocity}}
               </td>
               <td>
-                [{{e.latitude}}, {{e.longitude}}]
+                {{e.latitude.toFixed(6)}}, {{e.longitude.toFixed(6)}}
               </td>
               <td>
-                {{e.co2}}
+                {{e.co2}}{{(e.co2 === null ? '' : 'g')}}
               </td>
               <td>
-                {{e.temperature}}
+                {{e.temperature}}{{(e.temperature === null ? '' : 'º')}}
               </td>
             </tr>
 
