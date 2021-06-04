@@ -8,19 +8,19 @@
            style="display: flex; align-items: center">
         <h5 class="card-title">Latest Events</h5>
 
-        <div *ngIf="selectionMap==1" class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic"
-             [(ngModel)]="selectingDate">
-          <label style="height: 40px" ngbButtonLabel class="btn-primary">
-            <input ngbButton type="radio" (click)="filterCN()" [value]="0"> Costa Nova
-          </label>
-          <label style="height: 40px" ngbButtonLabel class="btn-primary">
-            <input ngbButton type="radio" (click)="filterBarra()" [value]="1"> Barra
-          </label>
+        <div *ngIf="selectionMap==1" ngbDropdown class="d-inline-block" style="margin-top: 10px">
+          <button class="btn btn-secondary dropdown-toggle" id="dropdownBasic12" ngbDropdownToggle>{{(selectedLocation === '' ? 'Location' : selectedLocation )}}</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button (click)="filterBarra()" ngbDropdownItem>Barra</button>
+            <button (click)="filterCN()" ngbDropdownItem>Costa Nova</button>
+            <button (click)="filterRA()" ngbDropdownItem>Ria Ativa</button>
+            <button (click)="filterPT()" ngbDropdownItem>Ponte da Barra</button>
+          </div>
         </div>
 
 
         <div *ngIf="selectionMap==1" ngbDropdown class="d-inline-block" style="margin-top: 10px">
-          <button class="btn btn-secondary dropdown-toggle" id="dropdownBasic1" ngbDropdownToggle>Class</button>
+          <button class="btn btn-secondary dropdown-toggle" id="dropdownBasic1" ngbDropdownToggle>{{(selectedClass === '' ? 'Class' : selectedClass )}}</button>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
             <button (click)="filterAnimal()" ngbDropdownItem>Animal</button>
             <button (click)="filterPerson()" ngbDropdownItem>Person</button>
@@ -42,7 +42,7 @@
 
 
         <div *ngIf="selectionMap==1" ngbDropdown class="d-inline-block" style="margin-top: 10px">
-          <button class="btn btn-secondary dropdown-toggle" id="dropdownBasic2" ngbDropdownToggle>Type</button>
+          <button class="btn btn-secondary dropdown-toggle" id="dropdownBasic2" ngbDropdownToggle>{{(selectedType === '' ? 'Type' : selectedType )}}</button>
           <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
             <button (click)="filterRoadTraffic()" ngbDropdownItem>Road Traffic</button>
             <button (click)="filterRoadDanger()" ngbDropdownItem>Road Danger</button>
