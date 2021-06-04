@@ -46,12 +46,14 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   dataAtual: String;
   private subscription2;
   limit: number = Number(1000);
+  total: number;
+  firstMap = 0;
+  lastMap = 50;
 
   hoveredDate: NgbDate | null = null;
 
   fromDate: NgbDate;
   toDate: NgbDate | null;
-
 
 
   // DROPLET ICONS
@@ -131,9 +133,9 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   clearAllFilters() {
     this.filterToSearch = '';
     if (this.dataSelection === 1) {
-      this.getEventsByDate()
+      this.selectDate()
     } else {
-      this.getEventsLast5Min()
+      this.last5min()
     }
   }
 
@@ -210,9 +212,9 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.mapMarkers = [];
     if (this.dataSelection === 0) {
-      this.getEventsLast5Min();
+      this.last5min();
     } else {
-      this.getEventsByDate();
+      this.selectDate();
     }
   }
 
@@ -255,18 +257,26 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
     tiles.addTo(this.map);
   }
 
-  last5min() {
+  last5min(reset: boolean = true) {
     for (let i = 0; i < this.mapMarkers.length; i++) {
       this.map.removeLayer(this.mapMarkers[i]);
+    }
+    if (reset) {
+      this.firstMap = 0;
+      this.lastMap = 50;
     }
     this.mapMarkers = [];
     this.dataSelection = 0;
     this.getEventsLast5Min();
   }
 
-  selectDate() {
+  selectDate(reset: boolean = true) {
     for (let i = 0; i < this.mapMarkers.length; i++) {
       this.map.removeLayer(this.mapMarkers[i]);
+    }
+    if (reset) {
+      this.firstMap = 0;
+      this.lastMap = 50;
     }
     this.mapMarkers = [];
     this.dataSelection = 1;
@@ -281,8 +291,9 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getEventsByDate() {
-    this.eventService.getEventsBetweenDates(0, this.fromDate, this.toDate, '&event_type=CO' + this.filterToSearch, 50).subscribe(
+    this.eventService.getEventsBetweenDates(this.firstMap, this.fromDate, this.toDate, '&event_type=CO' + this.filterToSearch, 50).subscribe(
       data => {
+        this.total = data.count;
         this.mapMarkers = [];
         data.results.forEach(r => {
           if (r.event_class === 'RA') {
@@ -318,7 +329,6 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.mapMarkers.push(marker);
           }
         })
-        console.log(this.mapMarkers.length);
       }
     )
   }
@@ -338,8 +348,9 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getEventsLast5Min() {
-    this.eventService.getEventsLast5Mins('&event_type=CO' + this.filterToSearch, 50).subscribe(
+    this.eventService.getEventsLast5Mins(this.firstMap, '&event_type=CO' + this.filterToSearch, 50).subscribe(
       data => {
+        this.total = data.count;
         this.mapMarkers = [];
         data.results.forEach(r => {
           if (r.event_class === 'RA') {
@@ -375,7 +386,6 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
             this.mapMarkers.push(marker);
           }
         })
-        console.log(this.mapMarkers.length);
         this.checkAllDoneLoading();
       }
     )
@@ -584,15 +594,47 @@ export class ConditionsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscription = timer(0, 30000).subscribe(() => {
       // para a parte das conditions
       this.getConditions();
-      console.log(this.mapMarkers.length);
       this.getCO2Barra();
       this.getCO2CostaNova();
 
       if (this.dataSelection === 0) {
-        this.getEventsLast5Min();
+        this.last5min();
+      } else {
+        // selected date
+        this.selectDate()
       }
     });
 
+
+  }
+
+  nextEvents() {
+    if (this.firstMap + 50 <= this.total) {
+      this.firstMap = this.firstMap + 50;
+      this.lastMap = this.lastMap + 50;
+
+      if (this.dataSelection === 0) {
+        this.last5min(false);
+      } else {
+        // selected date
+        this.selectDate(false)
+      }
+    }
+
+  }
+
+  previousEvents() {
+    if (this.firstMap - 50 >= 0) {
+      this.firstMap = this.firstMap - 50;
+      this.lastMap = this.lastMap - 50;
+
+      if (this.dataSelection === 0) {
+        this.last5min(false);
+      } else {
+        // selected date
+        this.selectDate(false)
+      }
+    }
 
   }
 

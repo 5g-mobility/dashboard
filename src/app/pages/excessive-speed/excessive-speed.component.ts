@@ -27,6 +27,9 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
   private loadingMap = true;
   private subscription;
   private subscription2;
+  firstMap = 0;
+  lastMap = 50;
+  total: number;
 
   carMarker = (L as any).ExtraMarkers.icon({
     shape: 'circle',
@@ -93,8 +96,9 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   getLast5min() {
-    this.eventService.getExcessiveSpeedLast5Mins(50).subscribe(
+    this.eventService.getExcessiveSpeedLast5Mins(this.firstMap, 50).subscribe(
       data => {
+        this.total = data.count;
         this.markers = [];
         if (data.results.length !== 0) {
           data.results.forEach(d => {
@@ -112,8 +116,9 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
 
   getEventsBetweenDates() {
     if (this.toDate != null && this.fromDate != null) {
-      this.eventService.getExcessiveSpeedBetweenDates(this.fromDate, this.toDate, 50).subscribe(
+      this.eventService.getExcessiveSpeedBetweenDates(this.firstMap, this.fromDate, this.toDate, 50).subscribe(
         data => {
+          this.total = data.count;
           this.markers = [];
           if (data.results.length !== 0) {
             data.results.forEach(d => {
@@ -160,10 +165,10 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
     this.subscription = timer(0, 30000).subscribe(() => {
       if (this.selectTime === 0) {
         // ultimos 5 minutos
-        this.getLast5min()
+        this.last5min()
       } else {
         // selected date
-        this.getEventsBetweenDates()
+        this.selectDate()
       }
     });
 
@@ -182,20 +187,58 @@ export class ExcessiveSpeedComponent implements OnInit, AfterViewInit, OnDestroy
     this.initMap();
   }
 
-  last5min() {
+  last5min(reset: boolean = true) {
     for (let i = 0; i < this.markers.length; i++) {
       this.map.removeLayer(this.markers[i]);
+    }
+    if (reset) {
+      this.firstMap = 0;
+      this.lastMap = 50;
     }
     this.markers = []
     this.getLast5min();
   }
 
-  selectDate() {
+  selectDate(reset: boolean = true) {
     for (let i = 0; i < this.markers.length; i++) {
       this.map.removeLayer(this.markers[i]);
     }
+    if (reset) {
+      this.firstMap = 0;
+      this.lastMap = 50;
+    }
     this.markers = []
     this.getEventsBetweenDates();
+  }
+
+  nextEvents() {
+    if (this.firstMap + 50 <= this.total) {
+      this.firstMap = this.firstMap + 50;
+      this.lastMap = this.lastMap + 50;
+
+      if (this.selectTime === 0) {
+        this.last5min(false);
+      } else {
+        // selected date
+        this.selectDate(false)
+      }
+    }
+
+  }
+
+  previousEvents() {
+    if (this.firstMap - 50 >= 0) {
+      this.firstMap = this.firstMap - 50;
+      this.lastMap = this.lastMap - 50;
+
+      if (this.selectTime === 0) {
+        this.last5min(false);
+      } else {
+        // selected date
+        this.selectDate(false)
+      }
+    }
+
   }
 
 
