@@ -54,15 +54,15 @@ export class EventService {
       + (filter === null || filter === undefined ? '' : '' + filter), httpOptions)
   }
 
-  getEventsLast5Mins(filter?: string, limit?: number): Observable<any> {
+  getEventsLast5Mins(offset: number, filter?: string, limit?: number): Observable<any> {
     const date = new Date();
     date.setMinutes(date.getMinutes() - 5);
 
     if (filter == null) {
-      return this.http.get<any>(this.baseURL + '?timestamp__gte=' + date.toISOString()
+      return this.http.get<any>(this.baseURL + '?timestamp__gte=' + date.toISOString() + '&offset=' + offset
         + (limit === null || limit === undefined ? '' : '&limit=' + limit), httpOptions)
     }
-    return this.http.get<any>(this.baseURL + '?timestamp__gte=' + date.toISOString()
+    return this.http.get<any>(this.baseURL + '?timestamp__gte=' + date.toISOString() + '&offset=' + offset
       + filter + (limit === null || limit === undefined ? '' : '&limit=' + limit), httpOptions)
   }
 

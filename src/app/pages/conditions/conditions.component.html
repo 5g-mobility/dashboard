@@ -131,6 +131,15 @@
           </label>
         </div>
 
+        <div class="btn-group btn-group-toggle">
+          <label class="btn-primary" ngbButtonLabel>
+            <input style="display: none" type="button" (click)="previousEvents()" ngbButton> Previous Events
+          </label>
+          <label class="btn-primary" ngbButtonLabel>
+            <input style="display: none" type="button" (click)="nextEvents()" ngbButton> Next Events
+          </label>
+        </div>
+
         <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="dataSelection">
           <label ngbButtonLabel class="btn-primary">
             <input style="height: 50px" ngbButton type="radio" (click)="last5min()" [value]="0"> Last 5 Minutes
@@ -179,6 +188,7 @@
         </div>
       </div>
       <div class="card-body">
+        <p *ngIf="total" style="text-align: center">Showing {{firstMap}}-{{lastMap}} events in a total of {{total}}</p>
         <div class="map-container" style="position:static; height: 62.5vh; margin: 0;">
           <div class="map-frame">
             <div id="mapConditions"></div>
