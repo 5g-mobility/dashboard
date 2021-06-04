@@ -99,14 +99,14 @@ export class EventService {
         '' : '&timestamp__lte=' + to_str), httpOptions)
   }
 
-  getExcessiveSpeedLast5Mins(limit?: number): Observable<any> {
+  getExcessiveSpeedLast5Mins(offset: number, limit: number): Observable<any> {
     const date: Date = new Date();
     date.setMinutes(date.getMinutes() - 5);
-    return this.http.get<any>(this.baseURL + '?timestamp__gte=' + date.toISOString() + '&event_type=CO&event_class=CS'
+    return this.http.get<any>(this.baseURL + '?timestamp__gte=' + date.toISOString() + '&event_type=CO&event_class=CS' + '&offset=' + offset
       + (limit === null || limit === undefined ? '' : '&limit=' + limit), httpOptions)
   }
 
-  getExcessiveSpeedBetweenDates(from: NgbDate, to: NgbDate, limit?: number): Observable<any> {
+  getExcessiveSpeedBetweenDates(offset: number, from: NgbDate, to: NgbDate, limit: number): Observable<any> {
     const from_str = from.year + '-' + from.month.toLocaleString('en-US', {
       minimumIntegerDigits: 2,
       useGrouping: false
@@ -123,6 +123,6 @@ export class EventService {
       useGrouping: false
     }) + 'T00:00'
     return this.http.get<any>(this.baseURL + '?timestamp__gte=' + from_str + '&timestamp__lte=' + to_str +
-      '&event_type=CO&event_class=CS' + (limit === null || limit === undefined ? '' : '&limit=' + limit), httpOptions)
+      '&event_type=CO&event_class=CS' + '&offset=' + offset + (limit === null || limit === undefined ? '' : '&limit=' + limit), httpOptions)
   }
 }
