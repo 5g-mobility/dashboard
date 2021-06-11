@@ -27,7 +27,7 @@
             </div>
             <div style="display: flex; align-items: center">
               <fa-icon style="font-size:170%; color:#93D16E;margin-right:17px" [icon]="leafIcon"></fa-icon>
-              <p style="font-size:110%; font-weight: bold; margin: 0">{{carbonFootprintBarra.CO2.toFixed(2)}}g</p>
+              <p style="font-size:110%; font-weight: bold; margin: 0">{{(carbonFootprintBarra.CO2/1000).toFixed(2)}}kg</p>
             </div>
           </div>
           <div class="col-6 col-md-6" *ngIf="ultimoClimateCN && carbonFootprintCostaNova" syy>
@@ -47,7 +47,7 @@
             </div>
             <div style="display: flex; align-items: center">
               <fa-icon style="font-size:170%; color:#93D16E;margin-right:17px" [icon]="leafIcon"></fa-icon>
-              <p style="font-size:110%; font-weight: bold; margin: 0">{{carbonFootprintCostaNova.CO2.toFixed(2)}}g</p>
+              <p style="font-size:110%; font-weight: bold; margin: 0">{{(carbonFootprintCostaNova.CO2/1000).toFixed(2)}}kg</p>
             </div>
           </div>
         </div>
