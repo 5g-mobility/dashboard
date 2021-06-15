@@ -140,16 +140,16 @@
                 {{(e.event_class === 'AN' ? 'Animal' : (e.event_class === 'PE' ? 'Person' : (e.event_class === 'SO' ? 'Strange Object' : (e.event_class === 'SC' ? 'Stopped Car' : (e.event_class === 'CA' ? 'Car' : (e.event_class === 'BC' ? 'Bicycle' : (e.event_class === 'MC' ? 'Motorcycle' : (e.event_class === 'TR' ? 'Truck' : (e.event_class === 'RA' ? 'Rain' : (e.event_class === 'FO' ? 'Fog' : (e.event_class === 'NL' ? 'No Light' : (e.event_class === 'LT' ? 'Light' : (e.event_class === 'OT' ? 'Outside Temperature' : (e.event_class === 'CS' ? 'Car Speeding' : (e.event_class === 'CF' ? 'Carbon Footprint' : '')))))))))))))))}}
               </td>
               <td>
-                {{e.velocity}}
+                {{(e.velocity === null ? '-' : e.velocity)}}
               </td>
               <td>
-                {{(e.latitude === null ? '' : e.latitude.toFixed(6))}}, {{(e.longitude === null ? '' : e.longitude.toFixed(6))}}
+                {{(e.latitude && e.longitude === null ? '-' : e.latitude.toFixed(6)+', ' + e.longitude.toFixed(6))}}
               </td>
               <td>
-                {{e.co2}}{{(e.co2 === null ? '' : 'g')}}
+                {{(e.co2 === null ? '-' : e.co2 + 'g')}}
               </td>
               <td>
-                {{e.temperature}}{{(e.temperature === null ? '' : 'º')}}
+                {{(e.temperature === null ? '-' : e.temperature + 'º')}}
               </td>
             </tr>
 
