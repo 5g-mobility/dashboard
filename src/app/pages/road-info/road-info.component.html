@@ -171,6 +171,14 @@
                 </div>
               </div>
               <ng-container *ngIf="lastRoadDanger !== null">
+
+                <div *ngIf="lastRoadDanger.event_class === 'AN'" class="col-8 col-md-8"
+                     style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                  <fa-icon style="color: white;" [icon]="dogIcon" size="3x"></fa-icon>
+                  <p class="card-category">Animal on Road Lane
+                  <p>
+                </div>
+
                 <div *ngIf="lastRoadDanger.event_class === 'PE'" class="col-8 col-md-8"
                      style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
                   <fa-icon style="color: white;" [icon]="walkingIcon" size="3x"></fa-icon>
