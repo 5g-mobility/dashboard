@@ -1,0 +1,166 @@
+<div>
+  <ngx-spinner [fullScreen]="true"></ngx-spinner>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card">
+      <div class="card-header" [style.justify-content]="selectionMap==1 ? 'space-around' : 'space-between'"
+           style="display: flex; align-items: center">
+        <h5 class="card-title">Latest Events</h5>
+
+        <div *ngIf="selectionMap==1" ngbDropdown class="d-inline-block" style="margin-top: 10px">
+          <button class="btn btn-secondary dropdown-toggle" id="dropdownBasic12" ngbDropdownToggle>{{(selectedLocation === '' ? 'Location' : selectedLocation )}}</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button (click)="filterBarra()" ngbDropdownItem>Barra</button>
+            <button (click)="filterCN()" ngbDropdownItem>Costa Nova</button>
+            <button (click)="filterRA()" ngbDropdownItem>Ria Ativa</button>
+            <button (click)="filterPT()" ngbDropdownItem>Ponte da Barra</button>
+          </div>
+        </div>
+
+
+        <div *ngIf="selectionMap==1" ngbDropdown class="d-inline-block" style="margin-top: 10px">
+          <button class="btn btn-secondary dropdown-toggle" id="dropdownBasic1" ngbDropdownToggle>{{(selectedClass === '' ? 'Class' : selectedClass )}}</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button (click)="filterAnimal()" ngbDropdownItem>Animal</button>
+            <button (click)="filterPerson()" ngbDropdownItem>Person</button>
+            <button (click)="filterStrangeObject()" ngbDropdownItem>Strange Object</button>
+            <button (click)="filterStoppedCar()" ngbDropdownItem>Stopped Car</button>
+            <button (click)="filterCar()" ngbDropdownItem>Car</button>
+            <button (click)="filterBicycle()" ngbDropdownItem>Bicycle</button>
+            <button (click)="filterMotorcycle()" ngbDropdownItem>Motorcycle</button>
+            <button (click)="filterTruck()" ngbDropdownItem>Truck</button>
+            <button (click)="filterRain()" ngbDropdownItem>Rain</button>
+            <button (click)="filterFog()" ngbDropdownItem>Fog</button>
+            <button (click)="filterNoLight()" ngbDropdownItem>No Light</button>
+            <button (click)="filterLight()" ngbDropdownItem>Light</button>
+            <button (click)="filterOutsideTemp()" ngbDropdownItem>Outside Temperature</button>
+            <button (click)="filterCarSpeeding()" ngbDropdownItem>Car Speeding</button>
+            <button (click)="filterCarbon()" ngbDropdownItem>Carbon Footprint</button>
+          </div>
+        </div>
+
+
+        <div *ngIf="selectionMap==1" ngbDropdown class="d-inline-block" style="margin-top: 10px">
+          <button class="btn btn-secondary dropdown-toggle" id="dropdownBasic2" ngbDropdownToggle>{{(selectedType === '' ? 'Type' : selectedType )}}</button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button (click)="filterRoadTraffic()" ngbDropdownItem>Road Traffic</button>
+            <button (click)="filterRoadDanger()" ngbDropdownItem>Road Danger</button>
+            <button (click)="filterBikeLanes()" ngbDropdownItem>Bike Lanes</button>
+            <button (click)="filterConditions()" ngbDropdownItem>Conditions</button>
+          </div>
+        </div>
+
+
+        <form *ngIf="selectionMap==1" class="form-inline">
+          <div class="form-group hidden">
+            <div class="input-group">
+              <!-- PARTE PARA DAR TOGGLE DO DATAPICKER -->
+              <input style="z-index: -1" name="datepicker" class="form-control" ngbDatepicker
+                     #datepicker="ngbDatepicker"
+                     [autoClose]="'outside'" (dateSelect)="onDateSelection($event)" [displayMonths]="2"
+                     [dayTemplate]="t" outsideDays="hidden" [startDate]="fromDate!" tabindex="-1">
+              <ng-template #t let-date let-focused="focused">
+                            <span class="custom-day" [class.focused]="focused" [class.range]="isRange(date)"
+                                  [class.faded]="isHovered(date) || isInside(date)" (mouseenter)="hoveredDate = date"
+                                  (mouseleave)="hoveredDate = null">
+                                {{ date.day }}
+                            </span>
+              </ng-template>
+            </div>
+          </div>
+          <div class="form-group" style="margin-top:2%">
+            <!-- PARTE ONDE APARECEM AS DATAS ESCOLHIDAS -->
+            <button class="btn btn-outline-secondary calendar fa fa-calendar"
+                    (click)="datepicker.toggle()" type="button">
+            </button>
+            <input #dpFromDate class="form-control input-sm" placeholder="yyyy-mm-dd" name="dpFromDate"
+                   [value]="formatter.format(fromDate)"
+                   (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+            <input #dpToDate class="form-control input-sm" placeholder="yyyy-mm-dd" name="dpToDate"
+                   [value]="formatter.format(toDate)"
+                   (input)="toDate = validateInput(toDate, dpToDate.value)">
+          </div>
+        </form>
+
+        <div class="btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="selectionMap">
+          <label style="height: 40px" ngbButtonLabel class="btn-primary">
+            <input ngbButton type="radio" (click)="clearAllFilters()" [value]="0"> All
+          </label>
+          <label style="height: 40px" ngbButtonLabel class="btn-primary">
+            <input ngbButton type="radio" [value]="1"> Filter
+          </label>
+          <label ngbButtonLabel style="height: 40px" class="btn-primary">
+            <input ngbButton type="radio" (click)="clearAllFilters()" [value]="2"> Clear Filters
+          </label>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table" style="table-layout: fixed;">
+            <thead class=" text-primary">
+            <th>
+              Timestamp
+            </th>
+            <th>
+              Location
+            </th>
+            <th>
+              Type
+            </th>
+            <th>
+              Class
+            </th>
+            <th>
+              Speed (km/h)
+            </th>
+            <th>
+              GeoLocation
+            </th>
+            <th>
+              CO2 Emission
+            </th>
+            <th>
+              Temperature
+            </th>
+            </thead>
+            <tbody>
+            <tr *ngFor="let e of events | paginate: { itemsPerPage: 10 , currentPage: page,
+                            totalItems: totalEvents }">
+              <td>
+                {{e.timestamp | date:'medium'}}
+              </td>
+              <td>
+                {{(e.location === 'BA' ? 'Barra' : (e.location === 'CN' ? 'Costa Nova' : (e.location === 'RA' ? 'Ria Ativa' : (e.location === 'PT' ? 'Ponte da Barra' : ''))))}}
+              </td>
+              <td>
+                {{(e.event_type === 'RT' ? 'Road Traffic' : (e.event_type === 'RD' ? 'Road Danger' : (e.event_type === 'CO' ? 'Conditions' : (e.event_type === 'BL' ? 'Bike Lanes' : ''))))}}
+              </td>
+              <td>
+                {{(e.event_class === 'AN' ? 'Animal' : (e.event_class === 'PE' ? 'Person' : (e.event_class === 'SO' ? 'Strange Object' : (e.event_class === 'SC' ? 'Stopped Car' : (e.event_class === 'CA' ? 'Car' : (e.event_class === 'BC' ? 'Bicycle' : (e.event_class === 'MC' ? 'Motorcycle' : (e.event_class === 'TR' ? 'Truck' : (e.event_class === 'RA' ? 'Rain' : (e.event_class === 'FO' ? 'Fog' : (e.event_class === 'NL' ? 'No Light' : (e.event_class === 'LT' ? 'Light' : (e.event_class === 'OT' ? 'Outside Temperature' : (e.event_class === 'CS' ? 'Car Speeding' : (e.event_class === 'CF' ? 'Carbon Footprint' : '')))))))))))))))}}
+              </td>
+              <td>
+                {{(e.velocity === null ? '-' : e.velocity)}}
+              </td>
+              <td>
+                {{(e.latitude === null || e.longitude === null ? '-' : e.latitude.toFixed(6)+', ' + e.longitude.toFixed(6))}}
+              </td>
+              <td>
+                {{(e.co2 === null ? '-' : e.co2 + 'g')}}
+              </td>
+              <td>
+                {{(e.temperature === null ? '-' : e.temperature + 'º')}}
+              </td>
+            </tr>
+
+            </tbody>
+          </table>
+          <div class="col-12" style="display: flex; justify-content: center">
+            <pagination-controls (pageChange)="changePage(page = $event)"></pagination-controls>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
